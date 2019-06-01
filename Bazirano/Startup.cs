@@ -43,6 +43,8 @@ namespace Bazirano
             app.UseMvcWithDefaultRoute();
             app.UseStaticFiles();
             app.UseStatusCodePages();
+
+            SeedData.EnsureCreated(app);
         }
     }
 }

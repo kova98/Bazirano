@@ -1,0 +1,20 @@
+﻿@{
+    Layout = "_BoardLayout";
+}
+
+@model List<BoardThread>
+
+<div class="container m-1">
+    <div class="row p-0">
+        @foreach (var thread in Model)
+        {
+            <partial name="BoardThreadPost" model="thread" />
+        }
+    </div>
+</div>
+    
+
+<a href="#">
+    <div class="btn btn-primary m-2 p-2 ">Na vrh</div>
+</a>
+

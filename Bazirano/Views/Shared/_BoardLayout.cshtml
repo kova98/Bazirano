@@ -1,0 +1,20 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+<div>
+    <h1 class="text-center text-dark border-bottom p-2">Ploča</h1>
+    <nav class="navbar navbar-expand p-1">
+        <a asp-action="Submit" asp-controller="Board"
+           class="btn btn-primary m-1">
+            Objavi
+        </a>
+        <a class="btn btn-secondary m-1"
+           asp-action="Catalog" asp-controller="Board">
+            Katalog
+        </a>
+        <button class="btn btn-secondary m-1">Na dno</button>
+    </nav>
+</div>
+
+@RenderBody()

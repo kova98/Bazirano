@@ -1,0 +1,42 @@
+﻿@{
+    Layout = "_BoardLayout";
+}
+
+@model BoardThread
+
+<div class="container p-0 m-1">
+    @foreach (var thread in Model.Posts)
+    {
+        <partial name="BoardPost" model="thread" />
+    }
+
+    <div class="card m-1">
+        <div class="card-header text-dark">
+            <h3>Odgovori</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-text"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<div>
+    <nav class="navbar navbar-expand p-1">
+        <a class="btn btn-secondary m-1"
+           asp-action="Catalog" asp-controller="Board">
+            Katalog
+        </a>
+        <a href="#">
+            <div class="btn btn-primary m-1">Na vrh</div>
+        </a>
+    </nav>
+</div>
+
