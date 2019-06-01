@@ -16,6 +16,11 @@ namespace Bazirano
     {
         public IConfiguration Configuration;
 
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
