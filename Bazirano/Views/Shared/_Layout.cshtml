@@ -7,7 +7,31 @@
     <link rel="stylesheet" asp-href-include="/lib/bootswatch/darkly/bootstrap.min.css" />
 </head>
 <body>
-    <div class="card">
+    <div class="container p-0">
+        <nav class="navbar navbar-expand-lg navbar-light bg-transparent border-bottom border-top">
+            <a class="navbar-brand" href="/">BAZIRANO</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarColor02">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Vijesti <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Board/Catalog">Ploča</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Kolumna</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Čavrljanje</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
         @RenderBody()
     </div>
 
