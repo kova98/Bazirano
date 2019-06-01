@@ -5,6 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\lib\bootswatch\flatly\**" />
+    <Compile Remove="wwwroot\lib\bootswatch\litera\**" />
+    <Compile Remove="wwwroot\lib\bootswatch\materia\**" />
+    <Content Remove="wwwroot\lib\bootswatch\flatly\**" />
+    <Content Remove="wwwroot\lib\bootswatch\litera\**" />
+    <Content Remove="wwwroot\lib\bootswatch\materia\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootswatch\flatly\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootswatch\litera\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootswatch\materia\**" />
+    <None Remove="wwwroot\lib\bootswatch\flatly\**" />
+    <None Remove="wwwroot\lib\bootswatch\litera\**" />
+    <None Remove="wwwroot\lib\bootswatch\materia\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
