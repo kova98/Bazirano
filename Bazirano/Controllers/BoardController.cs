@@ -45,11 +45,12 @@ namespace Bazirano.Controllers
         }
 
         [HttpPost]
-        public RedirectToActionResult CreateThread(BoardPost post)
+        public IActionResult CreateThread(BoardPost post)
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Submit));
+                ModelState.AddModelError("", "test");
+                return View("Submit");
             }   
 
             post.DatePosted = DateTime.Now;
