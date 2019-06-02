@@ -28,10 +28,20 @@ namespace Bazirano.Controllers
                 .ToList());
         }
 
-        public IActionResult Thread(int id)
+        public IActionResult Thread(long id)
         {
             return View(repository.BoardThreads
                     .FirstOrDefault(t => t.Posts.First().Id == id));
+        }
+
+        public RedirectToActionResult Respond(BoardRespondViewModel vm)
+        {
+            repository.AddPostToThread(vm.BoardPost, vm.ThreadId);
+
+            var thread = repository.BoardThreads
+                .FirstOrDefault(t => t.Id == vm.ThreadId);
+
+            return RedirectToAction(nameof(Thread), thread);
         }
 
         [HttpPost]
@@ -54,7 +64,7 @@ namespace Bazirano.Controllers
 
             repository.AddThread(thread);
 
-            return RedirectToAction(nameof(Thread), thread);
+            return RedirectToAction(nameof(Thread), new { post.Id });
         }
     }
 }

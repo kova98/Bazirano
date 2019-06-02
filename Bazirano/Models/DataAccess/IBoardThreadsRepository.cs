@@ -7,5 +7,6 @@ namespace Bazirano.Models.DataAccess
         IQueryable<BoardThread> BoardThreads { get; }
         void AddThread(BoardThread thread);
         void RemoveThread(BoardThread thread);
+        void AddPostToThread(BoardPost boardPost, long threadId);
     }
 }

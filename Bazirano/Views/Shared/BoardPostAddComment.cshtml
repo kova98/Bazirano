@@ -1,0 +1,18 @@
+﻿@model BoardRespondViewModel
+
+<div class="card m-1">
+    <div class="card-header text-dark">
+        <h4>Odgovori</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" asp-action="Respond" asp-controller="Board" asp-route-ThreadId="@Model.ThreadId">
+            <div class="form-group">
+                <textarea class="form-control" asp-for="BoardPost.Text"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="file" class="form-control-file" id="file_input" asp-for="BoardPost.Image">
+            </div>
+            <button class="btn btn-success" type="submit">Objavi</button>
+        </form>
+    </div>
+</div>

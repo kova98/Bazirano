@@ -17,9 +17,11 @@
                         <div><span asp-validation-for="Text" class="text-danger"></span></div>
                         <textarea class="form-control" asp-for="Text"></textarea>
                     </div>
-                    <input type="file" asp-for="Image" />
+                    <div class="form-group">
+                        <input type="file" class="form-control-file" id="file_input" asp-for="Image">
+                    </div>
                     <button class="btn btn-block btn-success" type="submit">Objavi</button>
                 </form>
             </div>            
         </div>
-    </div>
+    </div>  

@@ -19,12 +19,12 @@
     }
 
     string textToDisplay = post.Text.Length > 100 ? shortenedText : post.Text;
-
 }
-<div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 p-1">
+
+<div class="col-xl-3 col-lg-4 col-md-4 col-6 p-1">
     <div class="card text-center">
         <div class="card-header">
-            <a asp-action="Thread" asp-route-id="@Model.Id">
+            <a asp-action="Thread" asp-route-id="@post.Id">
                 #@post.Id | @time
             </a>
         </div>

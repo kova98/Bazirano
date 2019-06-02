@@ -10,23 +10,10 @@
         <partial name="BoardPost" model="thread" />
     }
 
-    <div class="card m-1">
-        <div class="card-header text-dark">
-            <h3>Odgovori</h3>
-        </div>
-        <div class="card-body">
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-text"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <partial name="BoardPostAddComment" 
+             model="new BoardRespondViewModel { BoardPost = new BoardPost(), ThreadId = Model.Id}"/>
 
 </div>
-
-
-
 
 <div>
     <nav class="navbar navbar-expand p-1">
