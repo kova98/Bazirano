@@ -34,14 +34,17 @@ namespace Bazirano.Controllers
                     .FirstOrDefault(t => t.Posts.First().Id == id));
         }
 
-        public RedirectToActionResult Respond(BoardRespondViewModel vm)
+        public IActionResult Respond(BoardRespondViewModel vm)
         {
-            repository.AddPostToThread(vm.BoardPost, vm.ThreadId);
+            if (ModelState.IsValid)
+            {
+                repository.AddPostToThread(vm.BoardPost, vm.ThreadId);
+            }
 
             var thread = repository.BoardThreads
-                .FirstOrDefault(t => t.Id == vm.ThreadId);
+                    .FirstOrDefault(t => t.Id == vm.ThreadId);
 
-            return RedirectToAction(nameof(Thread), thread);
+            return View(nameof(Thread), thread);
         }
 
         [HttpPost]
@@ -49,7 +52,6 @@ namespace Bazirano.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "test");
                 return View("Submit");
             }   
 

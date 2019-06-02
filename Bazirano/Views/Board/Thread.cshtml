@@ -10,9 +10,11 @@
         <partial name="BoardPost" model="thread" />
     }
 
-    <partial name="BoardPostAddComment" 
-             model="new BoardRespondViewModel { BoardPost = new BoardPost(), ThreadId = Model.Id}"/>
-
+<div id="comment">
+    <partial name="BoardPostAddComment"
+             model="new BoardRespondViewModel { BoardPost = new BoardPost(), ThreadId = Model.Id}" />
+</div>
+    
 </div>
 
 <div>

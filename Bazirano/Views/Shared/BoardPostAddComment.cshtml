@@ -7,6 +7,7 @@
     <div class="card-body">
         <form method="post" asp-action="Respond" asp-controller="Board" asp-route-ThreadId="@Model.ThreadId">
             <div class="form-group">
+                <div><span asp-validation-for="BoardPost.Text" class="text-danger"></span></div>
                 <textarea class="form-control" asp-for="BoardPost.Text"></textarea>
             </div>
             <div class="form-group">
