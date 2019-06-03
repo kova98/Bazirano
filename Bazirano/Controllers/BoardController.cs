@@ -37,15 +37,31 @@ namespace Bazirano.Controllers
                     .FirstOrDefault(t => t.Posts.First().Id == id));
         }
 
-        public IActionResult Respond(BoardRespondViewModel vm)
+        public async Task<IActionResult> Respond(BoardRespondViewModel vm, IFormFile file)
         {
-            if (ModelState.IsValid)
-            {
-                repository.AddPostToThread(vm.BoardPost, vm.ThreadId);
-            }
-
             var thread = repository.BoardThreads
                     .FirstOrDefault(t => t.Id == vm.ThreadId);
+
+            if (ModelState.IsValid)
+            {
+                if (file != null)
+                {
+                    if (!file.ContentType.StartsWith("image"))
+                    {
+                        ViewBag.FileError = "Nepodržan format datoteke.";
+                        return View(nameof(Thread), thread);
+                    }
+
+                    if (WriterHelper.ByteToMegabyte(file.Length) > 5)
+                    {
+                        ViewBag.FileError = "Datoteka je prevelika.";
+                        return View(nameof(Thread), thread);
+                    }
+
+                    await WriterHelper.UploadImage(vm.BoardPost, file);
+                }
+                repository.AddPostToThread(vm.BoardPost, vm.ThreadId);
+            }
 
             return View(nameof(Thread), thread);
         }
@@ -72,7 +88,7 @@ namespace Bazirano.Controllers
             {
                 if (!file.ContentType.StartsWith("image"))
                 {
-                    ViewBag.FileError = "Nepodržan format.";
+                    ViewBag.FileError = "Nepodržan format datoteke.";
                     return View("Submit");
                 }
 
