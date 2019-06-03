@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Bazirano
+namespace Bazirano.Infrastructure
 {
     public static class SeedData
     {
