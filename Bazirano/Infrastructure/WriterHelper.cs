@@ -34,5 +34,10 @@ namespace Bazirano.Infrastructure
                 }
             }
         }
+
+        public static double ByteToMegabyte(long bytes)
+        {
+            return (bytes / 1024f) / 1024f;
+        }
     }
 }

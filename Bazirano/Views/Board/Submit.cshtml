@@ -8,12 +8,12 @@
         <div class="card text-center">
             <div class="card-header">
                 <h2>Nova objava</h2>
-
             </div>
             <div class="card-body">
                 <form method="post" enctype="multipart/form-data" 
                       asp-action="CreateThread" asp-controller="Board">
                     <div class="form-group">
+                        <div class="text-danger">@ViewBag.FileError</div>
                         <div><span asp-validation-for="Text" class="text-danger"></span></div>
                         <textarea class="form-control" asp-for="Text"></textarea>
                     </div>

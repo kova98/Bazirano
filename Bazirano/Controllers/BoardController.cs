@@ -72,6 +72,13 @@ namespace Bazirano.Controllers
             {
                 if (!file.ContentType.StartsWith("image"))
                 {
+                    ViewBag.FileError = "Nepodržan format.";
+                    return View("Submit");
+                }
+
+                if (WriterHelper.ByteToMegabyte(file.Length) > 5)
+                {
+                    ViewBag.FileError = "Datoteka je prevelika.";
                     return View("Submit");
                 }
 
