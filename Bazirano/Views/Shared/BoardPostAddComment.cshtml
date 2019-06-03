@@ -10,7 +10,7 @@
             <div class="form-group">
                 <div class="text-danger">@ViewBag.FileError</div>
                 <div><span asp-validation-for="BoardPost.Text" class="text-danger"></span></div>
-                <textarea class="form-control" asp-for="BoardPost.Text"></textarea>
+                <textarea class="form-control" asp-for="BoardPost.Text" id="textbox"></textarea>
             </div>
             <div class="form-group">
                 <input type="file" class="form-control-file" id="file_input"

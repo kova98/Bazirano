@@ -1,16 +1,16 @@
 ﻿@model BoardPost
 
-@{ 
+@{
     string time = $"{Model.DatePosted.ToShortDateString()} {Model.DatePosted.ToShortTimeString()}";
     bool containsImage = !string.IsNullOrEmpty(Model.Image);
 }
 
-<div class="p-1 m-0">
+<div class="p-1 m-0" id="@Model.Id">
     <div class="card">
         <div class="card-header">
-            <a href="#">
+            <button class="btn btn-link p-0" onclick="quote(@Model.Id)">
                 #@Model.Id | @time
-            </a>
+            </button>
         </div>
         <div class="row">
             @if (containsImage)
