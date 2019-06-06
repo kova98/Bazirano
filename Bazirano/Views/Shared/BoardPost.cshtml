@@ -22,8 +22,8 @@
                 </div>
             }
             <div class="card-body" style="@(containsImage ? "" : "padding-left:40px")">
-                <div>
-                    @Model.Text
+                <div class="card-text">
+                    <post-text text="@Model.Text"></post-text>
                 </div>
             </div>
         </div>

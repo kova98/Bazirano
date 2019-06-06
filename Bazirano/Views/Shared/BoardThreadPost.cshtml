@@ -4,21 +4,6 @@
     BoardPost post = Model.Posts.FirstOrDefault();
     string time = $"{post.DatePosted.ToShortDateString()} {post.DatePosted.ToShortTimeString()}";
     bool containsImage = !string.IsNullOrEmpty(post.Image);
-    string shortenedText = "";
-
-    if (post.Text.Length > 100)
-    {
-        shortenedText = post.Text.Substring(0, 100);
-
-        if (shortenedText.Last() == ' ')
-        {
-            shortenedText.Remove(shortenedText.Last());
-        }
-
-        shortenedText += "...";
-    }
-
-    string textToDisplay = post.Text.Length > 100 ? shortenedText : post.Text;
 }
 
 <div class="col-xl-3 col-lg-4 col-md-4 col-6 p-1">
@@ -40,12 +25,12 @@
         <div class="card-body text-sm-center m-0 p-0">
             <div class="text-center">
                 <br />
-                <span class="text-danger">Odg: @Model.PostCount</span>
-                <span class="text-danger"> | Sli: @Model.ImageCount</span> <br />
+                <span class="text-info">Odg: @Model.PostCount</span>
+                <span class="text-info"> | Sli: @Model.ImageCount</span> <br />
             </div>
             <div class="text-center m-2 p-1">
                 <div>
-                    @textToDisplay
+                    <thread-post-text text="@post.Text"></thread-post-text>
                 </div>
             </div>
         </div>
