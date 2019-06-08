@@ -12,27 +12,57 @@ namespace Bazirano.Infrastructure
 
             if (isThreadPost)
             {
-               if (rows.Length > 5)
+                if (rows.Length > 5)
                 {
                     string[] shortened = new string[5];
                     Array.Copy(rows, shortened, 5);
                     rows = shortened;
-                }               
+                }
             }
 
             StringBuilder builder = new StringBuilder();
 
+            bool isPostStart = true;
+            bool emptyLineAdded = false;
+
             foreach (var row in rows)
             {
-                if (row[0] == '>')
+                if (row.Length == 0 || row[0] == '\r')
                 {
-                    builder.Append("<span style=\"color:lightgreen\">");
-                    builder.Append(row);
-                    builder.Append("</span><br/>");
+                    if (isPostStart)
+                    {
+                        // Start of the post, no empty lines allowed
+                    }
+                    else
+                    {
+                        if (emptyLineAdded == false && rows[rows.Length-1] != row)
+                        {
+                            // The first empty line in a row, add it and set the state to true.
+                            builder.Append($"{row}<br/>");
+
+                            emptyLineAdded = true;
+                        }
+                    }
                 }
                 else
                 {
-                    builder.Append($"{row}<br/>");
+                    // The loop went past all the empty lines from the post start
+                    isPostStart = false;
+
+                    if (row[0] == '>')
+                    {
+                        builder.Append("<span style=\"color:lightgreen\">");
+                        builder.Append(row);
+                        builder.Append("</span><br/>");
+
+                        emptyLineAdded = false;
+                    }
+                    else
+                    {
+                        builder.Append($"{row}<br/>");
+
+                        emptyLineAdded = false;
+                    }
                 }
             }
 
