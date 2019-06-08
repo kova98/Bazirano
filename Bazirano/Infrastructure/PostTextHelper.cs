@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Bazirano.Infrastructure
 {
@@ -67,6 +68,27 @@ namespace Bazirano.Infrastructure
             }
 
             return builder.ToString();
+        }
+
+        public static string GeneratePostAnchorLinks(string text)
+        {
+            MatchCollection matches = Regex.Matches(text, "#([0-9])+");
+            List<string> matchList = new List<string>();
+
+            foreach (var m in matches)
+            {
+                matchList.Add(m.ToString());
+            }
+
+            string newText = "";
+
+            foreach(var m in matchList)
+            {
+                string id = m.Remove(0, 1);
+                newText = text.Replace(m, $"<a href=\"{m}\" onclick=\"scrollToAnchor({id})\" class=\"btn-link\">{m}</a>");
+            }
+
+            return newText;
         }
     }
 }

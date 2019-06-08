@@ -11,8 +11,9 @@ namespace Bazirano.Infrastructure.TagHelpers
             output.TagName = "div";
 
             string greenText = PostTextHelper.GetGreenText(Text);
+            string textWithLinks = PostTextHelper.GeneratePostAnchorLinks(greenText);
 
-            output.Content.SetHtmlContent(greenText);
+            output.Content.SetHtmlContent(textWithLinks);
         }
 
     }
