@@ -3,7 +3,7 @@
 }
 
 <div>
-    <h1 class="text-center text-dark border-bottom p-2">Ploča</h1>
+    <h1 class="text-center text-dark border-bottom border-light p-2">Ploča</h1>
     <nav class="navbar navbar-expand p-1">
         <a asp-action="Submit" asp-controller="Board"
            class="btn btn-primary m-1">
@@ -16,5 +16,11 @@
         <button class="btn btn-secondary m-1">Na dno</button>
     </nav>
 </div>
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $("[id$=boardNav]").addClass("active");
+    });
+</script>
 
 @RenderBody()
