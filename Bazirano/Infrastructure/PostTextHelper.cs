@@ -80,7 +80,7 @@ namespace Bazirano.Infrastructure
                 matchList.Add(m.ToString());
             }
 
-            string newText = "";
+            string newText = text;
 
             foreach(var m in matchList)
             {
