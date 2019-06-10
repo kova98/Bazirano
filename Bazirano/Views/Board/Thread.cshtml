@@ -10,11 +10,11 @@
         <partial name="BoardPost" model="thread" />
     }
 
-<div id="comment">
-    <partial name="BoardPostAddComment"
-             model="new BoardRespondViewModel { BoardPost = new BoardPost(), ThreadId = Model.Id}" />
-</div>
-    
+    <div id="comment">
+        <partial name="BoardPostAddComment"
+                 model="new BoardRespondViewModel { BoardPost = new BoardPost(), ThreadId = Model.Id}" />
+    </div>
+
 </div>
 
 <div>
@@ -28,4 +28,15 @@
         </a>
     </nav>
 </div>
+
+@if (ViewBag.FileError != null)
+{
+    <script>scrollToAnchor("comment");</script>  
+}
+
+@if (TempData["NewPost"] != null)
+{
+    <script>scrollToAnchor(@TempData["NewPost"]);</script>
+}
+
 

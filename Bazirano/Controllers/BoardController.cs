@@ -63,7 +63,8 @@ namespace Bazirano.Controllers
                 repository.AddPostToThread(vm.BoardPost, vm.ThreadId);
             }
 
-            return View(nameof(Thread), thread);
+            TempData["NewPost"] = vm.BoardPost.Id;
+            return RedirectToAction(nameof(Thread), new { thread.Posts.First().Id });
         }
 
         [HttpPost]
