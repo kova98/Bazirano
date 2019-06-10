@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Bazirano.Board.Models
+namespace Bazirano.Models
 {
     public class BoardPost
     {
