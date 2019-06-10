@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Bazirano.Models
+namespace Bazirano.Board.Models
 {
     public class BoardRespondViewModel
     {
