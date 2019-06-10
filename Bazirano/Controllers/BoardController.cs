@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Bazirano.Infrastructure;
-using Bazirano.Models;
+using Bazirano.Models.Board;
 using Bazirano.Models.DataAccess;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

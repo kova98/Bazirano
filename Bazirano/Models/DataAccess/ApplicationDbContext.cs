@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Bazirano.Models.Board;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bazirano.Models.DataAccess
 {

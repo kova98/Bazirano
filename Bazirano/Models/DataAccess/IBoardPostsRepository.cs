@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Bazirano.Models.Board;
+using System.Linq;
 
 namespace Bazirano.Models.DataAccess
 {

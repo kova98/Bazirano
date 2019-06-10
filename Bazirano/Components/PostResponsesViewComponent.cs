@@ -1,10 +1,7 @@
-﻿using Bazirano.Models;
+﻿using Bazirano.Models.Board;
 using Bazirano.Models.DataAccess;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Bazirano.Components
 {
