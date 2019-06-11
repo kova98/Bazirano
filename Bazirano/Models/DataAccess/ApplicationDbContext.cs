@@ -1,4 +1,5 @@
 ﻿using Bazirano.Models.Board;
+using Bazirano.Models.News;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bazirano.Models.DataAccess
@@ -10,5 +11,6 @@ namespace Bazirano.Models.DataAccess
 
         public DbSet<BoardPost> BoardPosts { get; set; }
         public DbSet<BoardThread> BoardThreads { get; set; }
+        public DbSet<NewsPost> NewsPosts { get; set; }
     }
 }
