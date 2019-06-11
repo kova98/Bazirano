@@ -30,6 +30,7 @@ namespace Bazirano
 
             services.AddTransient<IBoardThreadsRepository, EFRepository>();
             services.AddTransient<IBoardPostsRepository, EFRepository>();
+            services.AddTransient<INewsPostsRepository, EFRepository>();
 
             services.AddMvc();
         }
