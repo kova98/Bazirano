@@ -1,52 +1,18 @@
-﻿
+﻿@model NewsPageViewModel
+
 <nav class="nav navbar-nav p-3"></nav>
 <div class="row">
     <div class="col-7 col-lg-5">
-        <div class="card">
-            <img class="card-img-top" src="~/images/62312640x360.png">
-            <div class="card-body">
-                <h3 class="card-title">Ovo je primjer naslova, otprilike je dugačak koliko bi bio dugačak jedan jako dugačak naslov</h3>
-                <p class="card-text">
-                    Ovdje bi bila prva rečenica članka. Bla bla bla riječi rječice. I derem i derem i perem i serem i perem i serem i perem i serem samo derem i derem i perem i serem
-                </p>
-                <small class="text-muted">10.6.2019. 13:19</small>
-                <br /> <br />
-
-                <p class="text-dark font-weight-bold">VEZANE VIJESTI</p>
-
-                <div class="p-2 border-top border-secondary btn-link">
-                    Naslov neke vezane vijesti
-                </div>
-                <div class="p-2 border-top border-secondary btn-link ">
-                    Malo duži naslov neke vezane vijesti
-                </div>
-                <div class="p-2 border-top border-secondary btn-link ">
-                    Naslov vezane vijesti koji je duži od svih naslova do sad, takoreći dugačak naslov
-                </div>
-            </div>
-
-        </div>
-
+        <partial name="NewsPostMain" model="@new NewsPost()"/>
     </div>
     <div class="col-5 col-lg-4">
-        <div class="card">
-            <img class="card-img-top" src="~/images/62312640x360.png" />
-            <h4 class="p-2">Ovo je primjer naslova, otprilike je dugačak koliko bi bio dugačak jedan jako dugačak naslov </h4>
-            <small class="text-muted p-2">11.6.2019. 09:43</small>
-        </div>
+        <partial name="NewsPostSecondary" model="@new NewsPost()" />
         <br />
-        @for (int i = 0; i < 4; i++)
+        @foreach (var post in Model.PostList)
         {
-            <div class="row bg-light rounded m-0">
-                <img class="col-4 p-0 rounded-left" src="~/images/38493640x360.png" style="max-height:100px" />
-                <div class="col-8 card-text">
-                    <div>Ovo je primjer naslova, otprilike je dugačak koliko bi bio jedan jako dugačak naslov</div>
-                    <small class="text-muted">11.6.2019. 09:43</small>
-                </div>
-            </div>
+            <partial name="NewsListPost" model="@new NewsPost()" />
             <br />
         }
-
     </div>
     <div class="col-5 col-lg-3">
         @for (int i = 0; i < 5; i++)

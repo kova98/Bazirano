@@ -1,0 +1,20 @@
+﻿@model NewsPageViewModel
+
+<div class="card">
+    <img class="card-img-top" src="@Model.MainPost.Image">
+    <div class="card-body">
+        <h3 class="card-title">@Model.MainPost.Title</h3>
+        <p class="card-text">@Model.MainPost.Text</p>
+        <small class="text-muted">@Model.MainPost.DatePosted</small>
+        <br /> <br />
+
+        <p class="text-dark font-weight-bold">VEZANE VIJESTI</p>
+
+        @foreach (var post in Model.MainPostRelatedPosts)
+        {
+            <div class="p-2 border-top border-secondary btn-link">
+                @post.Title
+            </div>
+        }
+    </div>
+</div>
