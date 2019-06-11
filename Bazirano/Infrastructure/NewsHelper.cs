@@ -47,7 +47,14 @@ namespace Bazirano.Infrastructure
 
         private List<NewsPost> GetLatestNews()
         {
-            return repository.NewsPosts.OrderBy(x => x.DatePosted).Take(10).ToList();
-        } 
+            return repository.NewsPosts.OrderByDescending(x => x.DatePosted).Take(10).ToList();
+        }
+
+        public static string GetPostElapsedTime(NewsPost post)
+        {
+            var elapsed = DateTime.Now - post.DatePosted;
+
+            return elapsed.Minutes.ToString();
+        }
     }
 }
