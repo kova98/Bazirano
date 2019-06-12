@@ -27,30 +27,62 @@ namespace Bazirano.Infrastructure
 
         private NewsPost GetMainPost()
         {
-            return repository.NewsPosts.First();
+            return repository.NewsPosts.OrderByDescending(x => x.DatePosted).First();
         }
 
         private List<NewsPost> GetMainPostRelatedPosts(NewsPost mainPost)
         {
-            return repository.NewsPosts.Where(p => p.Title.Contains("related")).ToList();
+            int index = mainPost.Text.IndexOf(' ');
+            string firstWord = mainPost.Text.Substring(0, index);
+            return repository.NewsPosts.Where(p => p.Title.Contains(firstWord)).ToList();
         }
 
         private NewsPost GetSecondaryPost()
         {
-            return repository.NewsPosts.ToList()[2];
+            return repository.NewsPosts.OrderByDescending(x => x.DatePosted).ToList()[1];
         }
 
         private List<NewsPost> GetPostList()
         {
-            return repository.NewsPosts.Take(5).ToList();
+            return repository.NewsPosts.OrderByDescending(x => x.DatePosted).ToList().GetRange(2,5);
         }
 
         private List<NewsPost> GetLatestNews()
         {
-            return repository.NewsPosts
-                .Where(x => x.DatePosted.LessThanHourElapsed())
-                .OrderByDescending(x => x.DatePosted)
-                .ToList();
+            return repository.NewsPosts.OrderByDescending(x => x.DatePosted).Take(6).ToList();
+        }
+
+        public static TimeDisplay GetTimeElapsed(TimeSpan elapsed)
+        {
+            int timeNumber;
+            string timeText;
+
+            if (elapsed.Days > 0)
+            {
+                timeNumber = elapsed.Days;
+
+                string daysString = timeNumber.ToString();
+                char lastDigit = daysString[daysString.Length - 1];
+                timeText = (lastDigit == '1' && elapsed.Days != 11) ? "dan" : "dana";
+            }
+            else if (elapsed.Hours > 0)
+            {
+                timeNumber = elapsed.Hours;
+
+                string hoursString = timeNumber.ToString();
+                char lastDigit = hoursString[hoursString.Length - 1];
+                timeText = (lastDigit == '1' && elapsed.Hours != 11) ? "sat" : "sati";
+            }
+            else
+            {
+                timeNumber = elapsed.Minutes;
+
+                string minutesString = elapsed.Minutes.ToString();
+                char lastDigit = minutesString[minutesString.Length - 1];
+                timeText = "min";
+            }
+
+            return new TimeDisplay { Number = timeNumber, Text = timeText };
         }
     }
 }

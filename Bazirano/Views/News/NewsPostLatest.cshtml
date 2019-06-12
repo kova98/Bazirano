@@ -1,10 +1,12 @@
 ﻿@model NewsPost
 @using Bazirano.Infrastructure
 
+@{TimeDisplay time = NewsHelper.GetTimeElapsed(@DateTime.Now - Model.DatePosted); }
+
 <div class="row border-secondary border-bottom" style="padding-bottom:20px">
     <div class="col-2">
-        <h4 class="p-0 m-0 btn-link">@Model.DatePosted.Elapsed()</h4>
-        <span class="btn-link">min</span>
+        <h4 class="p-0 m-0 btn-link">@time.Number</h4>
+        <span class="btn-link">@time.Text</span>
     </div>
     <div class="col-10">
         @Model.Title
