@@ -3,6 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
+using Moq;
+using Bazirano.Models.DataAccess;
+using Bazirano.Models.News;
+using System.Linq;
 
 namespace Bazirano.Tests
 {
@@ -88,6 +92,37 @@ namespace Bazirano.Tests
             // Assert
             Assert.Equal(13, actual.Number);
             Assert.Equal("min", actual.Text);
+        }
+
+        [Fact]
+        public void Can_Get_Main_Post_Related_Posts()
+        {
+            // Arrange
+            Mock<INewsPostsRepository> mock = new Mock<INewsPostsRepository>();
+            mock.Setup(x => x.NewsPosts).Returns((new NewsPost[]
+            {
+                new NewsPost{ KeywordsList = new List<string>{ "keyword1", "keyword6", "keyword7"} },
+                new NewsPost{ KeywordsList = new List<string>{ "keyword1", "keyword2" } },
+                new NewsPost{ KeywordsList = new List<string>{ "keyword1", "keyword2", "keyword3", "keyword6", "keyword7" } },
+                new NewsPost{ KeywordsList = new List<string>{ "keyword1", "keyword7", "keyword8", "keyword9", "keyword10" } },
+                new NewsPost{ KeywordsList = new List<string>{ "keyword7", "keyword9", "keyword10" } },
+            })
+            .AsQueryable());
+
+            NewsPost mainPost = new NewsPost
+            {
+                KeywordsList = new List<string> { "keyword1", "keyword2", "keyword3", "keyword4", "keyword5" }
+            };
+
+            // Act
+            var matches = mock.Object.NewsPosts
+                .Where(p => p.KeywordsList.KeywordMatches(mainPost.KeywordsList) > 1)
+                .ToList();
+
+            // Assert
+            Assert.Equal(2, matches.Count);
+            Assert.Equal(2, matches[0].KeywordsList.Count);
+            Assert.Equal(5, matches[1].KeywordsList.Count);
         }
     }
 }

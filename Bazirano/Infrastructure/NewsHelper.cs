@@ -32,9 +32,10 @@ namespace Bazirano.Infrastructure
 
         private List<NewsPost> GetMainPostRelatedPosts(NewsPost mainPost)
         {
-            int index = mainPost.Text.IndexOf(' ');
-            string firstWord = mainPost.Text.Substring(0, index);
-            return repository.NewsPosts.Where(p => p.Title.Contains(firstWord)).ToList();
+            return repository.NewsPosts
+                .Where(p => p.KeywordsList.KeywordMatches(mainPost.KeywordsList) > 0)
+                .Where(p=> p.Id != mainPost.Id)
+                .ToList();
         }
 
         private NewsPost GetSecondaryPost()
