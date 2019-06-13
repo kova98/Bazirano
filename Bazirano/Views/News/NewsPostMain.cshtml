@@ -8,13 +8,16 @@
         <small class="text-muted">@Model.MainPost.DatePosted</small>
         <br /> <br />
 
-        <p class="text-dark font-weight-bold">VEZANE VIJESTI</p>
-
-        @foreach (var post in Model.MainPostRelatedPosts)
+        @if (Model.MainPostRelatedPosts != null && Model.MainPostRelatedPosts.Count > 0)
         {
-            <div class="p-2 border-top border-secondary btn-link">
-                @post.Title
-            </div>
+            <p class="text-dark font-weight-bold">VEZANE VIJESTI</p>
+
+            @foreach (var post in Model.MainPostRelatedPosts)
+            {
+                <div class="p-2 border-top border-secondary btn-link">
+                    @post.Title
+                </div>
+            }
         }
     </div>
 </div>
