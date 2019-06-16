@@ -1,7 +1,11 @@
 ﻿@model NewsPost
 
 <div class="card">
-    <img class="card-img-top" src="@Model.Image" />
-    <h4 class="p-2">@Model.Title</h4>
+    <a asp-action="Article" asp-route-id="@Model.Id">
+        <img class="card-img-top" src="@Model.Image" />
+    </a>
+    <a class="text-white" asp-action="Article" asp-route-id="@Model.Id">
+        <h4 class="p-2">@Model.Title</h4>
+    </a>
     <small class="text-muted p-2">@Model.DatePosted</small>
 </div>

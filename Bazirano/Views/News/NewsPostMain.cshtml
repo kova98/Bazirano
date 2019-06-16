@@ -1,9 +1,11 @@
 ﻿@model NewsPageViewModel
 
 <div class="card">
-    <img class="card-img-top" src="@Model.MainPost.Image">
+    <a asp-action="Article" asp-route-id="@Model.MainPost.Id">
+        <img class="card-img-top" src="@Model.MainPost.Image">
+    </a>
     <div class="card-body">
-        <a asp-action="Article" asp-route-id="@Model.MainPost.Id">
+        <a class="text-white" asp-action="Article" asp-route-id="@Model.MainPost.Id">
             <h3 class="card-title">@Model.MainPost.Title</h3>
         </a>
         <p class="card-text">@Model.MainPost.Summary</p>
@@ -16,9 +18,11 @@
 
             @foreach (var post in Model.MainPostRelatedPosts)
             {
-                <div class="p-2 border-top border-secondary btn-link">
-                    @post.Title
-                </div>
+                <a asp-action="Article" asp-route-id="@post.Id">
+                    <div class="p-2 border-top border-secondary">
+                        @post.Title
+                    </div>
+                </a>
             }
         }
     </div>

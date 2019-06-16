@@ -1,9 +1,13 @@
 ﻿@model NewsPost
 
-<div class="row bg-light rounded m-0">
-    <img class="col-4 p-0 rounded-left" src="@Model.Image" style="max-height:100px" />
-    <div class="col-8 card-text">
-        <div>@Model.Title</div>
-        <small class="text-muted">@Model.DatePosted</small>
+    <div class="row rounded m-0 bg-light">
+        <a class="col-4 p-0 " asp-action="Article" asp-route-id="@Model.Id">   
+            <img class="rounded-left img-fluid" src="@Model.Image" style="max-height:100px" />
+        </a>
+        <div class="col-8 card-text">
+            <a class="text-white" asp-action="Article" asp-route-id="@Model.Id">
+                <div>@Model.Title</div>
+            </a>
+            <small class="text-muted">@Model.DatePosted</small>
+        </div>
     </div>
-</div>
