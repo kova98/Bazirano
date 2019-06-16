@@ -25,6 +25,13 @@ namespace Bazirano.Controllers
             return View(helper.CurrentNews);
         }
 
+        public IActionResult Article(long id)
+        {
+            NewsPost post = repository.NewsPosts.FirstOrDefault(p => p.Id == id);
+
+            return View(post);
+        }
+
         //TODO: Add security!!!
         [HttpPost("~/api/postNews")]
         public IActionResult PostNews([FromBody]NewsPost post)

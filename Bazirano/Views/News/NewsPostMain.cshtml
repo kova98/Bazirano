@@ -3,8 +3,10 @@
 <div class="card">
     <img class="card-img-top" src="@Model.MainPost.Image">
     <div class="card-body">
-        <h3 class="card-title">@Model.MainPost.Title</h3>
-        <p class="card-text">@Model.MainPost.Text</p>
+        <a asp-action="Article" asp-route-id="@Model.MainPost.Id">
+            <h3 class="card-title">@Model.MainPost.Title</h3>
+        </a>
+        <p class="card-text">@Model.MainPost.Summary</p>
         <small class="text-muted">@Model.MainPost.DatePosted</small>
         <br /> <br />
 

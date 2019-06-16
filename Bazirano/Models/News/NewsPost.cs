@@ -11,6 +11,7 @@ namespace Bazirano.Models.News
         public string Title { get; set; }
         public string Text { get; set; }
         public string Image { get; set; }
+        public string Summary { get; set; }
         public DateTime DatePosted { get; set; }
         public ICollection<NewsComment> Comments { get; set; }
         public string Keywords

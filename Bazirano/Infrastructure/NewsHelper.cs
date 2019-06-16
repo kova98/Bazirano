@@ -35,6 +35,7 @@ namespace Bazirano.Infrastructure
             return repository.NewsPosts
                 .Where(p => p.KeywordsList.KeywordMatches(mainPost.KeywordsList) > 0)
                 .Where(p=> p.Id != mainPost.Id)
+                .OrderByDescending(p=> p.KeywordsList.KeywordMatches(mainPost.KeywordsList))
                 .ToList();
         }
 
