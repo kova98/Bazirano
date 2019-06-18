@@ -6,17 +6,17 @@
     bool containsImage = !string.IsNullOrEmpty(post.Image);
 }
 
-<div class="col-xl-3 col-lg-4 col-md-4 col-6 p-1">
+<div>
     <div class="card text-center">
         <div class="card-header">
-            <a asp-action="Thread" asp-route-id="@post.Id">
+            <a asp-action="Thread" asp-route-id="@post.Id" asp-controller="Board">
                 #@post.Id | @time
             </a>
         </div>
         @if (containsImage)
         {
             <div class="card-img text-center">
-                <a asp-action="Thread" asp-route-id="@post.Id">
+                <a asp-action="Thread" asp-route-id="@post.Id" asp-controller="Board">
                     <img src="~/images/@post.Image" class="img-fluid" style="max-height:200px" />
                 </a>
             </div>

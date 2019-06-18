@@ -8,11 +8,13 @@
     <div class="row p-0">
         @foreach (var thread in Model)
         {
-            <partial name="BoardThreadPost" model="thread" />
+            <div class="col-xl-3 col-lg-4 col-md-4 col-6 p-1">
+                <partial name="BoardThreadPost" model="thread" />
+            </div>
         }
     </div>
 </div>
-    
+
 
 <a href="#">
     <div class="btn btn-primary m-2 p-2 ">Na vrh</div>

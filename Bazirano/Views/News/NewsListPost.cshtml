@@ -1,11 +1,13 @@
 ﻿@model NewsPost
 
     <div class="row rounded m-0 bg-light">
-        <a class="col-4 p-0 " asp-action="Article" asp-route-id="@Model.Id">   
+        <a class="col-4 p-0 " 
+           asp-action="Article" asp-route-id="@Model.Id" asp-controller="News">   
             <img class="rounded-left img-fluid" src="@Model.Image" style="max-height:100px" />
         </a>
         <div class="col-8 card-text">
-            <a class="text-white" asp-action="Article" asp-route-id="@Model.Id">
+            <a class="text-white" 
+               asp-action="Article" asp-route-id="@Model.Id" asp-controller="News">
                 <div>@Model.Title</div>
             </a>
             <small class="text-muted">@Model.DatePosted</small>

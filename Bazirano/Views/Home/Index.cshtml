@@ -1,9 +1,57 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
-}
+﻿@model HomePageViewModel
 
-<h2>Index</h2>
+<nav class="nav navbar-nav p-3"></nav>
+<div class="row">
+    <div class="col-6">
+        <div class="container-fluid col-12">
+            <div class="row">
+                <div class="col-12 text-center p-0 d-flex align-items-end">
+                    <img class="img-fluid position-relative rounded" src="@Model.MainPost.Image">
+                    <a class="text-white position-absolute p-3"
+                       asp-action="Article" asp-controller="News" asp-route-id="@Model.MainPost.Id">
+                        <h3 class="text-left" style="text-shadow: black 0.1em 0.1em 0.2em;">
+                            @Model.MainPost.Title
+                        </h3>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="p-3"></div>
+        <div class="col-12">
+            @foreach (var post in Model.PopularPosts)
+            {
+                <div class="row rounded bg-light">
+                    <a class="col-4 p-0 "
+                       asp-action="Article" asp-route-id="@post.Id" asp-controller="News">
+                        <img class="rounded-left img-fluid" src="@post.Image" />
+                    </a>
+                    <div class="col-8 card-text p-2">
+                        <a class="text-white"
+                           asp-action="Article" asp-route-id="@post.Id" asp-controller="News">
+                            <h4>@post.Title</h4>
+                        </a>
+                        <small class="text-muted">@post.DatePosted</small>
+                    </div>
+                </div>
+                <br />
+            }
+        </div>
+
+    </div>
+    <div class="col-6 ">
+        <div class="row">
+            @foreach (var thread in Model.Threads)
+            {
+                <div class="col-6 m-0 p-2">
+                    <partial name="BoardThreadPost" model="@thread" />
+                </div>
+            }
+        </div>
+
+    </div>
+
+</div>
+
 
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
