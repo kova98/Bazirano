@@ -8,5 +8,6 @@ namespace Bazirano.Models.DataAccess
         IQueryable<NewsPost> NewsPosts { get; }
         void AddNewsPost(NewsPost post);
         void RemoveNewsPost(NewsPost post);
+        void AddCommentToNewsPost(NewsComment comment, long postId);
     }
 }

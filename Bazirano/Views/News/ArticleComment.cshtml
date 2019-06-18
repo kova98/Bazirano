@@ -1,0 +1,17 @@
+﻿@model NewsComment
+
+@{ 
+    string time = $"{Model.DatePosted.ToShortDateString()} {Model.DatePosted.ToShortTimeString()}";
+}
+
+<div class="card m-1">
+    <div class="card-header text-success p-2">
+        <div class="float-left">@Model.Username</div>
+        <div class="float-right text-muted">@time</div>
+    </div>
+    <div class="card-body">
+        <div class="card-text">
+            @Model.Text
+        </div>
+    </div>
+</div>

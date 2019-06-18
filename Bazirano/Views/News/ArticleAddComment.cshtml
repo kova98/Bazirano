@@ -1,0 +1,25 @@
+﻿@model ArticleRespondViewModel
+
+@{
+    ViewData["Title"] = "ArticleAddComment";
+}
+
+<div class="card m-1">
+    <div class="card-header text-dark">
+        <h4>Komentiraj</h4>
+    </div>
+    <div class="card-body">
+        <form asp-action="PostComment" asp-controller="News" asp-route-ArticleId="@Model.ArticleId">
+            <div class="form-group">
+                <label class="text-muted">Ime</label>
+                <input class="form-control" asp-for="Comment.Username" />
+                <div class="text-danger">@ViewBag.FileError</div>
+                <label class="text-muted">Komentar</label>
+                <div><span asp-validation-for="Comment.Text" class="text-danger"></span></div>
+                <textarea class="form-control" asp-for="Comment.Text" id="textbox"></textarea>
+            </div>
+            <button class="btn btn-success" type="submit">Komentiraj</button>
+        </form>
+    </div>
+</div>
+

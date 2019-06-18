@@ -2,17 +2,26 @@
 
 <nav class="nav navbar-nav p-3"></nav>
 <div class="row">
-    <div class="col-9">
-        <div class="">
-            <div class="">
+    <div class="col-12 col-md-9">
+        <div>
+            <div>
                 <h1 class="card-title">@Model.Article.Title</h1>
                 <p class="text-muted">@Model.Article.DatePosted</p>
             </div>
             <img class="card-img-bottom" src="@Model.Article.Image" />
             <div class="card-body">@Html.Raw(Model.Article.Text)</div>
         </div>
+
+        <h2 class="border-bottom border-secondary">Komentari</h2>
+
+        @foreach (var comment in Model.Article.Comments)
+        {
+            <partial name="ArticleComment" model="comment" />
+        }
+        <partial name="ArticleAddComment"
+                 model="@new ArticleRespondViewModel { ArticleId = Model.Article.Id, Comment = new NewsComment()}" />
     </div>
-    <div class="col-3">
+    <div class="col-3 md">
         @foreach (var post in Model.LatestNews)
         {
             <partial name="NewsPostLatest" model="post" />
@@ -20,3 +29,9 @@
         }
     </div>
 </div>
+
+@if (ViewBag.FileError != null)
+{
+    <script>scrollToAnchor("comment");</script>
+}
+

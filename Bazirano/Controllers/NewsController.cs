@@ -36,6 +36,19 @@ namespace Bazirano.Controllers
             return View(vm);
         }
 
+        public IActionResult PostComment(ArticleRespondViewModel vm)
+        {
+            vm.Comment.DatePosted = DateTime.Now;
+            if (string.IsNullOrEmpty(vm.Comment.Username))
+            {
+                vm.Comment.Username = "Anonimac";
+            }
+
+            repository.AddCommentToNewsPost(vm.Comment, vm.ArticleId);
+
+            return RedirectToAction(nameof(Article), new { id = vm.ArticleId });
+        }
+
         //TODO: Add security!!!
         [HttpPost("~/api/postNews")]
         public IActionResult PostNews([FromBody]NewsPost post)

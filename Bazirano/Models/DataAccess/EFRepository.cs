@@ -2,6 +2,7 @@
 using Bazirano.Models.News;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Bazirano.Models.DataAccess
@@ -20,7 +21,21 @@ namespace Bazirano.Models.DataAccess
 
         public IQueryable<BoardPost> BoardPosts => context.BoardPosts;
 
-        public IQueryable<NewsPost> NewsPosts => context.NewsPosts;
+        public IQueryable<NewsPost> NewsPosts => context.NewsPosts
+            .Include(x=>x.Comments);
+
+        public void AddCommentToNewsPost(NewsComment comment, long postId)
+        {
+            NewsPost post = context.NewsPosts.First(p => p.Id == postId);
+            if (post.Comments == null)
+            {
+                post.Comments = new List<NewsComment>();
+            }
+
+            post.Comments.Add(comment);
+
+            context.SaveChanges();
+        }
 
         public void AddNewsPost(NewsPost post)
         {
