@@ -3,18 +3,14 @@
 <nav class="nav navbar-nav p-3"></nav>
 <div class="row">
     <div class="col-6">
-        <div class="container-fluid col-12">
-            <div class="row">
-                <div class="col-12 text-center p-0 d-flex align-items-end">
-                    <img class="img-fluid position-relative rounded" src="@Model.MainPost.Image">
-                    <a class="text-white position-absolute p-3"
-                       asp-action="Article" asp-controller="News" asp-route-id="@Model.MainPost.Id">
-                        <h3 class="text-left" style="text-shadow: black 0.1em 0.1em 0.2em;">
-                            @Model.MainPost.Title
-                        </h3>
-                    </a>
-                </div>
-            </div>
+        <div class="text-center d-flex align-items-end">
+            <img class="img-fluid position-relative rounded" src="@Model.MainPost.Image">
+            <a class="text-white position-absolute p-3"
+               asp-action="Article" asp-controller="News" asp-route-id="@Model.MainPost.Id">
+                <h3 class="text-left" style="text-shadow: black 0.1em 0.1em 0.2em;">
+                    @Model.MainPost.Title
+                </h3>
+            </a>
         </div>
         <div class="p-3"></div>
         <div class="col-12">
@@ -38,16 +34,13 @@
         </div>
 
     </div>
-    <div class="col-6 ">
-        <div class="row">
-            @foreach (var thread in Model.Threads)
-            {
-                <div class="col-6 m-0 p-2">
-                    <partial name="BoardThreadPost" model="@thread" />
-                </div>
-            }
-        </div>
-
+    <div class="col-6 row">
+        @foreach (var thread in Model.Threads)
+        {
+            <div class="col-6">
+                <partial name="BoardThreadPost" model="@thread" />
+            </div>
+        }
     </div>
 
 </div>
