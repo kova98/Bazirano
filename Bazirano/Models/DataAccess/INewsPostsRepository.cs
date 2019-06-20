@@ -9,5 +9,6 @@ namespace Bazirano.Models.DataAccess
         void AddNewsPost(NewsPost post);
         void RemoveNewsPost(NewsPost post);
         void AddCommentToNewsPost(NewsComment comment, long postId);
+        void IncrementViewCount(NewsPost post);
     }
 }

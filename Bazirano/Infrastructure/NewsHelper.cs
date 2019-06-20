@@ -41,12 +41,16 @@ namespace Bazirano.Infrastructure
 
         private NewsPost GetSecondaryPost()
         {
-            return repository.NewsPosts.OrderByDescending(x => x.DatePosted).ToList()[1];
+            return repository.NewsPosts
+                .OrderByDescending(x => x.DatePosted).Take(10)
+                .OrderByDescending(x => x.ViewCount).ToList()[1];
         }
 
         private List<NewsPost> GetPostList()
         {
-            return repository.NewsPosts.OrderByDescending(x => x.DatePosted).ToList().GetRange(2,5);
+            return repository.NewsPosts
+                .OrderByDescending(x => x.DatePosted).Take(10)
+                .OrderByDescending(x => x.ViewCount).ToList().GetRange(2,5);
         }
 
         private List<NewsPost> GetLatestNews()

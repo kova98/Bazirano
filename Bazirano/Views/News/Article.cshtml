@@ -2,7 +2,7 @@
 
 <nav class="nav navbar-nav p-3"></nav>
 <div class="row">
-    <div class="col-12 col-md-9">
+    <div class="col-12 col-md-8">
         <div>
             <div>
                 <h1 class="card-title">@Model.Article.Title</h1>
@@ -13,7 +13,6 @@
         </div>
 
         <h2 class="border-bottom border-secondary">Komentari</h2>
-
         @foreach (var comment in Model.Article.Comments)
         {
             <partial name="ArticleComment" model="comment" />
@@ -21,7 +20,7 @@
         <partial name="ArticleAddComment"
                  model="@new ArticleRespondViewModel { ArticleId = Model.Article.Id, Comment = new NewsComment()}" />
     </div>
-    <div class="col-3 md">
+    <div class="col-4 d-none d-md-block">
         @foreach (var post in Model.LatestNews)
         {
             <partial name="NewsPostLatest" model="post" />

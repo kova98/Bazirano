@@ -91,5 +91,13 @@ namespace Bazirano.Models.DataAccess
         {
             throw new NotImplementedException();
         }
+
+        public void IncrementViewCount(NewsPost post)
+        {
+            NewsPost record = context.NewsPosts.FirstOrDefault(x=>x.Id == post.Id);
+            record.ViewCount++;
+
+            context.SaveChanges();
+        }
     }
 }

@@ -27,11 +27,14 @@ namespace Bazirano.Controllers
 
         public IActionResult Article(long id)
         {
+            NewsPost article = repository.NewsPosts.FirstOrDefault(p => p.Id == id);
             ArticleViewModel vm = new ArticleViewModel
             {
-                Article = repository.NewsPosts.FirstOrDefault(p => p.Id == id),
+                Article = article,
                 LatestNews = helper.CurrentNews.LatestNews
             };
+
+            repository.IncrementViewCount(article);
 
             return View(vm);
         }
