@@ -17,8 +17,14 @@
         {
             <partial name="ArticleComment" model="comment" />
         }
-        <partial name="ArticleAddComment"
-                 model="@new ArticleRespondViewModel { ArticleId = Model.Article.Id, Comment = new NewsComment()}" />
+
+        <div class="p-1 border-bottom border-secondary"></div>
+
+        <div id="comment">
+            <partial name="ArticleAddComment"
+                     model="@new ArticleRespondViewModel { ArticleId = Model.Article.Id, Comment = new NewsComment()}" />
+        </div>
+        
     </div>
     <div class="col-4 d-none d-md-block">
         @foreach (var post in Model.LatestNews)
@@ -29,7 +35,7 @@
     </div>
 </div>
 
-@if (ViewBag.FileError != null)
+@if (ViewBag.CommentPosted != null)
 {
     <script>scrollToAnchor("comment");</script>
 }

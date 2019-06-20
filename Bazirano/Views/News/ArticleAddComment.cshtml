@@ -1,9 +1,5 @@
 ﻿@model ArticleRespondViewModel
 
-@{
-    ViewData["Title"] = "ArticleAddComment";
-}
-
 <div class="card m-1">
     <div class="card-header text-dark">
         <h4>Komentiraj</h4>
@@ -13,7 +9,7 @@
             <div class="form-group">
                 <label class="text-muted">Ime</label>
                 <input class="form-control" asp-for="Comment.Username" />
-                <div class="text-danger">@ViewBag.FileError</div>
+                <div class="text-danger">@TempData["Error"]</div>
                 <label class="text-muted">Komentar</label>
                 <div><span asp-validation-for="Comment.Text" class="text-danger"></span></div>
                 <textarea class="form-control" asp-for="Comment.Text" id="textbox"></textarea>

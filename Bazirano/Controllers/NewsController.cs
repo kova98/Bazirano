@@ -41,15 +41,26 @@ namespace Bazirano.Controllers
 
         public IActionResult PostComment(ArticleRespondViewModel vm)
         {
-            vm.Comment.DatePosted = DateTime.Now;
-            if (string.IsNullOrEmpty(vm.Comment.Username))
+            if (ModelState.IsValid)
             {
-                vm.Comment.Username = "Anonimac";
+                vm.Comment.DatePosted = DateTime.Now;
+                if (string.IsNullOrEmpty(vm.Comment.Username))
+                {
+                    vm.Comment.Username = "Anonimac";
+                }
+
+                repository.AddCommentToNewsPost(vm.Comment, vm.ArticleId);
             }
 
-            repository.AddCommentToNewsPost(vm.Comment, vm.ArticleId);
+            var articleVm = new ArticleViewModel
+            {
+                Article = repository.NewsPosts.First(p => p.Id == vm.ArticleId),
+                LatestNews = helper.CurrentNews.LatestNews,
+            };
 
-            return RedirectToAction(nameof(Article), new { id = vm.ArticleId });
+            ViewBag.CommentPosted = true;
+
+            return View(nameof(Article), articleVm);
         }
 
         //TODO: Add security!!!

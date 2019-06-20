@@ -10,7 +10,7 @@ namespace Bazirano.Models.Board
         public DateTime DatePosted { get; set; }
 
         [Required(ErrorMessage = "Molimo unesite tekst.")]
-        [MaxLength(500, ErrorMessage = "Tekst je predugačak.")]
+        [MaxLength(1000, ErrorMessage = "Tekst je predugačak.")]
         [MinLength(10, ErrorMessage = "Tekst je prekratak.")]
         public string Text { get; set; }
     }
