@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Bazirano.Infrastructure
@@ -17,11 +18,12 @@ namespace Bazirano.Infrastructure
         {
             Random rnd = new Random();
             string fileName = rnd.Next(10000, 99999).ToString() + file.FileName;
+            string cleanFileName = Regex.Replace(fileName, @"\s+", "");
 
             string filePath = Path.Combine(Directory.GetCurrentDirectory(),
-                                           "wwwroot\\images",
-                                           fileName);
-            post.Image = fileName;
+                                           "wwwroot", "images",
+                                           cleanFileName);
+            post.Image = cleanFileName;
 
             if (IsImageFile(file))
             {
