@@ -2,7 +2,7 @@
 
 <nav class="nav navbar-nav p-3"></nav>
 <div class="row">
-    <div class="col-6">
+    <div class="col-md-6">
         <div class="text-center d-flex align-items-end">
             <img class="img-fluid position-relative rounded" src="@Model.MainPost.Image">
             <a class="text-white position-absolute p-3"
@@ -34,12 +34,18 @@
         </div>
 
     </div>
-    <div class="col-6 row">
-        @foreach (var thread in Model.Threads)
+    <div class="col-6 col-md-3">
+        @foreach (var thread in Model.Threads.Take(3))
         {
-            <div class="col-6">
-                <partial name="BoardThreadPost" model="@thread" />
-            </div>
+            <partial name="BoardThreadPost" model="@thread" />
+            <div class="p-3"></div>
+        }
+    </div>
+    <div class="col-6 col-md-3">
+        @foreach (var thread in Model.Threads.TakeLast(3))
+        {
+            <partial name="BoardThreadPost" model="@thread" />
+            <div class="p-3"></div>
         }
     </div>
 

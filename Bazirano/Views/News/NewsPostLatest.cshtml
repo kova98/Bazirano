@@ -4,11 +4,11 @@
 @{TimeDisplay time = NewsHelper.GetTimeElapsed(@DateTime.Now - Model.DatePosted); }
 
 <div class="row border-light border-bottom" style="padding-bottom:20px">
-    <div class="col-2">
+    <div class="col-1 col-md-2">
         <h4 class="p-0 m-0 text-success text-center">@time.Number</h4>
-        <span class="text-success">@time.Text</span>
+        <span class="text-success text-center">@time.Text</span>
     </div>
-    <div class="col-10">
+    <div class="col-11 col-md-10">
         <a class="text-white" asp-action="Article" asp-route-id="@Model.Id">
             @Model.Title
         </a>

@@ -1,5 +1,21 @@
 ﻿@{
     Layout = "_BoardLayout";
+    List<BoardThread> firstHalf = new List<BoardThread>();
+    List<BoardThread> secondHalf = new List<BoardThread>();
+    if (Model != null && Model.Count > 0)
+    {
+        for (int i = 0; i < Model.Count; i++)
+        {
+            if (i % 2 == 0)
+            {
+                firstHalf.Add(Model[i]);
+            }
+            else
+            {
+                secondHalf.Add(Model[i]);
+            }
+        }
+    }
 }
 
 @model List<BoardThread>
@@ -8,10 +24,24 @@
     <div class="row p-0">
         @foreach (var thread in Model)
         {
-            <div class="col-xl-3 col-lg-4 col-md-4 col-6 p-1">
+            <div class="col-xl-3 col-lg-4 col-md-4 col-6 p-1 d-none d-md-block">
                 <partial name="BoardThreadPost" model="thread" />
             </div>
         }
+        <div class="col-6 d-block d-md-none p-1">
+            @foreach (var thread in firstHalf)
+            {
+                <partial name="BoardThreadPost" model="thread" />
+                <div class="p-1"></div>
+            }
+        </div>
+        <div class="col-6 d-block d-md-none p-1">
+            @foreach (var thread in secondHalf)
+            {
+                <partial name="BoardThreadPost" model="thread" />
+                <div class="p-1"></div>
+            }
+        </div>
     </div>
 </div>
 
