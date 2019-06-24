@@ -27,7 +27,9 @@ namespace Bazirano.Infrastructure
 
         private NewsPost GetMainPost()
         {
-            return repository.NewsPosts.OrderByDescending(x => x.DatePosted).First();
+            return repository.NewsPosts
+                .OrderByDescending(x => x.DatePosted).Take(15)
+                .OrderByDescending(x => x.ViewCount).First();
         }
 
         private List<NewsPost> GetMainPostRelatedPosts(NewsPost mainPost)
@@ -42,14 +44,14 @@ namespace Bazirano.Infrastructure
         private NewsPost GetSecondaryPost()
         {
             return repository.NewsPosts
-                .OrderByDescending(x => x.DatePosted).Take(10)
+                .OrderByDescending(x => x.DatePosted).Take(15)
                 .OrderByDescending(x => x.ViewCount).ToList()[1];
         }
 
         private List<NewsPost> GetPostList()
         {
             return repository.NewsPosts
-                .OrderByDescending(x => x.DatePosted).Take(10)
+                .OrderByDescending(x => x.DatePosted).Take(15)
                 .OrderByDescending(x => x.ViewCount).ToList().GetRange(2,5);
         }
 
@@ -77,7 +79,18 @@ namespace Bazirano.Infrastructure
 
                 string hoursString = timeNumber.ToString();
                 char lastDigit = hoursString[hoursString.Length - 1];
-                timeText = (lastDigit == '1' && elapsed.Hours != 11) ? "sat" : "sati";
+                if (lastDigit == '1' && elapsed.Hours != 11)
+                {
+                    timeText = "sat";
+                }
+                else if (lastDigit == '2' || lastDigit == '3' || lastDigit == '4')
+                {
+                    timeText = "sata";
+                }
+                else
+                {
+                    timeText = "sati";
+                }
             }
             else
             {
