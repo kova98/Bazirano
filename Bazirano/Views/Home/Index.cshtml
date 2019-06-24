@@ -1,5 +1,6 @@
 ﻿@model HomePageViewModel
 
+<div class="p-3"></div>
 <div class="row">
     <div class="col-md-6">
         <div class="card">
@@ -17,20 +18,20 @@
         <div class="col-12">
             @foreach (var post in Model.PopularPosts)
             {
-                <div class="row rounded bg-light">
-                    <a class="col-4 p-0 "
+            <div class="row rounded bg-light">
+                <a class="col-4 p-0 "
+                   asp-action="Article" asp-route-id="@post.Id" asp-controller="News">
+                    <img class="rounded-left img-fluid" src="@post.Image" />
+                </a>
+                <div class="col-8 card-text p-2">
+                    <a class="text-white"
                        asp-action="Article" asp-route-id="@post.Id" asp-controller="News">
-                        <img class="rounded-left img-fluid" src="@post.Image" />
+                        <h4>@post.Title</h4>
                     </a>
-                    <div class="col-8 card-text p-2">
-                        <a class="text-white"
-                           asp-action="Article" asp-route-id="@post.Id" asp-controller="News">
-                            <h4>@post.Title</h4>
-                        </a>
-                        <small class="text-muted">@post.DatePosted</small>
-                    </div>
+                    <small class="text-muted">@post.DatePosted</small>
                 </div>
-                <br />
+            </div>
+            <br />
             }
         </div>
 
@@ -38,15 +39,15 @@
     <div class="col-6 col-md-3">
         @foreach (var thread in Model.Threads.Take(3))
         {
-            <partial name="BoardThreadPost" model="@thread" />
-            <div class="p-1"></div>
+        <partial name="BoardThreadPost" model="@thread" />
+        <div class="p-1"></div>
         }
     </div>
     <div class="col-6 col-md-3">
         @foreach (var thread in Model.Threads.TakeLast(3))
         {
-            <partial name="BoardThreadPost" model="@thread" />
-            <div class="p-1"></div>
+        <partial name="BoardThreadPost" model="@thread" />
+        <div class="p-1"></div>
         }
     </div>
 
