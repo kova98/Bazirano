@@ -79,7 +79,11 @@ namespace Bazirano.Models.DataAccess
 
         public void RemoveNewsPost(NewsPost post)
         {
-            throw new NotImplementedException();
+            // TODO: Remove the related comments as well
+
+            context.NewsPosts.Remove(post);
+
+            context.SaveChanges();
         }
 
         public void RemovePost(BoardPost post)

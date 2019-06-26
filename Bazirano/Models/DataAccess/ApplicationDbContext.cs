@@ -12,5 +12,6 @@ namespace Bazirano.Models.DataAccess
         public DbSet<BoardPost> BoardPosts { get; set; }
         public DbSet<BoardThread> BoardThreads { get; set; }
         public DbSet<NewsPost> NewsPosts { get; set; }
+        public DbSet<NewsComment> NewsComments { get; set; }
     }
 }

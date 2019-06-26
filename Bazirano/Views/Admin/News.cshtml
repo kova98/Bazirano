@@ -1,0 +1,28 @@
+﻿@model IEnumerable<NewsPost>
+@{ 
+    Layout = "_AdminLayout";
+}
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Naslov</th>
+                <th>Akcija</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td class="text-center">@p.Id</td>
+                    <td class="text-left">@p.Title</td>
+                    <td>
+                        <a asp-action="Delete" asp-route-id="@p.Id" class="btn btn-danger">
+                            Ukloni
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
