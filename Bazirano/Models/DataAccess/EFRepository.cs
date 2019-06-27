@@ -93,7 +93,11 @@ namespace Bazirano.Models.DataAccess
 
         public void RemoveThread(BoardThread thread)
         {
-            throw new NotImplementedException();
+            // TODO: Remove the related posts as well
+
+            context.BoardThreads.Remove(thread);
+
+            context.SaveChanges();
         }
 
         public void IncrementViewCount(NewsPost post)

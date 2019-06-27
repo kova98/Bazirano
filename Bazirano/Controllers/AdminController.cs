@@ -6,11 +6,13 @@ namespace Bazirano.Controllers
 {
     public class AdminController : Controller
     {
-        public INewsPostsRepository repo;
+        public INewsPostsRepository newsRepo;
+        public IBoardThreadsRepository boardRepo;
 
-        public AdminController(INewsPostsRepository repository)
+        public AdminController(INewsPostsRepository newsRepository, IBoardThreadsRepository boardRepository)
         {
-            repo = repository;
+            newsRepo = newsRepository;
+            boardRepo = boardRepository;
         }
 
         public IActionResult Index()
@@ -20,14 +22,29 @@ namespace Bazirano.Controllers
 
         public IActionResult News()
         {
-            return View(nameof(News), repo.NewsPosts.OrderByDescending(x=>x.DatePosted).ToList().Take(100));
+            return View(nameof(News), newsRepo.NewsPosts.OrderByDescending(x=>x.DatePosted).ToList().Take(100));
         }
 
-        public IActionResult Delete(long id)
+        public IActionResult DeleteArticle(long id)
         {
-            repo.RemoveNewsPost(repo.NewsPosts.First(x => x.Id == id));
+            newsRepo.RemoveNewsPost(newsRepo.NewsPosts.First(x => x.Id == id));
 
             return RedirectToAction(nameof(News));
+        }
+
+        public IActionResult DeleteBoardThread(long id)
+        {
+            boardRepo.RemoveThread(boardRepo.BoardThreads.First(x => x.Id == id));
+
+            return RedirectToAction(nameof(Board));
+        }
+
+        public IActionResult Board()
+        {
+            return View(nameof(Board), boardRepo.BoardThreads
+                .OrderByDescending(x => x.Posts.FirstOrDefault().DatePosted)
+                .ToList()
+                .Take(100));
         }
     }
 }

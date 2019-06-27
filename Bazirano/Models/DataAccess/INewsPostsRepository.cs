@@ -1,4 +1,5 @@
-﻿using Bazirano.Models.News;
+﻿using Bazirano.Models.Board;
+using Bazirano.Models.News;
 using System.Linq;
 
 namespace Bazirano.Models.DataAccess

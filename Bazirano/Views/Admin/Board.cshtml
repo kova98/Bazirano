@@ -1,0 +1,29 @@
+﻿@model IEnumerable<BoardThread>
+@{
+    Layout = "_AdminLayout";
+}
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tekst</th>
+            <th>Akcija</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var t in Model)
+        {
+            BoardPost post = t.Posts.OrderBy(x=>x.DatePosted).ToList()[0];
+            <tr>
+                <td class="text-center">@post.Id</td>
+                <td class="text-left">@post.Text</td>
+                <td>
+                    <a asp-action="DeleteBoardThread" asp-route-id="@t.Id" class="btn btn-danger">
+                        Ukloni
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
