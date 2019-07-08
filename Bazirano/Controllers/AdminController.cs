@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Bazirano.Models.DataAccess;
 using System.Linq;
+using Bazirano.Models.News;
 
 namespace Bazirano.Controllers
 {
@@ -28,6 +29,20 @@ namespace Bazirano.Controllers
         public IActionResult DeleteArticle(long id)
         {
             newsRepo.RemoveNewsPost(newsRepo.NewsPosts.First(x => x.Id == id));
+
+            return RedirectToAction(nameof(News));
+        }
+
+        public IActionResult EditArticle(long id)
+        {
+            NewsPost post = newsRepo.NewsPosts.First(x => x.Id == id);
+
+            return View(post);
+        }
+
+        public IActionResult SaveArticle(NewsPost article)
+        {
+            newsRepo.EditNewsPost(article);
 
             return RedirectToAction(nameof(News));
         }

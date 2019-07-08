@@ -1,0 +1,20 @@
+﻿@model NewsPost
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<div>
+    <img class="card-img-top" src="@Model.Image" />
+    <div class="card-body">
+        <form asp-action="SaveArticle" asp-controller="Admin">
+            <div class="form-group">
+                <input class="form-control" asp-for="Id" value="@Model.Id" readonly />
+                <input class="form-control" asp-for="Title" value="@Model.Title" />
+                <br />
+                <textarea class="form-control" asp-for="Text">@Html.Raw(Model.Text)</textarea>
+            </div>
+            <button class="btn btn-success" type="submit">Spremi</button>
+        </form>
+    </div>
+</div>

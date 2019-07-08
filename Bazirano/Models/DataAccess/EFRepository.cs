@@ -44,6 +44,16 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
+        public void EditNewsPost(NewsPost post)
+        {
+            NewsPost postToEdit = context.NewsPosts.First(x => x.Id == post.Id);
+
+            postToEdit.Title = post.Title;
+            postToEdit.Text = post.Text;
+
+            context.SaveChanges();
+        }
+
         public void AddPost(BoardPost post)
         {
             context.BoardPosts.Add(post);
