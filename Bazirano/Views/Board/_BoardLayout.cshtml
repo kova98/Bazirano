@@ -13,7 +13,7 @@
        asp-action="Catalog" asp-controller="Board">
         Katalog
     </a>
-    <button class="btn btn-secondary m-1">Na dno</button>
+    <button class="btn btn-secondary m-1" onclick="jumpToAnchor('bot')">Na dno</button>
 </nav>
 
 <script language="javascript" type="text/javascript">
@@ -23,3 +23,5 @@
 </script>
 
 @RenderBody()
+
+<div id="bot"></div>
