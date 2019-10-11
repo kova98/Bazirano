@@ -13,6 +13,9 @@ namespace Bazirano.Controllers
     public class BoardController : Controller
     {
         private IBoardThreadsRepository repository;
+        // TODO: Make this configurable through the admin panel
+        private int maxThreadCount = 20;
+
         public BoardController(IBoardThreadsRepository repo)
         {
             repository = repo;
@@ -102,10 +105,35 @@ namespace Bazirano.Controllers
             }
 
             repository.AddThread(thread);
+            PruneLastThread();
 
             return RedirectToAction(nameof(Thread), new { post.Id });
         }
 
-        
+        private void PruneLastThread()
+        {
+            // TODO: Change this to use a list with threads sorted by bump order. 
+            // Implement bump order sorting.
+
+            int threadCount = repository.BoardThreads.Count();
+
+            if (threadCount > maxThreadCount)
+            {
+                BoardThread oldestThread = repository.BoardThreads.FirstOrDefault();
+
+                // Find the thread with the oldest recent post.
+                foreach (var thread in repository.BoardThreads)
+                {
+                    var newestPost = thread.Posts.OrderByDescending(x => x.DatePosted).First();
+                    var newestPostFromOldestThread = oldestThread.Posts.OrderByDescending(x => x.DatePosted).First();
+                    if (newestPost.DatePosted < newestPostFromOldestThread.DatePosted) // newestPost is older
+                    {
+                        oldestThread = thread;
+                    }
+                }
+
+                repository.RemoveThread(oldestThread);
+            }
+        }
     }
 }
