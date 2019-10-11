@@ -67,7 +67,7 @@ namespace Bazirano.Models.DataAccess
 
             BoardThread thread = context.BoardThreads
                 .Include(x => x.Posts)
-                .FirstOrDefault(x => x.Id == threadId);
+                .FirstOrDefault(x => x.Id == threadId); 
 
             if (!string.IsNullOrEmpty(boardPost.Image))
             {
@@ -89,7 +89,9 @@ namespace Bazirano.Models.DataAccess
 
         public void RemoveNewsPost(NewsPost post)
         {
-            // TODO: Remove the related comments as well
+            var comments = context.NewsComments.Where(x => post.Comments.Contains(x));
+
+            context.NewsComments.RemoveRange(comments);
 
             context.NewsPosts.Remove(post);
 
@@ -103,7 +105,9 @@ namespace Bazirano.Models.DataAccess
 
         public void RemoveThread(BoardThread thread)
         {
-            // TODO: Remove the related posts as well
+            var posts = context.BoardPosts.Where(x => thread.Posts.Contains(x));
+
+            context.BoardPosts.RemoveRange(posts);
 
             context.BoardThreads.Remove(thread);
 
