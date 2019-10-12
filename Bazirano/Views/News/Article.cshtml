@@ -15,14 +15,14 @@
         <h2 class="border-bottom border-secondary">Komentari</h2>
         @foreach (var comment in Model.Article.Comments)
         {
-            <partial name="ArticleComment" model="comment" />
+            <partial name="Comment" model="comment" />
         }
 
         <div class="p-1 border-bottom border-secondary"></div>
 
         <div id="comment">
             <partial name="ArticleAddComment"
-                     model="@new ArticleRespondViewModel { ArticleId = Model.Article.Id, Comment = new NewsComment()}" />
+                     model="@new ArticleRespondViewModel { ArticleId = Model.Article.Id, Comment = new Comment()}" />
         </div>
 
     </div>

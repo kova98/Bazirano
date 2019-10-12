@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Bazirano.Infrastructure;
 using Bazirano.Models.DataAccess;
 using Bazirano.Models.News;
+using Bazirano.Models.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bazirano.Controllers
@@ -70,7 +71,7 @@ namespace Bazirano.Controllers
             if (ModelState.IsValid)
             {
                 post.DatePosted = DateTime.Now;
-                post.Comments = new List<NewsComment>();
+                post.Comments = new List<Comment>();
 
                 repository.AddNewsPost(post);
 

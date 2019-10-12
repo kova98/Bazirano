@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Bazirano.Models.News
+namespace Bazirano.Models.Shared
 {
-    public class NewsComment
+    public class Comment
     {
         public long Id { get; set; }
         public string Username { get; set; }

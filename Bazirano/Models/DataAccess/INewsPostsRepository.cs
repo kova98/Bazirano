@@ -1,5 +1,6 @@
 ﻿using Bazirano.Models.Board;
 using Bazirano.Models.News;
+using Bazirano.Models.Shared;
 using System.Linq;
 
 namespace Bazirano.Models.DataAccess
@@ -10,7 +11,7 @@ namespace Bazirano.Models.DataAccess
         void AddNewsPost(NewsPost post);
         void RemoveNewsPost(NewsPost post);
         void EditNewsPost(NewsPost post);
-        void AddCommentToNewsPost(NewsComment comment, long postId);
+        void AddCommentToNewsPost(Comment comment, long postId);
         void IncrementViewCount(NewsPost post);
     }
 }
