@@ -26,7 +26,7 @@ namespace Bazirano.Models.DataAccess
 
         public void AddCommentToNewsPost(NewsComment comment, long postId)
         {
-            NewsPost post = context.NewsPosts.First(p => p.Id == postId);
+            NewsPost post = context.NewsPosts.FirstOrDefault(p => p.Id == postId);
             if (post.Comments == null)
             {
                 post.Comments = new List<NewsComment>();
@@ -46,7 +46,7 @@ namespace Bazirano.Models.DataAccess
 
         public void EditNewsPost(NewsPost post)
         {
-            NewsPost postToEdit = context.NewsPosts.First(x => x.Id == post.Id);
+            NewsPost postToEdit = context.NewsPosts.FirstOrDefault(x => x.Id == post.Id);
 
             postToEdit.Title = post.Title;
             postToEdit.Text = post.Text;

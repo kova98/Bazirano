@@ -36,7 +36,7 @@ namespace Bazirano.Controllers
         public IActionResult Thread(long id)
         {
             return View(repository.BoardThreads
-                    .FirstOrDefault(t => t.Posts.First().Id == id));
+                    .FirstOrDefault(t => t.Posts.FirstOrDefault().Id == id));
         }
 
         public async Task<IActionResult> Respond(BoardRespondViewModel vm, IFormFile file)
@@ -66,7 +66,7 @@ namespace Bazirano.Controllers
             }
 
             TempData["NewPost"] = vm.BoardPost.Id;
-            return RedirectToAction(nameof(Thread), new { thread.Posts.First().Id });
+            return RedirectToAction(nameof(Thread), new { thread.Posts.FirstOrDefault().Id });
         }
 
         [HttpPost]
@@ -124,8 +124,8 @@ namespace Bazirano.Controllers
                 // Find the thread with the oldest recent post.
                 foreach (var thread in repository.BoardThreads)
                 {
-                    var newestPost = thread.Posts.OrderByDescending(x => x.DatePosted).First();
-                    var newestPostFromOldestThread = oldestThread.Posts.OrderByDescending(x => x.DatePosted).First();
+                    var newestPost = thread.Posts.OrderByDescending(x => x.DatePosted).FirstOrDefault();
+                    var newestPostFromOldestThread = oldestThread.Posts.OrderByDescending(x => x.DatePosted).FirstOrDefault();
                     if (newestPost.DatePosted < newestPostFromOldestThread.DatePosted) // newestPost is older
                     {
                         oldestThread = thread;

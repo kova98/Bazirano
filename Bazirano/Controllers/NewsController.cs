@@ -54,7 +54,7 @@ namespace Bazirano.Controllers
 
             var articleVm = new ArticleViewModel
             {
-                Article = repository.NewsPosts.First(p => p.Id == vm.ArticleId),
+                Article = repository.NewsPosts.FirstOrDefault(p => p.Id == vm.ArticleId),
                 LatestNews = helper.CurrentNews.LatestNews,
             };
 

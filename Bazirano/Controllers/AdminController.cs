@@ -28,14 +28,14 @@ namespace Bazirano.Controllers
 
         public IActionResult DeleteArticle(long id)
         {
-            newsRepo.RemoveNewsPost(newsRepo.NewsPosts.First(x => x.Id == id));
+            newsRepo.RemoveNewsPost(newsRepo.NewsPosts.FirstOrDefault(x => x.Id == id));
 
             return RedirectToAction(nameof(News));
         }
 
         public IActionResult EditArticle(long id)
         {
-            NewsPost post = newsRepo.NewsPosts.First(x => x.Id == id);
+            NewsPost post = newsRepo.NewsPosts.FirstOrDefault(x => x.Id == id);
 
             return View(post);
         }
@@ -49,7 +49,7 @@ namespace Bazirano.Controllers
 
         public IActionResult DeleteBoardThread(long id)
         {
-            boardRepo.RemoveThread(boardRepo.BoardThreads.First(x => x.Id == id));
+            boardRepo.RemoveThread(boardRepo.BoardThreads.FirstOrDefault(x => x.Id == id));
 
             return RedirectToAction(nameof(Board));
         }

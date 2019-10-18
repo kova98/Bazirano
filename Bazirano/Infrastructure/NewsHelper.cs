@@ -29,7 +29,7 @@ namespace Bazirano.Infrastructure
         {
             return repository.NewsPosts
                 .OrderByDescending(x => x.DatePosted).Take(15)
-                .OrderByDescending(x => x.ViewCount).First();
+                .OrderByDescending(x => x.ViewCount).FirstOrDefault();
         }
 
         private List<NewsPost> GetMainPostRelatedPosts(NewsPost mainPost)
