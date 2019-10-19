@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Bazirano.Models.News
+namespace Bazirano.Models.Shared
 {
-    public class NewsComment
+    public class Comment
     {
         public long Id { get; set; }
+        [MaxLength(20, ErrorMessage = "Ime je predugačko.")]
         public string Username { get; set; }
         public DateTime DatePosted { get; set; }
 

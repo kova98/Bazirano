@@ -1,5 +1,6 @@
 ﻿using Bazirano.Models.Board;
 using Bazirano.Models.News;
+using Bazirano.Models.Shared;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -24,12 +25,12 @@ namespace Bazirano.Models.DataAccess
         public IQueryable<NewsPost> NewsPosts => context.NewsPosts
             .Include(x=>x.Comments);
 
-        public void AddCommentToNewsPost(NewsComment comment, long postId)
+        public void AddCommentToNewsPost(Comment comment, long postId)
         {
             NewsPost post = context.NewsPosts.FirstOrDefault(p => p.Id == postId);
             if (post.Comments == null)
             {
-                post.Comments = new List<NewsComment>();
+                post.Comments = new List<Comment>();
             }
 
             post.Comments.Add(comment);
@@ -89,9 +90,9 @@ namespace Bazirano.Models.DataAccess
 
         public void RemoveNewsPost(NewsPost post)
         {
-            var comments = context.NewsComments.Where(x => post.Comments.Contains(x));
+            var comments = context.Comments.Where(x => post.Comments.Contains(x));
 
-            context.NewsComments.RemoveRange(comments);
+            context.Comments.RemoveRange(comments);
 
             context.NewsPosts.Remove(post);
 
