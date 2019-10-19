@@ -2,9 +2,11 @@
 using Bazirano.Models.DataAccess;
 using System.Linq;
 using Bazirano.Models.News;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bazirano.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         public INewsPostsRepository newsRepo;
