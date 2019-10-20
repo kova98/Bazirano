@@ -1,4 +1,5 @@
-﻿using Bazirano.Models.Board;
+﻿using Bazirano.Infrastructure;
+using Bazirano.Models.Board;
 using Bazirano.Models.News;
 using Bazirano.Models.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -107,6 +108,11 @@ namespace Bazirano.Models.DataAccess
         public void RemoveThread(BoardThread thread)
         {
             var posts = context.BoardPosts.Where(x => thread.Posts.Contains(x));
+
+            foreach (var post in posts)
+            {
+                WriterHelper.DeleteImage(post);
+            }
 
             context.BoardPosts.RemoveRange(posts);
 

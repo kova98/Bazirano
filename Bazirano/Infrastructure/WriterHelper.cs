@@ -19,10 +19,8 @@ namespace Bazirano.Infrastructure
             Random rnd = new Random();
             string fileName = rnd.Next(10000, 99999).ToString() + file.FileName;
             string cleanFileName = Regex.Replace(fileName, @"\s+", "");
+            string filePath = GetFullPath(cleanFileName);
 
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(),
-                                           "wwwroot", "images",
-                                           cleanFileName);
             post.Image = cleanFileName;
 
             if (IsImageFile(file))
@@ -34,9 +32,24 @@ namespace Bazirano.Infrastructure
             }
         }
 
+        public static void DeleteImage (BoardPost post)
+        {
+            string path = GetFullPath(post.Image);
+
+            if (post.Image != null && File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+
         public static double ByteToMegabyte(long bytes)
         {
             return (bytes / 1024f) / 1024f;
+        }
+
+        private static string GetFullPath(string fileName)
+        {
+            return Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
         }
     }
 }
