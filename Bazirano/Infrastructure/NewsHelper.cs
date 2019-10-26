@@ -7,6 +7,8 @@ using Bazirano.Models.News;
 
 namespace Bazirano.Infrastructure
 {
+    // TODO: Look into refactoring this. Possibly the cause of error: 
+    // A second operation started on this context before a previous operation completed.
     public class NewsHelper : INewsHelper
     {
         private INewsPostsRepository repository;
@@ -16,48 +18,37 @@ namespace Bazirano.Infrastructure
             repository = repo;
         }
 
-        public NewsPageViewModel CurrentNews => new NewsPageViewModel
+        public NewsPageViewModel CurrentNews => GetCurrentNews();
+        
+        private NewsPageViewModel GetCurrentNews()
         {
-            MainPost = GetMainPost(),
-            MainPostRelatedPosts = GetMainPostRelatedPosts(GetMainPost()),
-            SecondaryPost = GetSecondaryPost(),
-            PostList = GetPostList(),
-            LatestNews = GetLatestNews()
-        };
+            NewsPageViewModel vm = new NewsPageViewModel();
 
-        private NewsPost GetMainPost()
-        {
-            return repository.NewsPosts
-                .OrderByDescending(x => x.DatePosted).Take(15)
-                .OrderByDescending(x => x.ViewCount).FirstOrDefault();
-        }
+            var recentPosts = repository.NewsPosts
+                .Where(x => repository.NewsPosts.LongCount() - x.Id < 50) // Last 50 posts
+                .OrderByDescending(x => x.DatePosted).ToList();
 
-        private List<NewsPost> GetMainPostRelatedPosts(NewsPost mainPost)
-        {
-            return repository.NewsPosts
-                .Where(p => p.KeywordsList.KeywordMatches(mainPost.KeywordsList) > 0)
-                .Where(p=> p.Id != mainPost.Id)
-                .OrderByDescending(p=> p.KeywordsList.KeywordMatches(mainPost.KeywordsList))
-                .ToList();
-        }
+            var popularRecentPosts = recentPosts.OrderByDescending(x => x.ViewCount).ToList();
 
-        private NewsPost GetSecondaryPost()
-        {
-            return repository.NewsPosts
-                .OrderByDescending(x => x.DatePosted).Take(15)
-                .OrderByDescending(x => x.ViewCount).ToList()[1];
-        }
+            if (popularRecentPosts.Count == 0)
+            {
+                //TODO: Handle this somehow
+            }
 
-        private List<NewsPost> GetPostList()
-        {
-            return repository.NewsPosts
-                .OrderByDescending(x => x.DatePosted).Take(15)
-                .OrderByDescending(x => x.ViewCount).ToList().GetRange(2,5);
-        }
+            vm.MainPost = popularRecentPosts[0];
+            vm.SecondaryPost = popularRecentPosts[1];
 
-        private List<NewsPost> GetLatestNews()
-        {
-            return repository.NewsPosts.OrderByDescending(x => x.DatePosted).Take(6).ToList();
+            //TODO: Cache this, add related articles once when adding a new article
+            vm.MainPostRelatedPosts = recentPosts.Take(6).ToList();
+            var query = repository.NewsPosts
+                .Where(p => p.KeywordsList.KeywordMatches(vm.MainPost.KeywordsList) > 5 && p.Id != vm.MainPost.Id)
+                .OrderByDescending(p => p.KeywordsList.KeywordMatches(vm.MainPost.KeywordsList));
+
+            vm.PostList = popularRecentPosts.GetRange(2, 5);
+
+            vm.LatestNews = recentPosts.Take(6).ToList();
+
+            return vm;
         }
 
         public static TimeDisplay GetTimeElapsed(TimeSpan elapsed)

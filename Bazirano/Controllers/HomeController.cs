@@ -27,7 +27,7 @@ namespace Bazirano.Controllers
                 MainPost = newsHelper.CurrentNews.MainPost,
                 PopularPosts = newsHelper.CurrentNews.PostList,
                 Threads = boardRepo.BoardThreads
-                    .OrderByDescending(x => x.Posts.FirstOrDefault().DatePosted)
+                    .OrderByDescending(x => x.Posts.OrderBy(y=>y.DatePosted).FirstOrDefault().DatePosted)
                     .ThenByDescending(x => x.Posts.Count)
                     .ToList()
             });

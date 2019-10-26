@@ -1,4 +1,5 @@
 ﻿using Bazirano.Models.DataAccess;
+using Bazirano.Models.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,8 @@ namespace Bazirano.Infrastructure
         {
             ApplicationDbContext context = app.ApplicationServices.GetRequiredService<ApplicationDbContext>();
             context.Database.Migrate();
+            AppIdentityDbContext idContext = app.ApplicationServices.GetRequiredService<AppIdentityDbContext>();
+            idContext.Database.Migrate();
         }
         
         public static async void EnsureAdminCreated(IApplicationBuilder app)
