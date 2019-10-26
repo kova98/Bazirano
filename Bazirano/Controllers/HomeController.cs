@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Bazirano.Models.DataAccess;
 using Bazirano.Models.Home;
 using Bazirano.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bazirano.Controllers
 {
@@ -20,17 +21,19 @@ namespace Bazirano.Controllers
             this.newsHelper = newsHelper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var vm = await newsHelper.GetCurrentNewsAsync();
+
             return View(new HomePageViewModel
             {
-                MainPost = newsHelper.CurrentNews.MainPost,
-                PopularPosts = newsHelper.CurrentNews.PostList,
-                Threads = boardRepo.BoardThreads
-                    .OrderByDescending(x => x.Posts.OrderBy(y=>y.DatePosted).FirstOrDefault().DatePosted)
+                MainPost = vm.MainPost,
+                PopularPosts = vm.PostList,
+                Threads = await boardRepo.BoardThreads
+                    .OrderByDescending(x => x.Posts.OrderBy(y => y.DatePosted).FirstOrDefault().DatePosted)
                     .ThenByDescending(x => x.Posts.Count)
-                    .ToList()
-            });
+                    .ToListAsync()
+            }); ;
         }
     }
 }

@@ -21,18 +21,19 @@ namespace Bazirano.Controllers
             repository = repo;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(helper.CurrentNews);
+            return View(await helper.GetCurrentNewsAsync());
         }
 
-        public IActionResult Article(long id)
+        public async Task<IActionResult> Article(long id)
         {
             NewsPost article = repository.NewsPosts.FirstOrDefault(p => p.Id == id);
+            var newsPageVm = await helper.GetCurrentNewsAsync();
             ArticleViewModel vm = new ArticleViewModel
             {
                 Article = article,
-                LatestNews = helper.CurrentNews.LatestNews
+                LatestNews = newsPageVm.LatestNews
             };
 
             repository.IncrementViewCount(article);
@@ -40,7 +41,7 @@ namespace Bazirano.Controllers
             return View(vm);
         }
 
-        public IActionResult PostComment(ArticleRespondViewModel vm)
+        public async Task<IActionResult> PostComment(ArticleRespondViewModel vm)
         {
             if (ModelState.IsValid)
             {
@@ -53,10 +54,12 @@ namespace Bazirano.Controllers
                 repository.AddCommentToNewsPost(vm.Comment, vm.ArticleId);
             }
 
+            var newsPageVm = await helper.GetCurrentNewsAsync();
+
             var articleVm = new ArticleViewModel
             {
                 Article = repository.NewsPosts.FirstOrDefault(p => p.Id == vm.ArticleId),
-                LatestNews = helper.CurrentNews.LatestNews,
+                LatestNews = newsPageVm.LatestNews,
             };
 
             ViewBag.CommentPosted = true;

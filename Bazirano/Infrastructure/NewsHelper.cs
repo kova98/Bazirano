@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bazirano.Models.DataAccess;
 using Bazirano.Models.News;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bazirano.Infrastructure
 {
@@ -18,15 +19,13 @@ namespace Bazirano.Infrastructure
             repository = repo;
         }
 
-        public NewsPageViewModel CurrentNews => GetCurrentNews();
-        
-        private NewsPageViewModel GetCurrentNews()
+        public async Task<NewsPageViewModel> GetCurrentNewsAsync()
         {
             NewsPageViewModel vm = new NewsPageViewModel();
 
-            var recentPosts = repository.NewsPosts
+            var recentPosts = await repository.NewsPosts
                 .Where(x => repository.NewsPosts.LongCount() - x.Id < 50) // Last 50 posts
-                .OrderByDescending(x => x.DatePosted).ToList();
+                .OrderByDescending(x => x.DatePosted).ToListAsync();
 
             var popularRecentPosts = recentPosts.OrderByDescending(x => x.ViewCount).ToList();
 
@@ -40,11 +39,12 @@ namespace Bazirano.Infrastructure
 
             //TODO: Cache this, add related articles once when adding a new article
             vm.MainPostRelatedPosts = recentPosts.Take(6).ToList();
+
             var query = repository.NewsPosts
                 .Where(p => p.KeywordsList.KeywordMatches(vm.MainPost.KeywordsList) > 5 && p.Id != vm.MainPost.Id)
                 .OrderByDescending(p => p.KeywordsList.KeywordMatches(vm.MainPost.KeywordsList));
 
-            vm.PostList = popularRecentPosts.GetRange(2, 5);
+            vm.PostList = popularRecentPosts.GetRange(2, 5).ToList();
 
             vm.LatestNews = recentPosts.Take(6).ToList();
 
