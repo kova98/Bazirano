@@ -4,34 +4,35 @@
 
 @model BoardThread
 
-<div class="container p-0 m-1">
+<div class="row">
+
     @foreach (var thread in Model.Posts)
     {
-        <partial name="BoardPost" model="thread" />
+        <div class="col-12">
+            <partial name="BoardPost" model="thread" />
+        </div>
     }
 
-    <div id="comment">
+    <div id="comment" class="col-12">
         <partial name="BoardPostAddComment"
                  model="new BoardRespondViewModel { BoardPost = new BoardPost(), ThreadId = Model.Id}" />
     </div>
 
+
+
 </div>
 
-<div>
-    <nav class="navbar navbar-expand p-1">
-        <a class="btn btn-secondary m-1"
-           asp-action="Catalog" asp-controller="Board">
-            Katalog
-        </a>
-        <a href="#">
-            <div class="btn btn-primary m-1">Na vrh</div>
-        </a>
-    </nav>
-</div>
-
+<a class="btn btn-secondary m-1"
+   asp-action="Catalog" asp-controller="Board">
+    Katalog
+</a>
+<a href="#">
+    <div class="btn btn-primary m-1">Na vrh</div>
+</a>
 @if (ViewBag.FileError != null)
 {
-    <script>scrollToAnchor("comment");</script>  
+    <script>scrollToAnchor("comment");</script>
+
 }
 
 @if (TempData["NewPost"] != null)

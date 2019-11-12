@@ -16,12 +16,14 @@
     <button class="btn btn-secondary m-1" onclick="jumpToAnchor('bot')">Na dno</button>
 </nav>
 
+
+
+@RenderBody()
+
+<div id="bot"></div>
+
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         $("[id$=boardNav]").addClass("active");
     });
 </script>
-
-@RenderBody()
-
-<div id="bot"></div>
