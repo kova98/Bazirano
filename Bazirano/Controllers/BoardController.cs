@@ -7,18 +7,22 @@ using Bazirano.Models.Board;
 using Bazirano.Models.DataAccess;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Bazirano.Controllers
 {
     public class BoardController : Controller
     {
         private IBoardThreadsRepository repository;
+        private IConfiguration config;
+
         // TODO: Make this configurable through the admin panel
         private int maxThreadCount = 20;
 
-        public BoardController(IBoardThreadsRepository repo)
+        public BoardController(IBoardThreadsRepository repo, IConfiguration cfg)
         {
             repository = repo;
+            config = cfg;
         }
 
         [Route("~/ploca/objavi")]
@@ -77,7 +81,13 @@ namespace Bazirano.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("Submit");
+                return View(nameof(Submit));
+            }
+
+            if (!await GoogleRecaptchaHelper.IsReCaptchaPassedAsync(Request.Form["g-recaptcha-response"], config["GoogleReCaptcha:secret"]))
+            {
+                ViewBag.CaptchaError = "CAPTCHA provjera neispravna.";
+                return View(nameof(Submit));
             }
 
             post.DatePosted = DateTime.Now;
@@ -95,13 +105,13 @@ namespace Bazirano.Controllers
                 if (!file.ContentType.StartsWith("image"))
                 {
                     ViewBag.FileError = "Nepodržan format datoteke.";
-                    return View("Submit");
+                    return View(nameof(Submit));
                 }
 
                 if (WriterHelper.ByteToMegabyte(file.Length) > 5)
                 {
                     ViewBag.FileError = "Datoteka je prevelika.";
-                    return View("Submit");
+                    return View(nameof(Submit));
                 }
 
                 await WriterHelper.UploadImage(post, file);

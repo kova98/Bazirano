@@ -34,11 +34,14 @@ namespace Bazirano.Infrastructure
 
         public static void DeleteImage (BoardPost post)
         {
-            string path = GetFullPath(post.Image);
-
-            if (post.Image != null && File.Exists(path))
+            if (post.Image != null)
             {
-                File.Delete(path);
+                var path = GetFullPath(post.Image);
+
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
             }
         }
 

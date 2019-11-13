@@ -1,4 +1,5 @@
-﻿    @model ArticleRespondViewModel
+﻿@model ArticleRespondViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration config;
 
 <div class="card m-1">
     <div class="card-header text-dark">
@@ -14,6 +15,7 @@
                 <div><span asp-validation-for="Comment.Text" class="text-danger"></span></div>
                 <textarea class="form-control" asp-for="Comment.Text" id="textbox"></textarea>
             </div>
+            <div class="g-recaptcha" data-sitekey="@config["GoogleReCaptcha:key"]"></div>
             <button class="btn btn-success" type="submit">Komentiraj</button>
         </form>
     </div>
