@@ -7,6 +7,7 @@ using Bazirano.Models.DataAccess;
 using Bazirano.Models.News;
 using Bazirano.Models.Shared;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Bazirano.Controllers
 {
@@ -14,11 +15,13 @@ namespace Bazirano.Controllers
     {
         private INewsHelper helper;
         private INewsPostsRepository repository;
+        private IConfiguration config;
 
-        public NewsController(INewsHelper helper, INewsPostsRepository repo)
+        public NewsController(INewsHelper helper, INewsPostsRepository repo, IConfiguration cfg)
         {
             this.helper = helper;
             repository = repo;
+            config = cfg;
         }
 
         [Route("~/vijesti")]
@@ -65,6 +68,12 @@ namespace Bazirano.Controllers
             };
 
             ViewBag.CommentPosted = true;
+
+            if (!await GoogleRecaptchaHelper.IsReCaptchaPassedAsync(Request.Form["g-recaptcha-response"], config["GoogleReCaptcha:secret"]))
+            {
+                ViewBag.CaptchaError = "CAPTCHA provjera neispravna.";
+                return View(nameof(Article), articleVm);
+            }
 
             return View(nameof(Article), articleVm);
         }

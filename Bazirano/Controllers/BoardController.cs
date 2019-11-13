@@ -53,6 +53,12 @@ namespace Bazirano.Controllers
 
             if (ModelState.IsValid)
             {
+                if (!await GoogleRecaptchaHelper.IsReCaptchaPassedAsync(Request.Form["g-recaptcha-response"], config["GoogleReCaptcha:secret"]))
+                {
+                    ViewBag.CaptchaError = "CAPTCHA provjera neispravna.";
+                    return View(nameof(Thread), thread);
+                }
+
                 if (file != null)
                 {
                     if (!file.ContentType.StartsWith("image"))

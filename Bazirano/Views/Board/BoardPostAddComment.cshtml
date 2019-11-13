@@ -1,11 +1,12 @@
 ﻿@model BoardRespondViewModel
+@inject Microsoft.Extensions.Configuration.IConfiguration config;
 
 <div class="card m-1">
     <div class="card-header text-dark">
         <h4>Odgovori</h4>
     </div>
     <div class="card-body">
-        <form method="post" enctype="multipart/form-data" 
+        <form method="post" enctype="multipart/form-data"
               asp-action="Respond" asp-controller="Board" asp-route-ThreadId="@Model.ThreadId">
             <div class="form-group">
                 <div class="text-danger">@ViewBag.FileError</div>
@@ -14,8 +15,11 @@
             </div>
             <div class="form-group">
                 <input type="file" class="form-control-file" id="file_input"
-                       asp-for="BoardPost.Image" name="file">            
+                       asp-for="BoardPost.Image" name="file">
             </div>
+            <div class="text-danger">@ViewBag.CaptchaError</div>
+            <div class="g-recaptcha" data-sitekey="@config["GoogleReCaptcha:key"]"></div>
+            <br />
             <button class="btn btn-success" type="submit">Objavi</button>
         </form>
     </div>
