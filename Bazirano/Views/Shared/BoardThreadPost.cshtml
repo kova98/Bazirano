@@ -2,7 +2,7 @@
 
 @{
     BoardPost post = Model.Posts.ToList()[0];
-    string time = post.DatePosted.ToString("dd/MM/yy HH:mm");
+    string time = post.DatePosted.ToString("dd.MM.yy. HH:mm");
     bool containsImage = !string.IsNullOrEmpty(post.Image);
 }
 

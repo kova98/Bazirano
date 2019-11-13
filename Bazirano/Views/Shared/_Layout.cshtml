@@ -13,7 +13,7 @@
 <body>
     <div class="container">
         <nav class="navbar navbar-expand navbar-light bg-transparent border-bottom border-light border-top p-0">
-            <a class="navbar-brand bg-secondary p-2" href="/">
+            <a class="navbar-brand bg-secondary p-2" asp-action="Index" asp-controller="Home">
                 <h4 class="font-weight-bold p-2 m-0">BAZIRANO</h4>
             </a>
             <div class="collapse navbar-collapse" id="navbar">
@@ -24,10 +24,14 @@
     </li>
     -->
                     <li class="nav-item">
-                        <a class="nav-link" id="newsNav" href="/News">VIJESTI</a>
+                        <a class="nav-link" id="newsNav" asp-action="Index" asp-controller="News">
+                            VIJESTI
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="boardNav" href="/Board/Catalog">PLOČA</a>
+                        <a class="nav-link" id="boardNav" asp-action="Catalog"asp-controller="Board">
+                            PLOČA
+                        </a>
                     </li>
                     <!--
                     <li class="nav-item">

@@ -21,11 +21,13 @@ namespace Bazirano.Controllers
             repository = repo;
         }
 
+        [Route("~/ploca/objavi")]
         public IActionResult Submit()
         {
             return View();
         }
 
+        [Route("~/ploca")]
         public IActionResult Catalog()
         {
             return View(repository.BoardThreads
@@ -33,6 +35,7 @@ namespace Bazirano.Controllers
                 .ToList());
         }
 
+        [Route("~/ploca/dretva/{id}")]
         public IActionResult Thread(long id)
         {
             return View(repository.BoardThreads

@@ -21,11 +21,13 @@ namespace Bazirano.Controllers
             repository = repo;
         }
 
+        [Route("~/vijesti")]
         public async Task<IActionResult> Index()
         {
             return View(await helper.GetCurrentNewsAsync());
         }
 
+        [Route("~/vijesti/clanak/{id}")]
         public async Task<IActionResult> Article(long id)
         {
             NewsPost article = repository.NewsPosts.FirstOrDefault(p => p.Id == id);
