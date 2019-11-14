@@ -9,5 +9,7 @@ namespace Bazirano.Models.News
     {
         public NewsPost Article { get; set; }
         public List<NewsPost> LatestNews { get; set; }
+
+        public string[] ArticleSentences => Article.Text.Split('~');
     }
 }
