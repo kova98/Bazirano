@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bazirano.Models.Identity
+namespace Bazirano.Models.DataAccess
 {
     public class AppIdentityDbContext : IdentityDbContext<IdentityUser>
     {

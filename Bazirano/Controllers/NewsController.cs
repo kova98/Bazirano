@@ -80,10 +80,21 @@ namespace Bazirano.Controllers
 
         //TODO: Add security!!!
         [HttpPost("~/api/postNews")]
-        public IActionResult PostNews([FromBody]NewsPost post)
+        public async Task<IActionResult> PostNews([FromBody]NewsPost post)
         {
             if (ModelState.IsValid)
             {
+                var latestPosts = await helper.GetLastXPosts(15);
+
+                foreach(var p in latestPosts)
+                {
+                    if (p.Guid == post.Guid)
+                    {
+                        repository.EditNewsPost(post);
+                        return Ok();
+                    }
+                }
+
                 post.DatePosted = DateTime.Now;
                 post.Comments = new List<Comment>();
 
