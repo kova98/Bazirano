@@ -22,6 +22,14 @@
         </div>
 
         <h2 class="border-bottom border-secondary">Komentari</h2>
+
+        @if (Model.Article.Comments.Count == 0)
+        {
+            <span class="text-muted m-2">
+                Nema komentara.
+            </span>
+        }
+
         @foreach (var comment in Model.Article.Comments)
         {
             <partial name="Comment" model="comment" />

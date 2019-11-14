@@ -23,7 +23,7 @@ namespace Bazirano.Infrastructure
         {
             NewsPageViewModel vm = new NewsPageViewModel();
 
-            var recentPosts = await GetLastXPosts(50);
+            var recentPosts = await GetLastXPosts(25);
 
             var popularRecentPosts = recentPosts.OrderByDescending(x => x.ViewCount).ToList();
 
@@ -51,9 +51,12 @@ namespace Bazirano.Infrastructure
 
         public async Task<List<NewsPost>> GetLastXPosts(int x)
         {
+            DateTime timeYesterday = DateTime.UtcNow.AddDays(-1);
+
             var recentPosts = await repository.NewsPosts
-                .Where(p => repository.NewsPosts.LongCount() - p.Id < x) // Last x posts
-                .OrderByDescending(p => p.DatePosted).ToListAsync();
+                .Where(p=>p.DatePosted.Date > timeYesterday)
+                .OrderByDescending(p => p.DatePosted)
+                .Take(x).ToListAsync();
 
             return recentPosts;
         }
