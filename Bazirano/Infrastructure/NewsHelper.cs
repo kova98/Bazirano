@@ -38,9 +38,9 @@ namespace Bazirano.Infrastructure
             //TODO: Cache this, add related articles once when adding a new article
             vm.MainPostRelatedPosts = recentPosts.Take(6).ToList();
 
-            var query = repository.NewsPosts
-                .Where(p => p.KeywordsList.KeywordMatches(vm.MainPost.KeywordsList) > 5 && p.Id != vm.MainPost.Id)
-                .OrderByDescending(p => p.KeywordsList.KeywordMatches(vm.MainPost.KeywordsList));
+            //var query = repository.NewsPosts
+            //    .Where(p => p.KeywordsList.KeywordMatches(vm.MainPost.KeywordsList) > 5 && p.Id != vm.MainPost.Id)
+            //    .OrderByDescending(p => p.KeywordsList.KeywordMatches(vm.MainPost.KeywordsList));
 
             vm.PostList = popularRecentPosts.GetRange(2, 5).ToList();
 

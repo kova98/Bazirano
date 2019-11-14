@@ -52,6 +52,7 @@ namespace Bazirano.Models.DataAccess
 
             postToEdit.Title = post.Title;
             postToEdit.Text = post.Text;
+            postToEdit.Image = post.Image;
 
             context.SaveChanges();
         }
