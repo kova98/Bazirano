@@ -3,6 +3,8 @@ using Bazirano.Models.DataAccess;
 using System.Linq;
 using Bazirano.Models.News;
 using Microsoft.AspNetCore.Authorization;
+using Bazirano.Infrastructure;
+using System.Threading.Tasks;
 
 namespace Bazirano.Controllers
 {
@@ -11,11 +13,13 @@ namespace Bazirano.Controllers
     {
         public INewsPostsRepository newsRepo;
         public IBoardThreadsRepository boardRepo;
+        public INewsHelper newsHelper;
 
-        public AdminController(INewsPostsRepository newsRepository, IBoardThreadsRepository boardRepository)
+        public AdminController(INewsPostsRepository newsRepository, IBoardThreadsRepository boardRepository, INewsHelper helper)
         {
             newsRepo = newsRepository;
             boardRepo = boardRepository;
+            newsHelper = helper;
         }
 
         public IActionResult Index()
@@ -23,9 +27,10 @@ namespace Bazirano.Controllers
             return View();
         }
 
-        public IActionResult News()
+        public async Task<IActionResult> News()
         {
-            return View(nameof(News), newsRepo.NewsPosts.OrderByDescending(x=>x.DatePosted).ToList().Take(100));
+            var newsPosts = await newsHelper.GetLastXPosts(100);
+            return View(nameof(News), newsPosts);
         }
 
         public IActionResult DeleteArticle(long id)
@@ -61,7 +66,7 @@ namespace Bazirano.Controllers
             return View(nameof(Board), boardRepo.BoardThreads
                 .OrderByDescending(x => x.Posts.FirstOrDefault().DatePosted)
                 .ToList()
-                .Take(100));
+                .Take(50));
         }
     }
 }
