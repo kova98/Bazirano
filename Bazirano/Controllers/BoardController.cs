@@ -18,6 +18,7 @@ namespace Bazirano.Controllers
 
         // TODO: Make this configurable through the admin panel
         private int maxThreadCount = 20;
+        private int maxImagesInThread = 50;
 
         public BoardController(IBoardThreadsRepository repo, IConfiguration cfg)
         {
@@ -56,6 +57,12 @@ namespace Bazirano.Controllers
                 if (!await GoogleRecaptchaHelper.IsReCaptchaPassedAsync(Request.Form["g-recaptcha-response"], config["GoogleReCaptcha:secret"]))
                 {
                     ViewBag.CaptchaError = "CAPTCHA provjera neispravna.";
+                    return View(nameof(Thread), thread);
+                }
+
+                if (thread.ImageCount > maxImagesInThread)
+                {
+                    ViewBag.FileError = "Maksimalni broj slika u dretvi premašen.";
                     return View(nameof(Thread), thread);
                 }
 
