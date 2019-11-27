@@ -35,9 +35,16 @@ namespace Bazirano.Controllers
         [Route("~/ploca")]
         public IActionResult Catalog()
         {
-            return View(repository.BoardThreads
-                .OrderByDescending(t => t.Id)
-                .ToList());
+            var threads = repository.BoardThreads.ToList();
+
+            foreach (var thread in threads)
+            {
+                thread.Posts.OrderByDescending(p => p.DatePosted);
+            }
+
+            var threadsByBumpOrder = threads.OrderByDescending(t => t.Posts.First().DatePosted).ToList();
+
+            return View(threadsByBumpOrder);
         }
 
         [Route("~/ploca/dretva/{id}")]
