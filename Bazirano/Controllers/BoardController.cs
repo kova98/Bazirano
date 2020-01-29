@@ -17,7 +17,7 @@ namespace Bazirano.Controllers
         private IConfiguration config;
 
         // TODO: Make this configurable through the admin panel
-        private int maxThreadCount = 20;
+        private int maxThreadCount = 40;
         private int maxImagesInThread = 50;
 
         public BoardController(IBoardThreadsRepository repo, IConfiguration cfg)
