@@ -22,15 +22,17 @@ namespace Bazirano.Infrastructure
         public async Task<NewsPageViewModel> GetCurrentNewsAsync()
         {
             NewsPageViewModel vm = new NewsPageViewModel();
-
+            
             var recentPosts = await GetLastXPosts(25);
 
-            var popularRecentPosts = recentPosts.OrderByDescending(x => x.ViewCount).ToList();
-
-            if (popularRecentPosts.Count == 0)
+            while (recentPosts.Count < 7)
             {
-                //TODO: Handle this somehow
+                recentPosts.Add(new NewsPost());
+
+                //TODO: Handle this properly
             }
+
+            var popularRecentPosts = recentPosts.OrderByDescending(x => x.ViewCount).ToList();
 
             vm.MainPost = popularRecentPosts[0];
             vm.SecondaryPost = popularRecentPosts[1];
