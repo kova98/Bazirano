@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Bazirano.Models.DataAccess
 {
@@ -37,6 +38,11 @@ namespace Bazirano.Models.DataAccess
         /// </summary>
         public IQueryable<NewsPost> NewsPosts => context.NewsPosts
             .Include(x=>x.Comments);
+
+        public async Task<List<NewsPost>> GetLatestNewsPosts(int count)
+        {
+            return await context.NewsPosts.OrderBy(x => x.DatePosted).Take(count).ToListAsync();
+        }
 
         /// <summary>
         /// Adds a new <see cref="Comment"/> to a <see cref="NewsPost"/>.

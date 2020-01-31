@@ -84,7 +84,7 @@ namespace Bazirano.Controllers
         {
             if (ModelState.IsValid)
             {
-                var latestPosts = await helper.GetLastXPosts(15);
+                var latestPosts = await repository.GetLatestNewsPosts(15);
 
                 foreach(var p in latestPosts)
                 {

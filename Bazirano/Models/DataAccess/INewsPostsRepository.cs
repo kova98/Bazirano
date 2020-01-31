@@ -1,6 +1,8 @@
 ﻿using Bazirano.Models.News;
 using Bazirano.Models.Shared;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Bazirano.Models.DataAccess
 {
@@ -10,6 +12,8 @@ namespace Bazirano.Models.DataAccess
         /// The <see cref="IQueryable"/> collection of all the <see cref="NewsPost"/>s in the database.
         /// </summary>
         IQueryable<NewsPost> NewsPosts { get; }
+
+        Task<List<NewsPost>> GetLatestNewsPosts(int count);
 
         /// <summary>
         /// Adds a new <see cref="NewsPost"/> to the database.

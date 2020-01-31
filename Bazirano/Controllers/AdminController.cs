@@ -29,7 +29,7 @@ namespace Bazirano.Controllers
 
         public async Task<IActionResult> News()
         {
-            var newsPosts = await newsHelper.GetLastXPosts(100);
+            var newsPosts = await newsRepo.GetLatestNewsPosts(100);
             return View(nameof(News), newsPosts);
         }
 

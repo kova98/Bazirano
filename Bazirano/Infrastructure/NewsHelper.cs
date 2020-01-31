@@ -23,7 +23,7 @@ namespace Bazirano.Infrastructure
         {
             NewsPageViewModel vm = new NewsPageViewModel();
             
-            var recentPosts = await GetLastXPosts(25);
+            var recentPosts = await repository.GetLatestNewsPosts(25);
 
             while (recentPosts.Count < 7)
             {
@@ -49,18 +49,6 @@ namespace Bazirano.Infrastructure
             vm.LatestNews = recentPosts.Take(6).ToList();
 
             return vm;
-        }
-
-        public async Task<List<NewsPost>> GetLastXPosts(int x)
-        {
-            DateTime timeYesterday = DateTime.UtcNow.AddDays(-1);
-
-            var recentPosts = await repository.NewsPosts
-                .Where(p=>p.DatePosted.Date > timeYesterday)
-                .OrderByDescending(p => p.DatePosted)
-                .Take(x).ToListAsync();
-
-            return recentPosts;
         }
 
         public static TimeDisplay GetTimeElapsed(TimeSpan elapsed)

@@ -7,6 +7,5 @@ namespace Bazirano.Infrastructure
     public interface INewsHelper
     {
         Task<NewsPageViewModel> GetCurrentNewsAsync();
-        Task<List<NewsPost>> GetLastXPosts(int x);
     }
 }
