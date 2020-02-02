@@ -51,10 +51,13 @@ namespace Bazirano.Controllers
             if (ModelState.IsValid)
             {
                 vm.Comment.DatePosted = DateTime.Now;
+
                 if (string.IsNullOrEmpty(vm.Comment.Username))
                 {
                     vm.Comment.Username = "Anonimac";
                 }
+
+                vm.Comment.Text = vm.Comment.Text.Trim();
 
                 repository.AddCommentToNewsPost(vm.Comment, vm.ArticleId);
             }
@@ -69,11 +72,6 @@ namespace Bazirano.Controllers
 
             ViewBag.CommentPosted = true;
 
-            if (!await GoogleRecaptchaHelper.IsReCaptchaPassedAsync(Request.Form["g-recaptcha-response"], config["GoogleReCaptcha:secret"]))
-            {
-                ViewBag.CaptchaError = "CAPTCHA provjera neispravna.";
-                return View(nameof(Article), articleVm);
-            }
 
             return View(nameof(Article), articleVm);
         }

@@ -89,6 +89,10 @@ namespace Bazirano.Controllers
 
                     await WriterHelper.UploadImage(vm.BoardPost, file);
                 }
+
+                // Trim the spaces
+                vm.BoardPost.Text = vm.BoardPost.Text.Trim();
+
                 repository.AddPostToThread(vm.BoardPost, vm.ThreadId);
             }
 
@@ -136,6 +140,8 @@ namespace Bazirano.Controllers
 
                 await WriterHelper.UploadImage(post, file);
             }
+
+            post.Text = post.Text.Trim();
 
             repository.AddThread(thread);
             PruneLastThread();
