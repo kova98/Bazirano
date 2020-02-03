@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewData["Title"] = "Column";
+}
+@model AdminColumnViewModel
+
+<div class="p-2"></div>
+<h3>Kolumne</h3>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Autor</th>
+            <th>Naslov</th>
+            <th>Radnja</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var column in Model.ColumnPosts)
+        {
+            <tr>
+                <td class="text-left">@column.Author.Name</td>
+                <td class="text-left">@column.Title</td>
+                <td>
+                    <a asp-action="EditColumn" asp-route-id="@column.Id" class="btn btn-info">
+                        Uredi
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<a class="btn btn-success" asp-action="AddColumn" asp-controller="Admin">Dodaj kolumnu</a>
+
+<hr class="border-secondary"/>
+
+<h3>Autori</h3>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Ime</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var author in Model.Authors)
+        {
+            <tr>
+                <td class="text-left">@author.Name</td>
+                <td>
+                    <a asp-action="EditAuthor" asp-route-id="@author.Id" class="btn btn-info">
+                        Uredi
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-success" asp-action="AddAuthor" asp-controller="Admin">Dodaj autora</a>

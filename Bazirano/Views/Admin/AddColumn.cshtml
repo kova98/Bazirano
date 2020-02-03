@@ -1,0 +1,27 @@
+﻿@model AddColumnViewModel
+
+@{
+    Layout = "_AdminLayout";
+    string value = "Id";
+    string text = "Name";
+}
+
+<form asp-action="SaveColumn" asp-controller="Admin">
+    <div class="form-group">
+        <label class="form-text">Autor</label>
+        <select class="form-control" asp-for="Column.Author.Id" asp-items="@new SelectList(Model.Authors, value, text)">
+            <option disabled selected value="">Odaberi autora</option>
+        </select>
+
+        <br />
+        <label class="form-text">Naslov</label>
+        <input class="form-control" asp-for="@Model.Column.Title" />
+
+        <br />
+        <label class="form-text">Tekst</label>
+        <textarea class="form-control" asp-for="@Model.Column.Text"></textarea>
+    </div>
+    <button class="btn btn-success" type="submit">Spremi</button>
+    <input class="form-control invisible" asp-for="Column.Id" value="@Model.Column.Id" readonly />
+
+</form>

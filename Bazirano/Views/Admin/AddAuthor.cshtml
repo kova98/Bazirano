@@ -1,0 +1,22 @@
+﻿@model Author
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<div>
+    <div class="card-body">
+        <form asp-action="SaveAuthor" asp-controller="Admin">
+            <div class="form-group">
+                <label class="form-text">Ime autora</label>
+                <input class="form-control" asp-for="@Model.Name" />
+                <br />
+
+                <label class="form-text">Bio autora</label>
+                <textarea class="form-control" asp-for="@Model.Bio"></textarea>
+            </div>
+            <button class="btn btn-success" type="submit">Spremi</button>
+            <input class="form-control invisible" asp-for="Id" value="@Model.Id" readonly />
+        </form>
+    </div>
+</div>

@@ -31,7 +31,6 @@ namespace Bazirano.Controllers
                 PopularPosts = vm.PostList,
                 Threads = await boardRepo.BoardThreads
                     .OrderByDescending(x => x.Posts.OrderBy(y => y.DatePosted).FirstOrDefault().DatePosted)
-                    .ThenByDescending(x => x.Posts.Count)
                     .ToListAsync()
             }); ;
         }

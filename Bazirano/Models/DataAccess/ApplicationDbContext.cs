@@ -1,4 +1,5 @@
 ﻿using Bazirano.Models.Board;
+using Bazirano.Models.Column;
 using Bazirano.Models.News;
 using Bazirano.Models.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -33,5 +34,9 @@ namespace Bazirano.Models.DataAccess
         /// The collection of <see cref="Comment"/>s in the application database.
         /// </summary>
         public DbSet<Comment> Comments { get; set; }
+
+        public DbSet<ColumnPost> ColumnPosts { get; set; }
+
+        public DbSet<Author> Authors { get; set; }
     }
 }

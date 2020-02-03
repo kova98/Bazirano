@@ -7,12 +7,27 @@ namespace Bazirano.Models.Column
     /// <summary>
     /// The column model.
     /// </summary>
-    public class Column
+    public class ColumnPost
     {
+        /// <summary>
+        /// The id of the column.
+        /// </summary>
+        public long Id { get; set; }
+
         /// <summary>
         /// The author of the column.
         /// </summary>
-        public string Author { get; set; }
+        public Author Author { get; set; }
+
+        /// <summary>
+        /// The title of the column.
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// The text of the column, in raw HTML.
+        /// </summary>
+        public string Text { get; set; }
 
         /// <summary>
         /// The date which the column was posted on.

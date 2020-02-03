@@ -1,5 +1,6 @@
 ﻿using Bazirano.Infrastructure;
 using Bazirano.Models.Board;
+using Bazirano.Models.Column;
 using Bazirano.Models.News;
 using Bazirano.Models.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ namespace Bazirano.Models.DataAccess
     /// <summary>
     /// The Entity Framework repository class used for retrieving data from the application database.
     /// </summary>
-    public class EFRepository : IBoardThreadsRepository, IBoardPostsRepository, INewsPostsRepository
+    public class EFRepository : IBoardThreadsRepository, IBoardPostsRepository, INewsPostsRepository, IColumnRepository
     {
         private ApplicationDbContext context;
 
@@ -39,9 +40,13 @@ namespace Bazirano.Models.DataAccess
         public IQueryable<NewsPost> NewsPosts => context.NewsPosts
             .Include(x=>x.Comments);
 
+        public IQueryable<ColumnPost> ColumnPosts => context.ColumnPosts.Include(p => p.Author);
+
+        public IQueryable<Author> Authors => context.Authors;
+
         public async Task<List<NewsPost>> GetLatestNewsPosts(int count)
         {
-            return await context.NewsPosts.OrderBy(x => x.DatePosted).Take(count).ToListAsync();
+            return await context.NewsPosts.OrderByDescending(x => x.DatePosted).Take(count).ToListAsync();
         }
 
         /// <summary>
@@ -187,6 +192,51 @@ namespace Bazirano.Models.DataAccess
         {
             NewsPost record = context.NewsPosts.FirstOrDefault(x=>x.Id == post.Id);
             record.ViewCount++;
+
+            context.SaveChanges();
+        }
+
+        public void AddColumn(ColumnPost column)
+        {
+            context.ColumnPosts.Add(column);
+
+            context.SaveChanges();
+        }
+
+        public void SaveColumn(ColumnPost column)
+        {
+            var existing = context.ColumnPosts
+                .FirstOrDefault(p => p.Id == column.Id);
+
+            if (existing != null)
+            {
+                existing.Author = context.Authors.First(a => a.Id == column.Author.Id);
+                existing.Text = column.Text;
+                existing.Title = column.Title;
+            } 
+            else
+            {
+                column.DatePosted = DateTime.Now;
+                column.Author = context.Authors.First(a => a.Id == column.Author.Id);
+                context.ColumnPosts.Add(column);
+            }
+
+            context.SaveChanges();
+        }
+
+        public void SaveAuthor(Author author)
+        {
+            var existing = context.Authors.FirstOrDefault(a => a.Id == author.Id);
+
+            if (existing != null)
+            {
+                existing.Name = author.Name;
+                existing.Bio = author.Bio;
+            }
+            else
+            {
+                context.Authors.Add(author);
+            }
 
             context.SaveChanges();
         }
