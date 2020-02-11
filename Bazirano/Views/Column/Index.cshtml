@@ -3,7 +3,79 @@
     ViewBag.Title = "Bazirano - Kolumna";
 }
 
+@model ColumnMainPageViewModel
 
+<div class="p-3"></div>
+<div class="row">
+    <div class="col-12 col-md-8 col-lg-8">
+        <div class="card">
+            <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@Model.FirstColumn.Id">
+                <img class="card-img-top img-fluid" src="~/images/640x360.png" style="max-height:200px" />
+            </a>
+            <div class="text-white card-body"
+                 asp-action="ColumnPost" asp-controller="Column" asp-route-id="@Model.FirstColumn.Id">
+                <h3>@Model.FirstColumn.Title</h3>
+                <div class="text-muted">
+                    Piše: <a asp-action="AuthorPage" asp-controller="Column" asp-route-id="@Model.FirstColumn.Author.Id" class="col-3 p-1 text-muted">
+                        @Model.FirstColumn.Author.Name
+                    </a>
+                </div>
+                <small class="text-muted">@Model.FirstColumn.DatePosted.ToString("dd.MM.yyyy. HH:mm")</small>
+                <hr class="bg-secondary" />
+                <p>@Model.FirstColumn.Text</p>
+            </div>
+        </div>
+        <div class="p-1"></div>
+        @foreach (var post in Model.Columns)
+        {
+            <div class="row rounded m-0 bg-light">
+                <a class="col-4 p-0 "
+                   asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
+                    <img class="rounded-left img-fluid" src="~/images/640x360.png" style="max-height:200px" />
+                </a>
+                <div class="col-8 card-text">
+                    <a class="text-white card-body"
+                       asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
+                        <h4>@post.Title</h4>
+                    </a>
+                    <div class="text-muted">
+                        Piše: <a asp-action="AuthorPage" asp-controller="Column" asp-route-id="@post.Author.Id" class="col-3 p-1 text-muted">
+                            @post.Author.Name
+                        </a>
+                    </div>
+                    <small class="text-muted">@post.DatePosted.ToString("dd.MM.yyyy. HH:mm")</small>
+                </div>
+            </div>
+            <div class="p-1"></div>
+        }
+    </div>
+    <div class="col-12 col-md-4 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h2>Kolumnisti</h2>
+            </div>
+            <div class="card-body">
+                @foreach (var author in Model.Authors)
+                {
+                    <div class="row">
+                        <a asp-action="AuthorPage" asp-controller="Column" asp-route-id="@author.Id" class="col-3 p-1">
+                            <img class="img-fluid" src="~/images/person.png" />
+                        </a>
+
+                        <div class="col-9 p-3">
+                            <a asp-action="AuthorPage" asp-controller="Column" asp-route-id="@author.Id" class="text-white">
+                                <h5>@author.Name</h5>
+                            </a>
+                            
+                            <p class="text-muted">Kratak opis autora</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
