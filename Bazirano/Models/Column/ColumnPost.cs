@@ -20,6 +20,11 @@ namespace Bazirano.Models.Column
         public Author Author { get; set; }
 
         /// <summary>
+        /// The url for the header image.
+        /// </summary>
+        public string Image { get; set; }
+
+        /// <summary>
         /// The title of the column.
         /// </summary>
         public string Title { get; set; }

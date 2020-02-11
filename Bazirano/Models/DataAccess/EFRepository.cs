@@ -213,6 +213,7 @@ namespace Bazirano.Models.DataAccess
                 existing.Author = context.Authors.First(a => a.Id == column.Author.Id);
                 existing.Text = column.Text;
                 existing.Title = column.Title;
+                existing.Image = column.Image;
             } 
             else
             {
@@ -232,6 +233,7 @@ namespace Bazirano.Models.DataAccess
             {
                 existing.Name = author.Name;
                 existing.Bio = author.Bio;
+                existing.Image = author.Image;
             }
             else
             {
