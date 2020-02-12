@@ -25,6 +25,21 @@ namespace Bazirano.Controllers
                 .OrderByDescending(p => p.DatePosted)
                 .ToList();
 
+            // Should only happen when first launching the website, without any columns in the database
+            if (columns.Count == 0)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    columns.Add(new ColumnPost
+                    {
+                        Author = new Author { Id = 0, Name = "Dummy", Image = "/", Bio = "Dummy bio" },
+                        Id = 0,
+                        Title = $"Dummy Column {i + 1}",
+                        Text = $"Dummy column text {i + 1}"
+                    });
+                }
+            }
+
             return View(new ColumnMainPageViewModel
             {
                 FirstColumn = columns.First(),
@@ -34,7 +49,7 @@ namespace Bazirano.Controllers
         }
 
         [Route("~/kolumna/{id}")]
-        public IActionResult ColumnPost(long id)
+        public IActionResult ColumnPost(long id)    
         {
             var post = columnRepo.ColumnPosts.First(p => p.Id == id);
             if (post.Comments == null)

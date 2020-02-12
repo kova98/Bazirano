@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = $"Bazirano - {Model.Title}";
+}
+
+@model ColumnPost
+
+<div class="p-3"></div>
+<div class="row">
+    <div class="col-12 col-md-8">
+        <div class="card">
+            <img class="card-img-top img-fluid" src="@Model.Image" style="max-height:200px" />
+            <div class="card-body">
+                <div class="card-title">
+                    <h1>@Model.Title</h1>
+                </div>
+                <h4 class="text-muted">Piše: @Model.Author.Name</h4>
+                <small class="text-muted">@Model.DatePosted.ToString("dd.MM.yyyy. HH:mm")</small>
+                <hr class="bg-secondary" />
+                <p>@Html.Raw(Model.Text)</p>
+            </div>
+        </div>
+
+        @*<div id="comment">
+            <partial name="ArticleAddComment"
+                     model="@new ArticleRespondViewModel { ArticleId = Model.Article.Id, Comment = new Comment()}" />
+        </div>*@
+
+        @if (Model.Comments.Count > 0)
+        {
+            <h2 class="border-bottom border-secondary">Komentari</h2>
+
+            @foreach (var comment in Model.Comments)
+            {
+                <partial name="Comment" model="comment" />
+            }
+
+            <div class="p-1 border-bottom border-secondary"></div>
+        }
+    </div>
+</div>
