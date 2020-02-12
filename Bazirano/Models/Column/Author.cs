@@ -8,6 +8,8 @@
 
         public string Bio { get; set; }
 
+        public string ShortBio { get; set; }
+
         public string Image { get; set; }
     }
 }
