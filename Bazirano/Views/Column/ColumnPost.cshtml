@@ -8,13 +8,19 @@
 <div class="row">
     <div class="col-12 col-md-8">
         <div class="card">
-            <img class="card-img-top img-fluid" src="@Model.Image" style="max-height:200px" />
+            <img class="card-img-top img-fluid" src="@Model.Image" />
             <div class="card-body">
                 <div class="card-title">
                     <h1>@Model.Title</h1>
                 </div>
-                <h4 class="text-muted">Piše: @Model.Author.Name</h4>
-                <small class="text-muted">@Model.DatePosted.ToString("dd.MM.yyyy. HH:mm")</small>
+                <span class="float-right text-muted">@Model.DatePosted.ToString("dd.MM.yyyy.")</span>
+                <div class="text-muted">
+                    Piše:
+                    <a asp-action="Author" asp-controller="Column" asp-route-id="@Model.Author.Id">
+                        @Model.Author.Name
+                    </a>
+                </div>
+                
                 <hr class="bg-secondary" />
                 <p>@Html.Raw(Model.Text)</p>
             </div>

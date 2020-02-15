@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = $"Bazirano - {Model.Author.Name}";
+}
+
+@model AuthorPageViewModel
+
+<div class="col-12 jumbotron bg-transparent row m-0">
+    <div class="col-12 col-lg-4 offset-0 offset-lg-1">
+        <img src="@Model.Author.Image" class=" rounded img-fluid" />
+    </div>
+
+    <div class="p-3"></div>
+
+    <div class="col-12 col-lg-6 text-center text-md-left">
+        <h1>@Model.Author.Name</h1>
+        <h3 class="text-muted">@Model.Author.ShortBio</h3>
+        <hr class="my-4 bg-secondary" />
+        <p class="text-dark">@Model.Author.Bio</p>
+    </div>
+</div>
+<div class="row p-2">
+    @foreach(var post in Model.Columns)
+    {
+        <div class="p-2 col-12 col-md-6 col-lg-4">
+            <div class="card">
+                <img class="card-img-top" src="@post.Image" />
+                <div class="card-body">
+                    <h3 class="card-text">@post.Title</h3>
+                    <h3 class="text-muted"></h3>
+                </div>
+                <div class="card-footer text-muted">
+                    @post.DatePosted.ToString("dd.MM.yyyy. HH:mm")
+                    <span class="badge badge-light float-right p-1">@(post.Comments?.Count ?? 0) komentar/a</span>
+                </div>
+            </div>
+        </div>
+
+    }
+
+</div>

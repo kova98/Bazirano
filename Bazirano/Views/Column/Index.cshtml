@@ -1,7 +1,6 @@
 ﻿
 @{
     ViewBag.Title = "Bazirano - Kolumna";
-    long id = Model.FirstColumn.Id;
 }
 
 @model ColumnMainPageViewModel
@@ -9,22 +8,23 @@
 
 <div class="p-3"></div>
 <div class="row">
-    <div class="col-12 col-md-8 col-lg-8"> 
+    <div class="col-12 col-md-7 col-lg-6"> 
         <div class="card">
             <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@Model.FirstColumn.Id">
-                <img class="card-img-top img-fluid" src="@Model.FirstColumn.Image" style="max-height:200px" />
+                <img class="img-fluid card-img-top" src="@Model.FirstColumn.Image" />
             </a>
-            <div class="text-white card-body">
+            <div class="card-body">
                 <a class="text-white" asp-action="ColumnPost" asp-controller="Column" asp-route-id="@Model.FirstColumn.Id">
                     <h3>@Model.FirstColumn.Title</h3>
                 </a>
-                
+                <div class="p-1"></div>
+                <span class="float-right text-muted">@Model.FirstColumn.DatePosted.ToString("dd.MM.yyyy.")</span>
                 <div class="text-muted">
-                    Piše: <a asp-action="AuthorPage" asp-controller="Column" asp-route-id="@Model.FirstColumn.Author.Id" class="col-3 p-1 text-muted">
+                    Piše:
+                    <a asp-action="Author" asp-controller="Column" asp-route-id="@Model.FirstColumn.Author.Id">
                         @Model.FirstColumn.Author.Name
                     </a>
                 </div>
-                <small class="text-muted">@Model.FirstColumn.DatePosted.ToString("dd.MM.yyyy. HH:mm")</small>
                 <hr class="bg-secondary" />
                 <p>@Model.FirstColumn.Text</p>
             </div>
@@ -51,7 +51,7 @@
             <div class="p-1"></div>
         }
     </div>
-    <div class="col-12 col-md-4 col-lg-4">
+    <div class="col-12 col-md-5 col-lg-4">
         <div class="card">
             <div class="card-header">
                 <h2>Kolumnisti</h2>
@@ -60,12 +60,13 @@
                 @foreach (var author in Model.Authors)
                 {
                     <div class="row">
-                        <a asp-action="AuthorPage" asp-controller="Column" asp-route-id="@author.Id" class="col-3 p-1">
+                        <a asp-action="Author" asp-controller="Column" asp-route-id="@author.Id" class="col-3 p-1">
                             <img class="img-fluid" src="@author.Image" />
                         </a>
 
                         <div class="col-9 p-3">
-                            <a asp-action="AuthorPage" asp-controller="Column" asp-route-id="@author.Id" class="text-white">
+                            <a asp-action="Author" asp-controller="Column" asp-route-id="@author.Id" class="card-link"
+                               >
                                 <h5>@author.Name</h5>
                             </a>
 

@@ -58,5 +58,21 @@ namespace Bazirano.Controllers
             }
             return View(post);
         }
+
+        [Route("~/kolumnist/{id}")]
+        public IActionResult Author(long id)
+        {
+            var author = columnRepo.Authors.First(p => p.Id == id);
+            var columns = columnRepo.ColumnPosts
+                .Where(p => p.Author.Id == id)
+                .OrderByDescending(p => p.DatePosted)
+                .ToList();
+
+            return View(new AuthorPageViewModel
+            {
+                Author = author,
+                Columns = columns
+            });
+        }
     }
 }
