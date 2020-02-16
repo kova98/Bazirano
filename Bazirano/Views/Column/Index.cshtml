@@ -26,10 +26,10 @@
                     </a>
                 </div>
                 <hr class="bg-secondary" />
-                <p>@Model.FirstColumn.Text</p>
+                <p>@Model.FirstColumn.FirstParagraph</p>
             </div>
         </div>
-        <div class="p-1"></div>
+        <div class="p-2"></div>
         @foreach (var post in Model.Columns)
         {
             <div class="row rounded m-0 bg-light">
@@ -37,21 +37,17 @@
                     <img class="rounded-left img-fluid" src="@post.Image" style="max-height:200px" />
                 </a>
                 <div class="col-8 card-text">
+                    <small class="text-muted">@post.DatePosted.ToString("dd.MM.yyyy.")</small>
+
                     <a class="text-white card-body" asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
                         <h4>@post.Title</h4>
                     </a>
-                    <div class="text-muted">
-                        Piše: <a asp-action="AuthorPage" asp-controller="Column" asp-route-id="@post.Author.Id" class="col-3 p-1 text-muted">
-                            @post.Author.Name
-                        </a>
-                    </div>
-                    <small class="text-muted">@post.DatePosted.ToString("dd.MM.yyyy. HH:mm")</small>
                 </div>
             </div>
-            <div class="p-1"></div>
+            <div class="p-2"></div>
         }
     </div>
-    <div class="col-12 col-md-5 col-lg-4">
+    <div class="col-12 col-md-5 col-lg-5">
         <div class="card">
             <div class="card-header">
                 <h2>Kolumnisti</h2>

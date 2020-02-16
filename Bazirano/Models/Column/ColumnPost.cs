@@ -43,5 +43,21 @@ namespace Bazirano.Models.Column
         /// The collection of all the <see cref="Comment"/>s on the column.
         /// </summary>
         public ICollection<Comment> Comments { get; set; }
+
+        public string FirstParagraph
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Text))
+                {
+                    return "";
+                }
+
+                int startIndex = Text.IndexOf("<p>") + 3;
+                int endIndex = Text.IndexOf("</p>") - 1;    
+                int length = endIndex - startIndex;
+                return $"{Text.Substring(startIndex, length).Trim()}..";
+            }
+        }
     }
 }

@@ -10,6 +10,6 @@
                asp-action="Article" asp-route-id="@Model.Id" asp-controller="News">
                 <div>@Model.Title</div>
             </a>
-            <small class="text-muted">@Model.DatePosted</small>
+            <small class="text-muted">@Model.DatePosted.ToString("dd.MM.yyyy. HH:mm")</small>
         </div>
     </div>

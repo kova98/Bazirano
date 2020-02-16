@@ -7,5 +7,5 @@
     <a class="text-white" asp-action="Article" asp-route-id="@Model.Id">
         <h4 class="p-2">@Model.Title</h4>
     </a>
-    <small class="text-muted p-2">@Model.DatePosted</small>
+    <small class="text-muted p-2">@Model.DatePosted.ToString("dd.MM.yyyy. HH:mm")</small>
 </div>
