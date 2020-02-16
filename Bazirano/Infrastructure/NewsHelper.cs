@@ -51,7 +51,7 @@ namespace Bazirano.Infrastructure
             return vm;
         }
 
-        public static TimeDisplay GetTimeElapsed(TimeSpan elapsed)
+        public static TimeDisplay GetTimeDisplayFromTimeElapsed(TimeSpan elapsed)
         {
             int timeNumber;
             string timeText;
@@ -59,40 +59,48 @@ namespace Bazirano.Infrastructure
             if (elapsed.Days > 0)
             {
                 timeNumber = elapsed.Days;
-
-                string daysString = timeNumber.ToString();
-                char lastDigit = daysString[daysString.Length - 1];
-                timeText = (lastDigit == '1' && elapsed.Days != 11) ? "dan" : "dana";
+                timeText = GetDayNoun(elapsed.Days);
             }
             else if (elapsed.Hours > 0)
             {
                 timeNumber = elapsed.Hours;
-
-                string hoursString = timeNumber.ToString();
-                char lastDigit = hoursString[hoursString.Length - 1];
-                if (lastDigit == '1' && elapsed.Hours != 11)
-                {
-                    timeText = "sat";
-                }
-                else if (lastDigit == '2' || lastDigit == '3' || lastDigit == '4')
-                {
-                    timeText = "sata";
-                }
-                else
-                {
-                    timeText = "sati";
-                }
+                timeText = GetHourNoun(elapsed.Hours);
             }
             else
             {
                 timeNumber = elapsed.Minutes;
-
-                string minutesString = elapsed.Minutes.ToString();
-                char lastDigit = minutesString[minutesString.Length - 1];
-                timeText = "min";
+                timeText = GetMinuteNoun(elapsed.Minutes);
             }
 
             return new TimeDisplay { Number = timeNumber, Text = timeText };
         }
+
+        private static string GetHourNoun(int hours)
+        {
+            char lastDigit = hours.ToString().Last();
+
+            if (lastDigit == '1' && hours != 11)
+            {
+                return "sat";
+            }
+            if ((lastDigit == '2' || lastDigit == '3' || lastDigit == '4') && (hours > 14 || hours < 10))
+            {
+                return "sata";
+            }
+
+            return "sati";
+        }
+
+        private static string GetDayNoun(int days)
+        {
+            char lastDigit = days.ToString().Last();
+            return (lastDigit == '1' && days != 11) ? "dan" : "dana";
+        }
+
+        private static string GetMinuteNoun(int minutes)
+        {
+            return "min";
+        }
+
     }
 }

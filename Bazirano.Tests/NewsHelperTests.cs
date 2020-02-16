@@ -12,82 +12,52 @@ namespace Bazirano.Tests
 {
     public class NewsHelperTests
     {
-        [Fact]
-        public void Can_Get_Time_Elapsed_With_Days()
+        [Theory]
+        [InlineData(1, "dan")]
+        [InlineData(4, "dana")]
+        [InlineData(3561, "dan")]
+        [InlineData(3564, "dana")]
+        [InlineData(11, "dana")]
+        public void Can_Get_Time_Elapsed_With_Days(int days, string noun)
         {
             // Arrange
-            TimeSpan oneDay = new TimeSpan(1, 0, 0, 0);
-            TimeSpan moreDays = new TimeSpan(4, 0, 0, 0);
-            TimeSpan endsWith1 = new TimeSpan(3561, 0, 0, 0);
-            TimeSpan notEndsWith1 = new TimeSpan(3564, 0, 0, 0);
-            TimeSpan elevenDays = new TimeSpan(11, 0, 0, 0);
+            TimeSpan time = new TimeSpan(days, 0, 0, 0);
 
             // Act
-            TimeDisplay actualOneDay = NewsHelper.GetTimeElapsed(oneDay);
-            TimeDisplay actualMoreDays = NewsHelper.GetTimeElapsed(moreDays);
-            TimeDisplay actualEndsWith1 = NewsHelper.GetTimeElapsed(endsWith1);
-            TimeDisplay actualNotEndsWith1 = NewsHelper.GetTimeElapsed(notEndsWith1);
-            TimeDisplay actualEndsWith11 = NewsHelper.GetTimeElapsed(elevenDays);
+            TimeDisplay actualTimeDisplay = NewsHelper.GetTimeDisplayFromTimeElapsed(time);
 
             // Assert
-            Assert.Equal(1, actualOneDay.Number);
-            Assert.Equal("dan", actualOneDay.Text);
+            Assert.Equal(days, actualTimeDisplay.Number);
+            Assert.Equal(noun, actualTimeDisplay.Text);
+        }
 
-            Assert.Equal(4, actualMoreDays.Number);
-            Assert.Equal("dana", actualMoreDays.Text);
+        [Theory]
+        [InlineData(1, "sat")]
+        [InlineData(4, "sata")]
+        [InlineData(21, "sat")]
+        [InlineData(14, "sati")]
+        [InlineData(11, "sati")]
+        public void Can_Get_Time_Display_With_Hours(int hours, string noun)
+        {
+            // Arrange
+            TimeSpan time = new TimeSpan(hours, 0, 0);
 
-            Assert.Equal(3561, actualEndsWith1.Number);
-            Assert.Equal("dan", actualEndsWith1.Text);
+            // Act
+            TimeDisplay actualTimeDisplay = NewsHelper.GetTimeDisplayFromTimeElapsed(time);
 
-            Assert.Equal(3564, actualNotEndsWith1.Number);
-            Assert.Equal("dana", actualNotEndsWith1.Text);
-
-            Assert.Equal(11, actualEndsWith11.Number);
-            Assert.Equal("dana", actualEndsWith11.Text);
+            // Assert
+            Assert.Equal(hours, actualTimeDisplay.Number);
+            Assert.Equal(noun, actualTimeDisplay.Text);
         }
 
         [Fact]
-        public void Can_Get_Time_Elapsed_With_Hours()
-        {
-            // Arrange
-            TimeSpan oneHour = new TimeSpan(1, 0, 0);
-            TimeSpan moreHours = new TimeSpan(4, 0, 0);
-            TimeSpan endsWith1 = new TimeSpan(21, 0, 0);
-            TimeSpan notEndsWith1 = new TimeSpan(14, 0, 0);
-            TimeSpan elevenHours = new TimeSpan(11, 0, 0);
-
-            // Act
-            TimeDisplay actualOneHour = NewsHelper.GetTimeElapsed(oneHour);
-            TimeDisplay actualMoreHours = NewsHelper.GetTimeElapsed(moreHours);
-            TimeDisplay actualEndsWith1 = NewsHelper.GetTimeElapsed(endsWith1);
-            TimeDisplay actualNotEndsWith1 = NewsHelper.GetTimeElapsed(notEndsWith1);
-            TimeDisplay actualEndsWith11 = NewsHelper.GetTimeElapsed(elevenHours);
-
-            // Assert
-            Assert.Equal(1, actualOneHour.Number);
-            Assert.Equal("sat", actualOneHour.Text);
-
-            Assert.Equal(4, actualMoreHours.Number);
-            Assert.Equal("sati", actualMoreHours.Text);
-
-            Assert.Equal(21, actualEndsWith1.Number);
-            Assert.Equal("sat", actualEndsWith1.Text);
-
-            Assert.Equal(14, actualNotEndsWith1.Number);
-            Assert.Equal("sati", actualNotEndsWith1.Text);
-
-            Assert.Equal(11, actualEndsWith11.Number);
-            Assert.Equal("sati", actualEndsWith11.Text);
-        }
-
-        [Fact]
-        public void Can_Get_Time_Elapsed_With_Minutes()
+        public void Can_Get_Time_Display_With_Minutes()
         {
             // Arrange
             TimeSpan minutes = new TimeSpan(0, 13, 0);
 
             // Act
-            TimeDisplay actual = NewsHelper.GetTimeElapsed(minutes);
+            TimeDisplay actual = NewsHelper.GetTimeDisplayFromTimeElapsed(minutes);
 
             // Assert
             Assert.Equal(13, actual.Number);
