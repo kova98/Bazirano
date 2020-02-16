@@ -13,13 +13,11 @@ namespace Bazirano.Controllers
 {
     public class NewsController : Controller
     {
-        private INewsHelper helper;
         private INewsPostsRepository repository;
         private IConfiguration config;
 
-        public NewsController(INewsHelper helper, INewsPostsRepository repo, IConfiguration cfg)
+        public NewsController(INewsPostsRepository repo, IConfiguration cfg)
         {
-            this.helper = helper;
             repository = repo;
             config = cfg;
         }
@@ -27,14 +25,14 @@ namespace Bazirano.Controllers
         [Route("~/vijesti")]
         public async Task<IActionResult> Index()
         {
-            return View(await helper.GetCurrentNewsAsync());
+            return View(await repository.GetNewsPageViewModelAsync());
         }
 
         [Route("~/vijesti/clanak/{id}")]
         public async Task<IActionResult> Article(long id)
         {
             NewsPost article = repository.NewsPosts.FirstOrDefault(p => p.Id == id);
-            var newsPageVm = await helper.GetCurrentNewsAsync();
+            var newsPageVm = await repository.GetNewsPageViewModelAsync();
             ArticleViewModel vm = new ArticleViewModel
             {
                 Article = article,
@@ -62,7 +60,7 @@ namespace Bazirano.Controllers
                 repository.AddCommentToNewsPost(vm.Comment, vm.ArticleId);
             }
 
-            var newsPageVm = await helper.GetCurrentNewsAsync();
+            var newsPageVm = await repository.GetNewsPageViewModelAsync();
 
             var articleVm = new ArticleViewModel
             {
@@ -82,7 +80,7 @@ namespace Bazirano.Controllers
         {
             if (ModelState.IsValid)
             {
-                var latestPosts = await repository.GetLatestNewsPosts(15);
+                var latestPosts = await repository.GetLatestNewsPostsAsync(15);
 
                 foreach(var p in latestPosts)
                 {
@@ -105,5 +103,7 @@ namespace Bazirano.Controllers
                 return BadRequest();
             }
         }
+
+        
     }
 }

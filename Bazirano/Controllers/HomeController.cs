@@ -7,23 +7,24 @@ using Bazirano.Models.DataAccess;
 using Bazirano.Models.Home;
 using Bazirano.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Bazirano.Models.News;
 
 namespace Bazirano.Controllers
 {
     public class HomeController : Controller
     {
         private IBoardThreadsRepository boardRepo;
-        private INewsHelper newsHelper;
+        private INewsPostsRepository newsRepo;
 
-        public HomeController(IBoardThreadsRepository boardRepo, INewsHelper newsHelper)
+        public HomeController(IBoardThreadsRepository boardRepo, INewsPostsRepository newsRepo)
         {
             this.boardRepo = boardRepo;
-            this.newsHelper = newsHelper;
+            this.newsRepo = newsRepo;
         }
 
         public async Task<IActionResult> Index()
         {
-            var vm = await newsHelper.GetCurrentNewsAsync();
+            NewsPageViewModel vm = await newsRepo.GetNewsPageViewModelAsync();
 
             return View(new HomePageViewModel
             {

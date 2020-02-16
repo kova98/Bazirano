@@ -17,14 +17,12 @@ namespace Bazirano.Controllers
         private INewsPostsRepository newsRepo;
         private IBoardThreadsRepository boardRepo;
         private IColumnRepository columnRepo;
-        private INewsHelper newsHelper;
 
-        public AdminController(INewsPostsRepository newsRepository, IBoardThreadsRepository boardRepository, INewsHelper helper, IColumnRepository columnRepository)
+        public AdminController(INewsPostsRepository newsRepository, IBoardThreadsRepository boardRepository, IColumnRepository columnRepository)
         {
             newsRepo = newsRepository;
             boardRepo = boardRepository;
             columnRepo = columnRepository;
-            newsHelper = helper;
         }
 
         public IActionResult Index()
@@ -34,7 +32,7 @@ namespace Bazirano.Controllers
 
         public async Task<IActionResult> News()
         {
-            var newsPosts = await newsRepo.GetLatestNewsPosts(100);
+            var newsPosts = await newsRepo.GetLatestNewsPostsAsync(100);
             return View(nameof(News), newsPosts);
         }
 

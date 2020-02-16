@@ -1,7 +1,7 @@
 ﻿@model NewsPost
 @using Bazirano.Infrastructure
 
-@{TimeDisplay time = NewsHelper.GetTimeDisplayFromTimeElapsed(@DateTime.Now - Model.DatePosted); }
+@{TimeDisplay time = TimeHelper.GetTimeDisplayFromTimeElapsed(@DateTime.Now - Model.DatePosted); }
 
 <div class="row border-light border-bottom" style="padding-bottom:20px">
     <div class="col-1 col-md-2">

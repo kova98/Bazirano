@@ -43,8 +43,6 @@ namespace Bazirano
             services.AddTransient<INewsPostsRepository, EFRepository>();
             services.AddTransient<IColumnRepository, EFRepository>();
 
-            services.AddSingleton<INewsHelper, NewsHelper>();
-
             services.AddMvc();
         }
 

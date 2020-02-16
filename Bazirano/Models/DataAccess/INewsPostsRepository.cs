@@ -13,7 +13,10 @@ namespace Bazirano.Models.DataAccess
         /// </summary>
         IQueryable<NewsPost> NewsPosts { get; }
 
-        Task<List<NewsPost>> GetLatestNewsPosts(int count);
+        // refactor
+        Task<List<NewsPost>> GetLatestNewsPostsAsync(int count);
+
+        Task<NewsPageViewModel> GetNewsPageViewModelAsync();
 
         /// <summary>
         /// Adds a new <see cref="NewsPost"/> to the database.
@@ -44,6 +47,6 @@ namespace Bazirano.Models.DataAccess
         /// Increases the <see cref="NewsPost.ViewCount"/> by 1.
         /// </summary>
         /// <param name="post">The post which view count to increment.</param>
-        void IncrementViewCount(NewsPost post);
+        void IncrementViewCount(NewsPost post);       
     }
 }

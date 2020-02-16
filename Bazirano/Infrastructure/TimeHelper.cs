@@ -8,49 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bazirano.Infrastructure
 {
-    // TODO: Look into refactoring this. Possibly the cause of error: 
-    // A second operation started on this context before a previous operation completed.
-    public class NewsHelper : INewsHelper
+    public static class TimeHelper
     {
-        private INewsPostsRepository repository;
-
-        public NewsHelper(INewsPostsRepository repo)
-        {
-            repository = repo;
-        }
-
-        public async Task<NewsPageViewModel> GetCurrentNewsAsync()
-        {
-            NewsPageViewModel vm = new NewsPageViewModel();
-            
-            var recentPosts = await repository.GetLatestNewsPosts(25);
-
-            while (recentPosts.Count < 7)
-            {
-                recentPosts.Add(new NewsPost());
-
-                //TODO: Handle this properly
-            }
-
-            var popularRecentPosts = recentPosts.OrderByDescending(x => x.ViewCount).ToList();
-
-            vm.MainPost = popularRecentPosts[0];
-            vm.SecondaryPost = popularRecentPosts[1];
-
-            //TODO: Cache this, add related articles once when adding a new article
-            vm.MainPostRelatedPosts = recentPosts.Take(6).ToList();
-
-            //var query = repository.NewsPosts
-            //    .Where(p => p.KeywordsList.KeywordMatches(vm.MainPost.KeywordsList) > 5 && p.Id != vm.MainPost.Id)
-            //    .OrderByDescending(p => p.KeywordsList.KeywordMatches(vm.MainPost.KeywordsList));
-
-            vm.PostList = popularRecentPosts.GetRange(2, 5).ToList();
-
-            vm.LatestNews = recentPosts.Take(6).ToList();
-
-            return vm;
-        }
-
         public static TimeDisplay GetTimeDisplayFromTimeElapsed(TimeSpan elapsed)
         {
             int timeNumber;

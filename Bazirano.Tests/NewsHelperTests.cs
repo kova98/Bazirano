@@ -24,7 +24,7 @@ namespace Bazirano.Tests
             TimeSpan time = new TimeSpan(days, 0, 0, 0);
 
             // Act
-            TimeDisplay actualTimeDisplay = NewsHelper.GetTimeDisplayFromTimeElapsed(time);
+            TimeDisplay actualTimeDisplay = TimeHelper.GetTimeDisplayFromTimeElapsed(time);
 
             // Assert
             Assert.Equal(days, actualTimeDisplay.Number);
@@ -43,7 +43,7 @@ namespace Bazirano.Tests
             TimeSpan time = new TimeSpan(hours, 0, 0);
 
             // Act
-            TimeDisplay actualTimeDisplay = NewsHelper.GetTimeDisplayFromTimeElapsed(time);
+            TimeDisplay actualTimeDisplay = TimeHelper.GetTimeDisplayFromTimeElapsed(time);
 
             // Assert
             Assert.Equal(hours, actualTimeDisplay.Number);
@@ -57,7 +57,7 @@ namespace Bazirano.Tests
             TimeSpan minutes = new TimeSpan(0, 13, 0);
 
             // Act
-            TimeDisplay actual = NewsHelper.GetTimeDisplayFromTimeElapsed(minutes);
+            TimeDisplay actual = TimeHelper.GetTimeDisplayFromTimeElapsed(minutes);
 
             // Assert
             Assert.Equal(13, actual.Number);
