@@ -8,6 +8,7 @@ using Bazirano.Models.Home;
 using Bazirano.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Bazirano.Models.News;
+using Bazirano.Models.Board;
 
 namespace Bazirano.Controllers
 {
@@ -15,25 +16,28 @@ namespace Bazirano.Controllers
     {
         private IBoardThreadsRepository boardRepo;
         private INewsPostsRepository newsRepo;
+        private NewsHelper newsHelper;
 
         public HomeController(IBoardThreadsRepository boardRepo, INewsPostsRepository newsRepo)
         {
             this.boardRepo = boardRepo;
             this.newsRepo = newsRepo;
+            newsHelper = new NewsHelper(newsRepo);
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            NewsPageViewModel vm = await newsRepo.GetNewsPageViewModelAsync();
+            NewsPageViewModel newsPageViewModel = newsHelper.GetNewsPageViewModel();
+            List<BoardThread> boardThreads = boardRepo.BoardThreads
+                .OrderByDescending(x => x.Posts.OrderBy(y => y.DatePosted).FirstOrDefault().DatePosted)
+                .ToList();
 
             return View(new HomePageViewModel
             {
-                MainPost = vm.MainPost,
-                PopularPosts = vm.PostList,
-                Threads = await boardRepo.BoardThreads
-                    .OrderByDescending(x => x.Posts.OrderBy(y => y.DatePosted).FirstOrDefault().DatePosted)
-                    .ToListAsync()
-            }); ;
+                MainPost = newsPageViewModel.MainPost,
+                PopularPosts = newsPageViewModel.PostList,
+                Threads = boardThreads
+            });
         }
     }
 }

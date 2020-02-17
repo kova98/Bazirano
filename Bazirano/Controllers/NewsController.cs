@@ -13,38 +13,40 @@ namespace Bazirano.Controllers
 {
     public class NewsController : Controller
     {
-        private INewsPostsRepository repository;
+        private INewsPostsRepository newsRepo;
         private IConfiguration config;
+        private NewsHelper newsHelper;
 
         public NewsController(INewsPostsRepository repo, IConfiguration cfg)
         {
-            repository = repo;
+            newsRepo = repo;
             config = cfg;
+            newsHelper = new NewsHelper(repo);
         }
 
         [Route("~/vijesti")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await repository.GetNewsPageViewModelAsync());
+            return View(newsHelper.GetNewsPageViewModel());
         }
 
         [Route("~/vijesti/clanak/{id}")]
-        public async Task<IActionResult> Article(long id)
+        public IActionResult Article(long id)
         {
-            NewsPost article = repository.NewsPosts.FirstOrDefault(p => p.Id == id);
-            var newsPageVm = await repository.GetNewsPageViewModelAsync();
+            NewsPost article = newsRepo.NewsPosts.FirstOrDefault(p => p.Id == id);
+            var newsPageVm = newsHelper.GetNewsPageViewModel();
             ArticleViewModel vm = new ArticleViewModel
             {
                 Article = article,
-                LatestNews = newsPageVm.LatestNews
+                LatestNews = newsPageVm.LatestPosts
             };
 
-            repository.IncrementViewCount(article);
+            newsRepo.IncrementViewCount(article);
 
             return View(vm);
         }
 
-        public async Task<IActionResult> PostComment(ArticleRespondViewModel vm)
+        public IActionResult PostComment(ArticleRespondViewModel vm)
         {
             if (ModelState.IsValid)
             {
@@ -57,36 +59,36 @@ namespace Bazirano.Controllers
 
                 vm.Comment.Text = vm.Comment.Text.Trim();
 
-                repository.AddCommentToNewsPost(vm.Comment, vm.ArticleId);
+                newsRepo.AddCommentToNewsPost(vm.Comment, vm.ArticleId);
             }
 
-            var newsPageVm = await repository.GetNewsPageViewModelAsync();
+            var newsPageViewModel = newsHelper.GetNewsPageViewModel();
 
-            var articleVm = new ArticleViewModel
+            var articleViewModel = new ArticleViewModel
             {
-                Article = repository.NewsPosts.FirstOrDefault(p => p.Id == vm.ArticleId),
-                LatestNews = newsPageVm.LatestNews,
+                Article = newsRepo.NewsPosts.FirstOrDefault(p => p.Id == vm.ArticleId),
+                LatestNews = newsPageViewModel.LatestPosts,
             };
 
             ViewBag.CommentPosted = true;
 
 
-            return View(nameof(Article), articleVm);
+            return View(nameof(Article), articleViewModel);
         }
 
         //TODO: Add security!!!
         [HttpPost("~/api/postNews")]
-        public async Task<IActionResult> PostNews([FromBody]NewsPost post)
+        public IActionResult PostNews([FromBody]NewsPost post)
         {
             if (ModelState.IsValid)
             {
-                var latestPosts = await repository.GetLatestNewsPostsAsync(15);
+                var latestPosts = newsRepo.NewsPosts.OrderByDescending(x => x.DatePosted).Take(15).ToList();
 
-                foreach(var p in latestPosts)
+                foreach (var p in latestPosts)
                 {
                     if (p.Guid == post.Guid)
                     {
-                        repository.EditNewsPost(post);
+                        newsRepo.EditNewsPost(post);
                         return Ok();
                     }
                 }
@@ -94,7 +96,7 @@ namespace Bazirano.Controllers
                 post.DatePosted = DateTime.Now;
                 post.Comments = new List<Comment>();
 
-                repository.AddNewsPost(post);
+                newsRepo.AddNewsPost(post);
 
                 return Ok();
             }

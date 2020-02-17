@@ -44,35 +44,6 @@ namespace Bazirano.Models.DataAccess
 
         public IQueryable<Author> Authors => context.Authors;
 
-        public async Task<List<NewsPost>> GetLatestNewsPostsAsync(int count)
-        {
-            return await context.NewsPosts.OrderByDescending(x => x.DatePosted).Take(count).ToListAsync();
-        }
-
-        public async Task<NewsPageViewModel> GetNewsPageViewModelAsync()
-        {
-            List<NewsPost> recentPosts = await GetLatestNewsPostsAsync(25);
-            List<NewsPost> popularPosts = recentPosts.OrderByDescending(x => x.ViewCount).ToList();
-
-            while (popularPosts.Count < 7)
-            {
-                popularPosts.Add(new NewsPost());
-            }
-
-            NewsPageViewModel vm = new NewsPageViewModel()
-            {
-                MainPost = popularPosts[0],
-                SecondaryPost = popularPosts[1],
-                //TODO: Cache this, add related articles once when adding a new article
-                MainPostRelatedPosts = recentPosts.Take(6).ToList(),
-                PostList = popularPosts.GetRange(2, 5).ToList(),
-                LatestNews = recentPosts.Take(6).ToList()
-            };
-
-            return vm;
-        }
-
-
         /// <summary>
         /// Adds a new <see cref="Comment"/> to a <see cref="NewsPost"/>.
         /// </summary>

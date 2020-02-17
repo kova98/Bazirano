@@ -30,6 +30,6 @@ namespace Bazirano.Models.News
         /// <summary>
         /// The list containing the latest <see cref="NewsPost"/>s.
         /// </summary>
-        public List<NewsPost> LatestNews { get; set; }
+        public List<NewsPost> LatestPosts { get; set; }
     }
 }

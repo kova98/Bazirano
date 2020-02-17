@@ -13,11 +13,6 @@ namespace Bazirano.Models.DataAccess
         /// </summary>
         IQueryable<NewsPost> NewsPosts { get; }
 
-        // refactor
-        Task<List<NewsPost>> GetLatestNewsPostsAsync(int count);
-
-        Task<NewsPageViewModel> GetNewsPageViewModelAsync();
-
         /// <summary>
         /// Adds a new <see cref="NewsPost"/> to the database.
         /// </summary>

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Bazirano.Models.Column;
 using System;
 using Bazirano.Models.Admin;
+using System.Collections.Generic;
 
 namespace Bazirano.Controllers
 {
@@ -17,12 +18,14 @@ namespace Bazirano.Controllers
         private INewsPostsRepository newsRepo;
         private IBoardThreadsRepository boardRepo;
         private IColumnRepository columnRepo;
+        private NewsHelper newsHelper;
 
         public AdminController(INewsPostsRepository newsRepository, IBoardThreadsRepository boardRepository, IColumnRepository columnRepository)
         {
             newsRepo = newsRepository;
             boardRepo = boardRepository;
             columnRepo = columnRepository;
+            newsHelper = new NewsHelper(newsRepo);
         }
 
         public IActionResult Index()
@@ -30,9 +33,10 @@ namespace Bazirano.Controllers
             return View();
         }
 
-        public async Task<IActionResult> News()
+        public IActionResult News()
         {
-            var newsPosts = await newsRepo.GetLatestNewsPostsAsync(100);
+            List<NewsPost> newsPosts = newsRepo.NewsPosts.OrderByDescending(x => x.DatePosted).Take(100).ToList();
+
             return View(nameof(News), newsPosts);
         }
 
