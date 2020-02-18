@@ -30,7 +30,7 @@ namespace Bazirano.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View(nameof(Index));
         }
 
         public IActionResult News()
@@ -51,7 +51,7 @@ namespace Bazirano.Controllers
         {
             NewsPost post = newsRepo.NewsPosts.FirstOrDefault(x => x.Id == id);
 
-            return View(post);
+            return View(nameof(EditArticle), post);
         }
 
         public IActionResult SaveArticle(NewsPost article)
@@ -70,21 +70,22 @@ namespace Bazirano.Controllers
 
         public IActionResult Board()
         {
-            return View(nameof(Board), boardRepo.BoardThreads
+            var boardThreads = boardRepo.BoardThreads
                 .OrderByDescending(x => x.Posts.FirstOrDefault().DatePosted)
-                .ToList()
-                .Take(50));
+                .ToList();
+
+            return View(nameof(Board), boardThreads);
         }
         
         public IActionResult Column()
         {
-            AdminColumnViewModel vm = new AdminColumnViewModel
+            var adminColumnViewModel = new AdminColumnViewModel
             {
                 Authors = columnRepo.Authors.ToList(),
                 ColumnPosts = columnRepo.ColumnPosts.ToList()
             };
 
-            return View(nameof(Column), vm);
+            return View(nameof(Column), adminColumnViewModel);
         }
 
         public IActionResult AddColumn()

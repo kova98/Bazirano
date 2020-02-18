@@ -28,16 +28,7 @@ namespace Bazirano.Controllers
             // Should only happen when first launching the website, without any columns in the database
             if (columns.Count == 0)
             {
-                for (int i = 0; i < 3; i++)
-                {
-                    columns.Add(new ColumnPost
-                    {
-                        Author = new Author { Id = 0, Name = "Dummy", Image = "/", Bio = "Dummy bio" },
-                        Id = 0,
-                        Title = $"Dummy Column {i + 1}",
-                        Text = $"Dummy column text {i + 1}"
-                    });
-                }
+                columns.AddRange(GetDummyColumns(6));
             }
 
             return View(new ColumnMainPageViewModel
@@ -46,6 +37,24 @@ namespace Bazirano.Controllers
                 Authors = columnRepo.Authors.ToList(),
                 Columns = columns.GetRange(1, columns.Count - 1)
             });
+        }
+
+        private List<ColumnPost> GetDummyColumns(int amount)
+        {
+            List<ColumnPost> columnPosts = new List<ColumnPost>();
+
+            for (int i = 0; i < amount; i++)
+            {
+                columnPosts.Add(new ColumnPost
+                {
+                    Author = new Author { Id = 0, Name = "Dummy", Image = "/", Bio = $"Dummy bio {i}" },
+                    Id = 0,
+                    Title = $"Dummy Column {i + 1}",
+                    Text = $"Dummy column text {i + 1}"
+                });
+            }
+
+            return columnPosts;
         }
 
         [Route("~/kolumna/{id}")]

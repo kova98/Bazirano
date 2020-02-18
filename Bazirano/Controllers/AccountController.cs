@@ -43,12 +43,9 @@ namespace Bazirano.Controllers
                 {
                     await signInManager.SignOutAsync();
 
-                    var passwordCorrect = await signInManager.CheckPasswordSignInAsync(user, loginModel.Password, false);
-
                     if ((await signInManager.PasswordSignInAsync(user, loginModel.Password, false, false)).Succeeded)
                     {
                         return Redirect(loginModel?.ReturnUrl ?? "/Admin"); 
-                        // It fails to authorize properly, causing it to keep redirecting to Account controller
                     }
                 }
             }

@@ -10,9 +10,9 @@ namespace Bazirano.Infrastructure
 {
     public class NewsHelper
     {
-        public const int PostListCount = 5;
-        public const int LatestPostsCount = 6;
-        public const int MainPostRelatedPostsCount = 6;
+        private const int PostListCount = 5;
+        private const int LatestPostsCount = 6;
+        private const int MainPostRelatedPostsCount = 6;
 
         private INewsPostsRepository repository;
 

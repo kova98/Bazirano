@@ -40,14 +40,8 @@ namespace Bazirano.Tests
             // Assert
             Assert.Equal(6, actual.MainPost.Id);
             Assert.Equal(2, actual.SecondaryPost.Id);
-
-            Assert.Equal(NewsHelper.MainPostRelatedPostsCount, actual.MainPostRelatedPosts.Count);
             Assert.Equal(3, actual.MainPostRelatedPosts.First().Id);
-
-            Assert.Equal(NewsHelper.PostListCount, actual.PostList.Count);
             Assert.Equal(1, actual.PostList.First().Id);
-
-            Assert.Equal(NewsHelper.LatestPostsCount, actual.LatestPosts.Count);
             Assert.Equal(3, actual.LatestPosts.First().Id);
         }
     }
