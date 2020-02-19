@@ -17,198 +17,145 @@ namespace Bazirano.Tests.Controllers
     public class AdminControllerTests
     {
         [Fact]
-        void Can_Display_Index()
+        void Index_DisplaysView()
         {
-            // Arrange
             var mock = new Mock<INewsPostsRepository>();
             var adminController = new AdminController(mock.Object, null, null);
 
-            // Act
-            var result = adminController.Index();
+            var result = (ViewResult)adminController.Index(); 
 
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal(nameof(adminController.Index), viewResult.ViewName);
+            Assert.Equal(nameof(adminController.Index), result.ViewName);
+        }
+
+        [Theory]
+        [ClassData(typeof(NewsPostsTestData))]
+        void News_DisplaysViewWithCorrectModel(NewsPost[] newsPosts)
+        {
+            var mock = new Mock<INewsPostsRepository>(); 
+            mock.Setup(x => x.NewsPosts).Returns(newsPosts.AsQueryable());
+            var adminController = new AdminController(mock.Object, null, null);
+
+            var result = (ViewResult)adminController.News();
+            var newsPostsModel = (List<NewsPost>)result.Model;
+
+            Assert.Equal(2, newsPostsModel.First().Id);
+            Assert.Equal(nameof(adminController.News), result.ViewName);
         }
 
         [Fact]
-        void Can_Display_News_View_With_Latest_News()
+        void DeleteArticle_RedirectsToNews()
         {
-            // Arrange
             var mock = new Mock<INewsPostsRepository>();
-            mock.Setup(x => x.NewsPosts).Returns(new NewsPost[]
-            {
-                new NewsPost { Id = 0, DatePosted = DateTime.Now.AddHours(-1) },
-                new NewsPost { Id = 1, DatePosted = DateTime.Now.AddHours(-5) },
-                new NewsPost { Id = 2, DatePosted = DateTime.Now.AddHours(5) },
-                new NewsPost { Id = 3, DatePosted = DateTime.Now.AddHours(-2) },
-                new NewsPost { Id = 4, DatePosted = DateTime.Now.AddHours(-10) }
-            }
-            .AsQueryable());
-
             var adminController = new AdminController(mock.Object, null, null);
 
-            // Act
-            var result = adminController.News();
+            var result = (RedirectToActionResult)adminController.DeleteArticle(1);
 
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var newsPosts = Assert.IsType<List<NewsPost>>(viewResult.Model);
-            Assert.Equal(2, newsPosts.First().Id);
+            Assert.Equal(nameof(adminController.News), result.ActionName);
+        }
+
+        [Theory]
+        [ClassData(typeof(NewsPostsTestData))]
+        void EditArticle_DisplaysViewWithCorrectModel(NewsPost[] newsPosts)
+        {
+            var mock = new Mock<INewsPostsRepository>();
+            mock.Setup(x => x.NewsPosts).Returns(newsPosts.AsQueryable());
+            var adminController = new AdminController(mock.Object, null, null);
+
+            var result = (ViewResult)adminController.EditArticle(1);
+            var postModel = (NewsPost)result.Model;
+
+            Assert.Equal(nameof(adminController.EditArticle), result.ViewName);
+            Assert.Equal(1, postModel.Id);
         }
 
         [Fact]
-        void Can_Redirect_To_News_After_Deleting_Article()
+        void SaveArticle_RedirectsToNews()
         {
-            // Arrange
             var mock = new Mock<INewsPostsRepository>();
             var adminController = new AdminController(mock.Object, null, null);
 
-            // Act
-            var result = adminController.DeleteArticle(1);
+            var result = (RedirectToActionResult)adminController.SaveArticle(new NewsPost());
 
-            // Assert
-            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal(nameof(adminController.News), redirectResult.ActionName);
-        }
-
-        [Fact]
-        void Can_Display_EditArticle_With_Selected_Article()
-        {
-            // Arrange
-            var mock = new Mock<INewsPostsRepository>();
-            mock.Setup(x => x.NewsPosts).Returns(new NewsPost[]
-            {
-                new NewsPost { Id = 0 },
-                new NewsPost { Id = 1 },
-                new NewsPost { Id = 2 },
-            }
-            .AsQueryable());
-
-            var adminController = new AdminController(mock.Object, null, null);
-
-            // Act
-            var result = adminController.EditArticle(1);
-
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var newsPost = Assert.IsType<NewsPost>(viewResult.Model);
-            Assert.Equal(nameof(adminController.EditArticle), viewResult.ViewName);
-            Assert.Equal(1, newsPost.Id);
-        }
-
-        [Fact]
-        void Can_Redirect_To_News_After_Saving_Article()
-        {
-            // Arrange
-            var mock = new Mock<INewsPostsRepository>();
-            var adminController = new AdminController(mock.Object, null, null);
-
-            // Act
-            var result = adminController.SaveArticle(new NewsPost());
-
-            // Assert
-            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal(nameof(adminController.News), redirectResult.ActionName);
+            Assert.Equal(nameof(adminController.News), result.ActionName);
         }
 
         [InlineData(1)]
         [Theory]
-        void Can_Redirect_To_Board_After_Deleting_Board_Thread(long id)
+        void DeleteBoardThread_RedirectsToBoard(long id)
         {
-            // Arrange
             var mock = new Mock<IBoardThreadsRepository>();
             var adminController = new AdminController(null, mock.Object, null);
 
-            // Act
-            var result = adminController.DeleteBoardThread(id);
+            var result = (RedirectToActionResult)adminController.DeleteBoardThread(id);
 
-            // Assert
-            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal(nameof(adminController.Board), redirectResult.ActionName);
+            Assert.Equal(nameof(adminController.Board), result.ActionName);
         }
 
-        [Fact]
-        void Can_Display_Board()
+        [Theory]
+        [ClassData(typeof(BoardThreadTestData))]
+        void Board_DisplaysViewWithCorrectModel(BoardThread[] boardThreads)
         {
-            // Arrange
             var mock = new Mock<IBoardThreadsRepository>();
+            mock.Setup(x => x.BoardThreads).Returns(boardThreads.AsQueryable());
             var adminController = new AdminController(null, mock.Object, null);
 
-            // Act
-            var result = adminController.Board();
+            var result = (ViewResult)adminController.Board();
+            var firstThread = (result.Model as List<BoardThread>).First();
 
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal(nameof(adminController.Board), viewResult.ViewName);
-            Assert.IsAssignableFrom<IEnumerable<BoardThread>>(viewResult.Model);
+            Assert.Equal(nameof(adminController.Board), result.ViewName);
+            Assert.Equal(1, firstThread.Id);
         }
 
         [Fact]
-        void Can_Display_Column()
+        void Column_DisplaysView()
         {
-            // Arrange
             var mock = new Mock<IColumnRepository>();
             var adminController = new AdminController(null, null, mock.Object);
 
-            // Act
-            var result = adminController.Column();
+            var result = (ViewResult)adminController.Column();
+            var viewModel = (AdminColumnViewModel)result.Model;
 
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var viewModel = Assert.IsType<AdminColumnViewModel>(viewResult.Model);
+            Assert.Equal(nameof(adminController.Column), result.ViewName);
             Assert.IsType<List<Author>>(viewModel.Authors);
             Assert.IsType<List<ColumnPost>>(viewModel.ColumnPosts);
         }
 
         [Fact]
-        void Can_Display_AddColumn()
+        void AddColumn_DisplaysView()
         {
-            // Arrange
             var mock = new Mock<IColumnRepository>();
             var adminController = new AdminController(null, null, mock.Object);
 
-            // Act
-            var result = adminController.AddColumn();
+            var result = (ViewResult)adminController.AddColumn();
+            var viewModel = (AddColumnViewModel)result.Model;
 
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var viewModel = Assert.IsType<AddColumnViewModel>(viewResult.Model);
+            Assert.Equal(nameof(adminController.AddColumn), result.ViewName);
             Assert.IsType<List<Author>>(viewModel.Authors);
             Assert.IsType<ColumnPost>(viewModel.Column);
         }
 
         [Fact]
-        void Can_Display_Column_After_Saving_Column()
+        void SaveColumn_DisplaysColumnView()
         {
-            // Arrange
-            var columnPost = new ColumnPost();
             var mock = new Mock<IColumnRepository>();
             var adminController = new AdminController(null, null, mock.Object);
+            var columnPost = new ColumnPost();
 
-            // Act
-            var result = adminController.SaveColumn(columnPost);
+            var result = (ViewResult)adminController.SaveColumn(columnPost);
 
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal(nameof(adminController.Column), viewResult.ViewName);
+            Assert.Equal(nameof(adminController.Column), result.ViewName);
         }
 
         [Fact]
-        void Can_Display_AddAuthor()
+        void AddAuthor_DisplaysView()
         {
-            // Arrange
             var mock = new Mock<INewsPostsRepository>();
             var adminController = new AdminController(mock.Object, null, null);
 
-            // Act
-            var result = adminController.AddAuthor();
+            var result = (ViewResult)adminController.AddAuthor();
+            var author = (Author)result.Model;
 
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var author = Assert.IsType<Author>(viewResult.Model);
-
-            Assert.Equal(nameof(adminController.AddAuthor), viewResult.ViewName);
+            Assert.Equal(nameof(adminController.AddAuthor), result.ViewName);
             Assert.True(IsAuthorEmpty(author));
         }
 
@@ -224,78 +171,47 @@ namespace Bazirano.Tests.Controllers
         }
 
         [Fact]
-        void Can_Display_Column_After_Saving_Author()
+        void SaveAuthor_DisplaysColumnView()
         {
-            // Arrange
+            var mock = new Mock<IColumnRepository>();
+            var adminController = new AdminController(null, null, mock.Object); 
             var author = new Author();
-            var mock = new Mock<IColumnRepository>();
-            var adminController = new AdminController(null, null, mock.Object);
 
-            // Act
-            var result = adminController.SaveAuthor(author);
+            var result = (ViewResult)adminController.SaveAuthor(author);
 
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal(nameof(adminController.Column), viewResult.ViewName);
+            Assert.Equal(nameof(adminController.Column), result.ViewName);
         }
 
-        [InlineData(1)]
         [Theory]
-        void Can_Display_AddColumn_When_Calling_EditColumn(long id)
+        [ClassData(typeof(ColumnTestData))]
+        void EditColumn_DisplaysAddColumn(ColumnPost[] columnPosts, Author[] authors)
         {
-            // Arrange
             var mock = new Mock<IColumnRepository>();
-            mock.Setup(x => x.ColumnPosts).Returns(new ColumnPost[]
-            {
-                new ColumnPost { Id = 0 },
-                new ColumnPost { Id = 1 },
-                new ColumnPost { Id = 2 },
-            }
-            .AsQueryable());
-
-            mock.Setup(x => x.Authors).Returns(new Author[]
-            {
-                new Author { Id = 0 },
-                new Author { Id = 1 }
-            }
-            .AsQueryable());
-
+            mock.Setup(x => x.ColumnPosts).Returns(columnPosts.AsQueryable());
+            mock.Setup(x => x.Authors).Returns(authors.AsQueryable());
             var adminController = new AdminController(null, null, mock.Object);
 
-            // Act
-            var result = adminController.EditColumn(id);
+            var result = (ViewResult)adminController.EditColumn(1);
+            var viewModel = (AddColumnViewModel)result.Model;
 
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var viewModel = Assert.IsType<AddColumnViewModel>(viewResult.Model);
-            Assert.Equal(id, viewModel.Column.Id);
-            Assert.Equal(2, viewModel.Authors.Count);
+            Assert.Equal(nameof(adminController.AddColumn), result.ViewName);
+            Assert.Equal(1, viewModel.Column.Id);
+            Assert.Equal(3, viewModel.Authors.Count);
         }
 
-        [InlineData(1)]
-        [Theory]
-        void Can_Display_AddAuthor_When_Calling_EditAuthor(long id)
+        [Fact]
+        void EditAuthor_DisplaysAddAuthorWithCorrectModel()
         {
-            // Arrange
+            var authors = new List<Author> { new Author { Id = 0 }, new Author { Id = 1 }, new Author { Id = 2 } };
             var mock = new Mock<IColumnRepository>();
-            mock.Setup(x => x.Authors).Returns(new Author[]
-            {
-                new Author { Id = 0 },
-                new Author { Id = 1 },
-                new Author { Id = 2 }
-            }
-            .AsQueryable());
-
+            mock.Setup(x => x.Authors).Returns(authors.AsQueryable());
             var adminController = new AdminController(null, null, mock.Object);
 
-            // Act
-            var result = adminController.EditAuthor(id);
+            var result = (ViewResult)adminController.EditAuthor(1);
+            var author = (Author)result.Model;
 
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result); 
-            var author = Assert.IsType<Author>(viewResult.Model);
-            Assert.Equal(nameof(adminController.AddAuthor), viewResult.ViewName);
-            Assert.Equal(id, author.Id);
+            Assert.Equal(nameof(adminController.AddAuthor), result.ViewName);
+            Assert.Equal(1, author.Id);
         }
     }
 }

@@ -70,9 +70,7 @@ namespace Bazirano.Controllers
 
         public IActionResult Board()
         {
-            var boardThreads = boardRepo.BoardThreads
-                .OrderByDescending(x => x.Posts.FirstOrDefault().DatePosted)
-                .ToList();
+            var boardThreads = boardRepo.BoardThreads.ToList().SortByBumpOrder();
 
             return View(nameof(Board), boardThreads);
         }
