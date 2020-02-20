@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bazirano.Infrastructure
 {
-    public static class QueryHelper
+    public static class BoardHelper
     {
         public static List<BoardThread> SortByBumpOrder(this List<BoardThread> boardThreads)
         {
