@@ -31,7 +31,7 @@ namespace Bazirano.Controllers
                 columns.AddRange(GetDummyColumns(6));
             }
 
-            return View(new ColumnMainPageViewModel
+            return View(nameof(Index), new ColumnMainPageViewModel
             {
                 FirstColumn = columns.First(),
                 Authors = columnRepo.Authors.ToList(),
@@ -65,19 +65,19 @@ namespace Bazirano.Controllers
             {
                 post.Comments = new List<Comment>();
             }
-            return View(post);
+            return View(nameof(ColumnPost), post);
         }
 
         [Route("~/kolumnist/{id}")]
         public IActionResult Author(long id)
         {
-            var author = columnRepo.Authors.First(p => p.Id == id);
+            var author = columnRepo.Authors.FirstOrDefault(p => p.Id == id);
             var columns = columnRepo.ColumnPosts
                 .Where(p => p.Author.Id == id)
                 .OrderByDescending(p => p.DatePosted)
                 .ToList();
 
-            return View(new AuthorPageViewModel
+            return View(nameof(Author), new AuthorPageViewModel
             {
                 Author = author,
                 Columns = columns

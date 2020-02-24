@@ -23,9 +23,9 @@ namespace Bazirano.Tests
 
         private ColumnPost[] Columns => new ColumnPost[]
         {
-            new ColumnPost { Id = 0 },
-            new ColumnPost { Id = 1 },
-            new ColumnPost { Id = 2 },
+            new ColumnPost { Id = 0, DatePosted = DateTime.Now.AddHours(-1) , Author = new Author{ Id = 0 } },
+            new ColumnPost { Id = 1, DatePosted = DateTime.Now.AddHours(1) , Author = new Author{ Id = 1 }},
+            new ColumnPost { Id = 2, DatePosted = DateTime.Now, Author = new Author{ Id = 1 }},
         };
 
         private Author[] Authors => new Author[]
