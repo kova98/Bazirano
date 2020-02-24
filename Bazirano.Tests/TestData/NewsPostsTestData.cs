@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Bazirano.Tests
+namespace Bazirano.Tests.TestData
 {
     class NewsPostsTestData : IEnumerable<object[]>
     {
