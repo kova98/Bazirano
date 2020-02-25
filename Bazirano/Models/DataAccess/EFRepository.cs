@@ -227,6 +227,7 @@ namespace Bazirano.Models.DataAccess
             if (existing != null)
             {
                 existing.Name = author.Name;
+                existing.ShortBio = author.ShortBio;
                 existing.Bio = author.Bio;
                 existing.Image = author.Image;
             }
