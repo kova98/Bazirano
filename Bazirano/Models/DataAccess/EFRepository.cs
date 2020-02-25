@@ -11,9 +11,7 @@ using System.Threading.Tasks;
 
 namespace Bazirano.Models.DataAccess
 {
-    /// <summary>
-    /// The Entity Framework repository class used for retrieving data from the application database.
-    /// </summary>
+
     public class EFRepository : IBoardThreadsRepository, IBoardPostsRepository, INewsPostsRepository, IColumnRepository
     {
         private ApplicationDbContext context;
@@ -25,32 +23,20 @@ namespace Bazirano.Models.DataAccess
             this.writer = writer;
         }
 
-        /// <summary>
-        /// The <see cref="IQueryable"/> collection of all the <see cref="BoardThread"/>s in the database, loaded with child <see cref="BoardPost"/>s.
-        /// </summary>
         public IQueryable<BoardThread> BoardThreads => context.BoardThreads
             .Include(x => x.Posts);
 
-        /// <summary>
-        /// The <see cref="IQueryable"/> collection of all the <see cref="BoardPost"/>s in the database.
-        /// </summary>
         public IQueryable<BoardPost> BoardPosts => context.BoardPosts;
 
-        /// <summary>
-        /// The <see cref="IQueryable"/> collection of all the <see cref="NewsPost"/>s in the database, loaded with child <see cref="Comment"/>s.
-        /// </summary>
         public IQueryable<NewsPost> NewsPosts => context.NewsPosts
             .Include(x=>x.Comments);
 
-        public IQueryable<ColumnPost> ColumnPosts => context.ColumnPosts.Include(p => p.Author);
+        public IQueryable<ColumnPost> ColumnPosts => context.ColumnPosts
+            .Include(p => p.Author)
+            .Include(p => p.Comments);
 
         public IQueryable<Author> Authors => context.Authors;
 
-        /// <summary>
-        /// Adds a new <see cref="Comment"/> to a <see cref="NewsPost"/>.
-        /// </summary>
-        /// <param name="comment">The comment to add.</param>
-        /// <param name="postId">The id of the post which to add the comment to.</param>
         public void AddCommentToNewsPost(Comment comment, long postId)
         {
             NewsPost post = context.NewsPosts.FirstOrDefault(p => p.Id == postId);
@@ -64,10 +50,6 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
-        /// <summary>
-        /// Adds a new <see cref="NewsPost"/> to the database.
-        /// </summary>
-        /// <param name="post">The post to add.</param>
         public void AddNewsPost(NewsPost post)
         {
             context.NewsPosts.Add(post);
@@ -75,10 +57,6 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
-        /// <summary>
-        /// Updates a <see cref="NewsPost"/> in the database with the new values.
-        /// </summary>
-        /// <param name="post">The post to edit.</param>
         public void EditNewsPost(NewsPost post)
         {
             NewsPost postToEdit = context.NewsPosts.FirstOrDefault(x => x.Id == post.Id);
@@ -90,10 +68,6 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
-        /// <summary>
-        /// Adds a new <see cref="BoardPost"/> to the database.
-        /// </summary>
-        /// <param name="post">The post to add.</param>
         public void AddPost(BoardPost post)
         {
             context.BoardPosts.Add(post);
@@ -101,11 +75,6 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
-        /// <summary>
-        /// Adds a new <see cref="BoardPost"/> to a <see cref="BoardThread"/>.
-        /// </summary>
-        /// <param name="boardPost">The post to add.</param>
-        /// <param name="threadId">The id of the thread which to add the post to.</param>
         public void AddPostToThread(BoardPost boardPost, long threadId)
         {
             boardPost.DatePosted = DateTime.Now;
@@ -125,10 +94,6 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
-        /// <summary>
-        /// Adds a new <see cref="BoardThread"/> to the database.
-        /// </summary>
-        /// <param name="thread">The thread to add.</param>
         public void AddThread(BoardThread thread)
         {
             context.BoardThreads.Add(thread);
@@ -136,10 +101,6 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
-        /// <summary>
-        /// Removes a <see cref="NewsPost"/> from the database, along with all the child <see cref="Comment"/>s.
-        /// </summary>
-        /// <param name="post">The post to remove.</param>
         public void RemoveNewsPost(NewsPost post)
         {
             var comments = context.Comments.Where(x => post.Comments.Contains(x));
@@ -151,20 +112,11 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
-        /// <summary>
-        /// Removes a <see cref="BoardPost"/> from the database. Not implemented.
-        /// </summary>
-        /// <param name="post">The post to remove.</param>
         public void RemovePost(BoardPost post)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Removes a <see cref="BoardThread"/> from the database, along with all the child <see cref="BoardPost"/>s 
-        /// and their images stored locally.
-        /// </summary>
-        /// <param name="thread">The thread to remove.</param>
         public void RemoveThread(BoardThread thread)
         {
             var posts = context.BoardPosts.Where(x => thread.Posts.Contains(x));
@@ -181,10 +133,6 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
-        /// <summary>
-        /// Increases the <see cref="NewsPost.ViewCount"/> by 1.
-        /// </summary>
-        /// <param name="post">The post which view count to increment.</param>
         public void IncrementViewCount(NewsPost post)
         {
             context.NewsPosts.FirstOrDefault(x=>x.Id == post.Id).ViewCount += 1;
@@ -236,6 +184,19 @@ namespace Bazirano.Models.DataAccess
             {
                 context.Authors.Add(author);
             }
+
+            context.SaveChanges();
+        }
+
+        public void AddCommentToColumn(Comment comment, long columnId)
+        {
+            ColumnPost post = context.ColumnPosts.FirstOrDefault(p => p.Id == columnId);
+            if (post.Comments == null)
+            {
+                post.Comments = new List<Comment>();
+            }
+
+            post.Comments.Add(comment);
 
             context.SaveChanges();
         }

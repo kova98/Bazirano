@@ -1,4 +1,5 @@
 ﻿using Bazirano.Models.Column;
+using Bazirano.Models.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,7 @@ namespace Bazirano.Models.DataAccess
         void SaveColumn(ColumnPost column);
 
         void SaveAuthor(Author author);
+
+        void AddCommentToColumn(Comment comment, long columnId);
     }
 }

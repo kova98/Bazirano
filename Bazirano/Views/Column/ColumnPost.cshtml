@@ -20,27 +20,35 @@
                         @Model.Author.Name
                     </a>
                 </div>
-                
+
                 <hr class="bg-secondary" />
                 <p>@Html.Raw(Model.Text)</p>
             </div>
         </div>
 
-        @*<div id="comment">
-            <partial name="ArticleAddComment"
-                     model="@new ArticleRespondViewModel { ArticleId = Model.Article.Id, Comment = new Comment()}" />
-        </div>*@
+        <div class="p-2"></div>
+
+        <div id="comment">
+            <partial name="ColumnAddComment"
+                     model="@new ColumnRespondViewModel { ColumnId = Model.Id, Comment = new Comment()}" />
+        </div>
+
+        <div class="p-2"></div>
 
         @if (Model.Comments.Count > 0)
         {
-            <h2 class="border-bottom border-secondary">Komentari</h2>
-
             @foreach (var comment in Model.Comments)
             {
                 <partial name="Comment" model="comment" />
+
+                <div class="p-1"></div>
             }
 
-            <div class="p-1 border-bottom border-secondary"></div>
         }
     </div>
 </div>
+
+@if (ViewBag.CommentPosted != null)
+{
+    <script>scrollToAnchor("comment");</script>
+}
