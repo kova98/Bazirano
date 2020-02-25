@@ -17,10 +17,12 @@ namespace Bazirano.Models.DataAccess
     public class EFRepository : IBoardThreadsRepository, IBoardPostsRepository, INewsPostsRepository, IColumnRepository
     {
         private ApplicationDbContext context;
+        private IWriter writer;
 
-        public EFRepository(ApplicationDbContext ctx)
+        public EFRepository(ApplicationDbContext ctx, IWriter writer)
         {
             context = ctx;
+            this.writer = writer;
         }
 
         /// <summary>
@@ -169,7 +171,7 @@ namespace Bazirano.Models.DataAccess
 
             foreach (var post in posts)
             {
-                WriterHelper.DeleteImage(post);
+                writer.DeleteImage(post.Image);
             }
 
             context.BoardPosts.RemoveRange(posts);
@@ -185,8 +187,7 @@ namespace Bazirano.Models.DataAccess
         /// <param name="post">The post which view count to increment.</param>
         public void IncrementViewCount(NewsPost post)
         {
-            NewsPost record = context.NewsPosts.FirstOrDefault(x=>x.Id == post.Id);
-            record.ViewCount++;
+            context.NewsPosts.FirstOrDefault(x=>x.Id == post.Id).ViewCount += 1;
 
             context.SaveChanges();
         }

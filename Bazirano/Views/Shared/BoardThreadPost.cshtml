@@ -9,14 +9,14 @@
 <div>
     <div class="card text-center">
         <div class="card-header">
-            <a asp-action="Thread" asp-route-id="@post.Id" asp-controller="Board">
+            <a asp-action="Thread" asp-route-id="@Model.Id" asp-controller="Board">
                 #@post.Id | @time
             </a>
         </div>
         @if (containsImage)
         {
             <div class="card-img text-center">
-                <a asp-action="Thread" asp-route-id="@post.Id" asp-controller="Board">
+                <a asp-action="Thread" asp-route-id="@Model.Id" asp-controller="Board">
                     <img src="~/images/@post.Image" class="img-fluid" style="max-height:200px" />
                 </a>
             </div>

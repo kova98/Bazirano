@@ -7,14 +7,9 @@ using System.Threading.Tasks;
 
 namespace Bazirano.Infrastructure
 {
-    public class WriterHelper
+    public class WriterHelper : IWriter
     {
-        public static bool IsImageFile(IFormFile file)
-        {
-            return file.ContentType.StartsWith("image");
-        }
-
-        public static async Task UploadImage(BoardPost post, IFormFile file)
+        public async Task UploadImage(BoardPost post, IFormFile file)
         {
             Random rnd = new Random();
             string fileName = rnd.Next(10000, 99999).ToString() + file.FileName;
@@ -31,12 +26,16 @@ namespace Bazirano.Infrastructure
                 }
             }
         }
-
-        public static void DeleteImage (BoardPost post)
+        private bool IsImageFile(IFormFile file)
         {
-            if (post.Image != null)
+            return file.ContentType.StartsWith("image");
+        }
+
+        public void DeleteImage (string image)
+        {
+            if (!string.IsNullOrEmpty(image))
             {
-                var path = GetFullPath(post.Image);
+                var path = GetFullPath(image);
 
                 if (File.Exists(path))
                 {
@@ -45,7 +44,7 @@ namespace Bazirano.Infrastructure
             }
         }
 
-        public static double ByteToMegabyte(long bytes)
+        public double ByteToMegabyte(long bytes)
         {
             return (bytes / 1024f) / 1024f;
         }

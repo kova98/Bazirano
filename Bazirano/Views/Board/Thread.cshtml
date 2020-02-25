@@ -30,10 +30,9 @@
 <a href="#">
     <div class="btn btn-primary m-1">Na vrh</div>
 </a>
-@if (ViewBag.FileError != null)
+@if (ViewBag.FileError != null || ViewData.ModelState.IsValid == false)
 {
     <script>scrollToAnchor("comment");</script>
-
 }
 
 @if (TempData["NewPost"] != null)

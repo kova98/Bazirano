@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Bazirano.Infrastructure
 {
-    public static class GoogleRecaptchaHelper
+    public class GoogleRecaptchaHelper : IGoogleRecaptchaHelper
     {
-        public static async Task<bool> IsReCaptchaPassedAsync(string gRecaptchaResponse, string secret)
+        public async Task<bool> IsRecaptchaValid(string gRecaptchaResponse, string secret)
         {
             HttpClient httpClient = new HttpClient();
             var content = new FormUrlEncodedContent(new[]

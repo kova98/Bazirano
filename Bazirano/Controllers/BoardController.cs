@@ -15,89 +15,86 @@ namespace Bazirano.Controllers
     {
         private IBoardThreadsRepository repository;
         private IConfiguration config;
+        private IGoogleRecaptchaHelper googleRecaptchaHelper;
+        private IWriter writer;
 
         // TODO: Make this configurable through the admin panel
         private int maxThreadCount = 40;
         private int maxImagesInThread = 50;
 
-        public BoardController(IBoardThreadsRepository repo, IConfiguration cfg)
+        public BoardController(IBoardThreadsRepository repo, IConfiguration cfg, IGoogleRecaptchaHelper grHelper, IWriter writer)
         {
             repository = repo;
             config = cfg;
+            googleRecaptchaHelper = grHelper;
+            this.writer = writer;
         }
 
         [Route("~/ploca/objavi")]
         public IActionResult Submit()
         {
-            return View();
+            return View(nameof(Submit));
         }
 
         [Route("~/ploca")]
         public IActionResult Catalog()
         {
-            var threads = repository.BoardThreads.ToList();
+            var threads = repository.BoardThreads.ToList().SortByBumpOrder();
 
-            foreach (var thread in threads)
-            {
-                thread.Posts.OrderByDescending(p => p.DatePosted);
-            }
-
-            var threadsByBumpOrder = threads.OrderByDescending(t => t.Posts.First().DatePosted).ToList();
-
-            return View(threadsByBumpOrder);
+            return View(nameof(Catalog), threads);
         }
 
         [Route("~/ploca/dretva/{id}")]
         public IActionResult Thread(long id)
         {
-            return View(repository.BoardThreads
-                    .FirstOrDefault(t => t.Posts.FirstOrDefault().Id == id));
+            var thread = repository.BoardThreads.FirstOrDefault(t => t.Id == id);
+
+            return View(nameof(Thread), thread);
         }
 
         public async Task<IActionResult> Respond(BoardRespondViewModel vm, IFormFile file)
         {
-            var thread = repository.BoardThreads
-                    .FirstOrDefault(t => t.Id == vm.ThreadId);
+            var thread = repository.BoardThreads.FirstOrDefault(t => t.Id == vm.ThreadId);
 
-            if (ModelState.IsValid)
+            VerifyRecaptcha();
+
+            if (MaxImagesCountReached(thread))
             {
-                if (!await GoogleRecaptchaHelper.IsReCaptchaPassedAsync(Request.Form["g-recaptcha-response"], config["GoogleReCaptcha:secret"]))
-                {
-                    ViewBag.CaptchaError = "CAPTCHA provjera neispravna.";
-                    return View(nameof(Thread), thread);
-                }
-
-                if (thread.ImageCount > maxImagesInThread)
-                {
-                    ViewBag.FileError = "Maksimalni broj slika u dretvi premašen.";
-                    return View(nameof(Thread), thread);
-                }
-
-                if (file != null)
-                {
-                    if (!file.ContentType.StartsWith("image"))
-                    {
-                        ViewBag.FileError = "Nepodržan format datoteke.";
-                        return View(nameof(Thread), thread);
-                    }
-
-                    if (WriterHelper.ByteToMegabyte(file.Length) > 5)
-                    {
-                        ViewBag.FileError = "Datoteka je prevelika.";
-                        return View(nameof(Thread), thread);
-                    }
-
-                    await WriterHelper.UploadImage(vm.BoardPost, file);
-                }
-
-                // Trim the spaces
-                vm.BoardPost.Text = vm.BoardPost.Text.Trim();
-
-                repository.AddPostToThread(vm.BoardPost, vm.ThreadId);
+                ModelState.AddModelError("maxImgCountError", "Maksimalni broj slika u dretvi premašen.");
             }
 
-            TempData["NewPost"] = vm.BoardPost.Id;
-            return RedirectToAction(nameof(Thread), new { thread.Posts.FirstOrDefault().Id });
+            await RespondToThread(vm, file);
+
+            return View(nameof(Thread), thread);
+        }
+
+        private async Task RespondToThread(BoardRespondViewModel vm, IFormFile file)
+        {
+            if (file != null && IsImageFileValid(file))
+            {
+                await writer.UploadImage(vm.BoardPost, file);
+            }
+
+            if (ModelState.IsValid && ModelState.Count > 0)
+            {
+                vm.BoardPost.Text = vm.BoardPost.Text.Trim();
+                repository.AddPostToThread(vm.BoardPost, vm.ThreadId);
+                TempData["NewPost"] = vm.BoardPost.Id;
+                ModelState.Clear();
+            }
+        }
+
+        private bool MaxImagesCountReached(BoardThread thread)
+        {
+            return thread.ImageCount > maxImagesInThread;
+        }
+
+        private async void VerifyRecaptcha()
+        {
+            if (!await googleRecaptchaHelper.IsRecaptchaValid(Request.Form["g-recaptcha-response"], config["GoogleReCaptcha:secret"]))
+            {
+                ModelState.AddModelError("captchaError", "CAPTCHA provjera neispravna.");
+            }
         }
 
         [HttpPost]
@@ -108,12 +105,25 @@ namespace Bazirano.Controllers
                 return View(nameof(Submit));
             }
 
-            if (!await GoogleRecaptchaHelper.IsReCaptchaPassedAsync(Request.Form["g-recaptcha-response"], config["GoogleReCaptcha:secret"]))
+            if (!await googleRecaptchaHelper.IsRecaptchaValid(Request.Form["g-recaptcha-response"], config["GoogleReCaptcha:secret"]))
             {
                 ViewBag.CaptchaError = "CAPTCHA provjera neispravna.";
                 return View(nameof(Submit));
             }
 
+            if (file != null)
+            {
+                if (IsImageFileValid(file))
+                {
+                    await writer.UploadImage(post, file);
+                }
+                else
+                {
+                    return View(nameof(Submit));
+                }
+            }
+
+            post.Text = post.Text.Trim();
             post.DatePosted = DateTime.Now;
 
             BoardThread thread = new BoardThread
@@ -124,29 +134,27 @@ namespace Bazirano.Controllers
                 Posts = new List<BoardPost> { post }
             };
 
-            if (file != null)
-            {
-                if (!file.ContentType.StartsWith("image"))
-                {
-                    ViewBag.FileError = "Nepodržan format datoteke.";
-                    return View(nameof(Submit));
-                }
-
-                if (WriterHelper.ByteToMegabyte(file.Length) > 5)
-                {
-                    ViewBag.FileError = "Datoteka je prevelika.";
-                    return View(nameof(Submit));
-                }
-
-                await WriterHelper.UploadImage(post, file);
-            }
-
-            post.Text = post.Text.Trim();
-
             repository.AddThread(thread);
             PruneLastThread();
 
             return RedirectToAction(nameof(Thread), new { post.Id });
+        }
+
+        private bool IsImageFileValid(IFormFile file)
+        {
+            if (!file.ContentType.StartsWith("image"))
+            {
+                ModelState.AddModelError("", "Nepodržan format datoteke.");
+                return false;
+            }
+
+            if (writer.ByteToMegabyte(file.Length) > 5)
+            {
+                ModelState.AddModelError("", "Datoteka je prevelika.");
+                return false;
+            }
+
+            return true;
         }
 
         private void PruneLastThread()
