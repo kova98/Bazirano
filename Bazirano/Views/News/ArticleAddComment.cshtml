@@ -10,12 +10,12 @@
             <div class="form-group">
                 <label class="text-muted">Ime</label>
                 <input class="form-control" asp-for="Comment.Username" />
-                <div class="text-danger">@TempData["Error"]</div>
+                <span asp-validation-for="Comment.Text" class="text-danger"></span>
+
                 <label class="text-muted">Komentar</label>
-                <div><span asp-validation-for="Comment.Text" class="text-danger"></span></div>
                 <textarea class="form-control" asp-for="Comment.Text" id="textbox"></textarea>
+                <span asp-validation-for="Comment.Text" class="text-danger"></span>
             </div>
-            <div class="text-danger">@ViewBag.CaptchaError</div>
             <div class="g-recaptcha" data-sitekey="@config["GoogleReCaptcha:key"]"></div>
             <br />
             <button class="btn btn-success" type="submit">Komentiraj</button>
