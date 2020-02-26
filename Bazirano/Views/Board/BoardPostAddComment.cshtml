@@ -8,16 +8,19 @@
     <div class="card-body">
         <form method="post" enctype="multipart/form-data"
               asp-action="Respond" asp-controller="Board" asp-route-ThreadId="@Model.ThreadId">
-            <div class="text-danger" asp-validation-summary="All"></div>
             <div class="form-group">
                 <textarea class="form-control" asp-for="BoardPost.Text" id="textbox"></textarea>
+                <span asp-validation-for="BoardPost.Text" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="file" class="form-control-file" id="file_input"
                        asp-for="BoardPost.Image" name="file">
             </div>
-            <div class="g-recaptcha" data-sitekey="@config["GoogleReCaptcha:key"]"></div>
-            <br />
+
+            <div class="form-group">
+                <div class="g-recaptcha" data-sitekey="@config["GoogleReCaptcha:key"]"></div>
+            </div>
+
             <button class="btn btn-success" type="submit">Objavi</button>
         </form>
     </div>
