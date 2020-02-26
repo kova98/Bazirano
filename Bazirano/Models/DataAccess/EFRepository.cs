@@ -33,9 +33,24 @@ namespace Bazirano.Models.DataAccess
 
         public IQueryable<ColumnPost> ColumnPosts => context.ColumnPosts
             .Include(p => p.Author)
-            .Include(p => p.Comments);
+            .Include(p => p.Comments)
+                .ThenInclude(c => c.Responses);
 
         public IQueryable<Author> Authors => context.Authors;
+
+        public void AddCommentResponse(Comment responseComment, long commentId)
+        {
+            Comment comment = context.Comments.FirstOrDefault(c => c.Id == commentId);
+            if (comment.Responses == null)
+            {
+                comment.Responses = new List<Comment>();
+            }
+
+            responseComment.IsRoot = false;
+            comment.Responses.Add(responseComment);
+
+            context.SaveChanges();
+        }
 
         public void AddCommentToNewsPost(Comment comment, long postId)
         {

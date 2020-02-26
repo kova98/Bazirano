@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Bazirano.Models.Shared
@@ -31,5 +32,9 @@ namespace Bazirano.Models.Shared
         [MaxLength(1000, ErrorMessage = "Komentar je predugačak.")]
         [MinLength(10, ErrorMessage = "Komentar je prekratak.")]
         public string Text { get; set; }
+
+        public bool IsRoot { get; set; } = true;
+
+        public List<Comment> Responses { get; set; }
     }
 }

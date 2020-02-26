@@ -107,5 +107,27 @@ namespace Bazirano.Controllers
             return ColumnPost(viewModel.ColumnId);
         }
 
+        public IActionResult RespondToComment(CommentRespondViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                viewModel.Comment.DatePosted = DateTime.Now;
+
+                if (string.IsNullOrEmpty(viewModel.Comment.Username))
+                {
+                    viewModel.Comment.Username = "Anonimac";
+                }
+
+                viewModel.Comment.Text = viewModel.Comment.Text.Trim();
+
+                columnRepo.AddCommentResponse(viewModel.Comment, viewModel.CommentId);
+
+                ModelState.Clear();
+            }
+
+            ViewBag.CommentPosted = true;
+
+            return Redirect(viewModel.ReturnUrl);
+        }
     }
 }

@@ -4,14 +4,41 @@
     string time = Model.DatePosted.ToString("dd.MM.yy. HH:mm");
 }
 
-<div class="card">
-    <div class="card-header text-success p-2">
-        <div class="float-left">@Model.Username</div>
-        <div class="float-right text-muted">@time</div>
-    </div>
-    <div class="card-body">
-        <div class="card-text">
-            @Model.Text
+    <div class="card">
+        <div class="card-header text-success p-2">
+            <div class="float-left">@Model.Username</div>
+            <div class="float-right text-muted">@time</div>
+        </div>
+        <div class="card-body" onclick="test(@Model.Id)">
+            <div class="card-text">
+                @Model.Text
+            </div>
+            <div class="p-2"></div>
+        </div>
+        <div style="padding-left:20px">
+            @if (Model.IsRoot)
+            {
+                <div id="@($"responseBox{Model.Id}")" style="display:none">
+                    <partial name="CommentRespond"
+                             model="@new CommentRespondViewModel { CommentId = Model.Id, Comment = new Comment()}" />
+                    <div class="p-1"></div>
+                </div>
+            }
+
+            @if (Model.Responses?.Count > 0)
+            {
+                @foreach (var comment in Model.Responses)
+                {
+                    <partial name="Comment" model="comment" />
+
+                    <div class="p-1"></div>
+                }
+            }
         </div>
     </div>
-</div>
+
+<script>
+    test = function (id) {
+        $('#responseBox' + id).toggle("fast");
+    }
+</script>
