@@ -53,6 +53,10 @@ namespace Bazirano
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            } 
+            else
+            {
+                app.UseExceptionHandler("/Error");
             }
 
             app.UseAuthentication();
