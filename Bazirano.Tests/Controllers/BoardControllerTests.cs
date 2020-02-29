@@ -11,6 +11,7 @@ using System.Text;
 using Xunit;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Specialized;
 
 namespace Bazirano.Tests.Controllers
 {
@@ -30,6 +31,8 @@ namespace Bazirano.Tests.Controllers
             var writerMock = new Mock<IWriter>();
 
             var boardController = new BoardController(mock.Object, configMock.Object, googleRecaptchaHelperMock.Object, writerMock.Object);
+
+            //boardController.Request.Form["g-recaptcha-response"] = "";
 
             return boardController;
         }

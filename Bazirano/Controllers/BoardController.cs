@@ -56,7 +56,7 @@ namespace Bazirano.Controllers
         {
             var thread = repository.BoardThreads.FirstOrDefault(t => t.Id == vm.ThreadId);
 
-            VerifyRecaptcha();
+            await VerifyRecaptcha();
 
             if (MaxImagesCountReached(thread))
             {
@@ -89,7 +89,7 @@ namespace Bazirano.Controllers
             return thread.ImageCount > maxImagesInThread;
         }
 
-        private async void VerifyRecaptcha()
+        private async Task VerifyRecaptcha()
         {
             if (!await googleRecaptchaHelper.IsRecaptchaValid(Request.Form["g-recaptcha-response"], config["GoogleReCaptcha:secret"]))
             {

@@ -90,9 +90,9 @@ namespace Bazirano.Controllers
             });
         }
 
-        public IActionResult PostComment(ColumnRespondViewModel viewModel)
+        public async Task<IActionResult> PostComment(ColumnRespondViewModel viewModel)
         {
-            VerifyRecaptcha();
+            await VerifyRecaptcha();
 
             if (ModelState.IsValid)
             {
@@ -115,9 +115,9 @@ namespace Bazirano.Controllers
             return ColumnPost(viewModel.ColumnId);
         }
 
-        public IActionResult RespondToComment(CommentRespondViewModel viewModel)
+        public async Task<IActionResult> RespondToComment(CommentRespondViewModel viewModel)
         {
-            VerifyRecaptcha();
+            await VerifyRecaptcha();
 
             if (ModelState.IsValid && ModelState.Count > 0)
             {
@@ -140,7 +140,7 @@ namespace Bazirano.Controllers
             return Redirect(viewModel.ReturnUrl);
         }
 
-        private async void VerifyRecaptcha()
+        private async Task VerifyRecaptcha()
         {
             if (!await googleRecaptchaHelper.IsRecaptchaValid(Request.Form["g-recaptcha-response"], config["GoogleReCaptcha:secret"]))
             {
