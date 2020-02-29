@@ -1,4 +1,5 @@
 ﻿using Bazirano.Controllers;
+using Bazirano.Infrastructure;
 using Bazirano.Models.Column;
 using Bazirano.Models.DataAccess;
 using Bazirano.Tests.TestData;
@@ -16,9 +17,10 @@ namespace Bazirano.Tests.Controllers
         [ClassData(typeof(ColumnTestData))]
         void Index_DisplaysViewWithCorrectModel(ColumnPost[] columnPosts, Author[] authors)
         {
-            var mock = new Mock<IColumnRepository>();
-            mock.Setup(x => x.ColumnPosts).Returns(columnPosts.AsQueryable());
-            var columnController = new ColumnController(mock.Object);
+            var columnRepoMock = new Mock<IColumnRepository>();
+            columnRepoMock.Setup(x => x.ColumnPosts).Returns(columnPosts.AsQueryable());
+
+            var columnController = new ColumnController(columnRepoMock.Object, null, null);
             
             var result = (ViewResult)columnController.Index();
             var model = (ColumnMainPageViewModel)result.Model;
@@ -34,7 +36,7 @@ namespace Bazirano.Tests.Controllers
         {
             var mock = new Mock<IColumnRepository>();
             mock.Setup(x => x.ColumnPosts).Returns(new List<ColumnPost>().AsQueryable());
-            var columnController = new ColumnController(mock.Object);
+            var columnController = new ColumnController(mock.Object, null, null);
 
             var result = (ViewResult)columnController.Index();
             var model = (ColumnMainPageViewModel)result.Model;
@@ -49,7 +51,7 @@ namespace Bazirano.Tests.Controllers
         {
             var mock = new Mock<IColumnRepository>();
             mock.Setup(x => x.ColumnPosts).Returns(columnPosts.AsQueryable());
-            var columnController = new ColumnController(mock.Object);
+            var columnController = new ColumnController(mock.Object, null, null);
 
             var result = (ViewResult)columnController.ColumnPost(1);
             var model = (ColumnPost)result.Model;
@@ -66,7 +68,7 @@ namespace Bazirano.Tests.Controllers
             var mock = new Mock<IColumnRepository>();
             mock.Setup(x => x.ColumnPosts).Returns(columnPosts.AsQueryable());
             mock.Setup(x => x.Authors).Returns(authors.AsQueryable());
-            var columnController = new ColumnController(mock.Object);
+            var columnController = new ColumnController(mock.Object, null, null);
 
             var result = (ViewResult)columnController.Author(1);
             var model = (AuthorPageViewModel)result.Model;
