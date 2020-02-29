@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Bazirano
 {
@@ -46,6 +47,12 @@ namespace Bazirano
             services.AddTransient<IWriter, WriterHelper>();
 
             services.AddMvc();
+
+            var loggingSection = Configuration.GetSection("Logging");
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddFile(loggingSection);
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
