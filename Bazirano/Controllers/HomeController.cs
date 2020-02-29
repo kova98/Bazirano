@@ -28,11 +28,9 @@ namespace Bazirano.Controllers
         public IActionResult Index()
         {
             NewsPageViewModel newsPageViewModel = newsHelper.GetNewsPageViewModel();
-            List<BoardThread> boardThreads = boardRepo.BoardThreads
-                .OrderByDescending(x => x.Posts.OrderBy(y => y.DatePosted).FirstOrDefault().DatePosted)
-                .ToList();
+            List<BoardThread> boardThreads = boardRepo.BoardThreads.ToList().SortByBumpOrder();
 
-            return View(new HomePageViewModel
+            return View(nameof(Index), new HomePageViewModel
             {
                 MainPost = newsPageViewModel.MainPost,
                 PopularPosts = newsPageViewModel.PostList,
