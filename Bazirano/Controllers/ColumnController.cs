@@ -2,20 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bazirano.Infrastructure;
 using Bazirano.Models.Column;
 using Bazirano.Models.DataAccess;
 using Bazirano.Models.Shared;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Bazirano.Controllers
 {
     public class ColumnController : Controller
     {
         private IColumnRepository columnRepo;
+        private IGoogleRecaptchaHelper googleRecaptchaHelper;
+        private IConfiguration config;
 
-        public ColumnController(IColumnRepository columnRepository)
+        public ColumnController(IColumnRepository columnRepository, IGoogleRecaptchaHelper googleRecaptchaHelper, IConfiguration config)
         {
             columnRepo = columnRepository;
+            this.googleRecaptchaHelper = googleRecaptchaHelper;
+            this.config = config;
         }
 
         [Route("~/kolumna")]
@@ -58,7 +64,7 @@ namespace Bazirano.Controllers
         }
 
         [Route("~/kolumna/{id}")]
-        public IActionResult ColumnPost(long id)    
+        public IActionResult ColumnPost(long id)
         {
             var post = columnRepo.ColumnPosts.First(p => p.Id == id);
             if (post.Comments == null)
@@ -86,6 +92,8 @@ namespace Bazirano.Controllers
 
         public IActionResult PostComment(ColumnRespondViewModel viewModel)
         {
+            VerifyRecaptcha();
+
             if (ModelState.IsValid)
             {
                 viewModel.Comment.DatePosted = DateTime.Now;
@@ -109,7 +117,9 @@ namespace Bazirano.Controllers
 
         public IActionResult RespondToComment(CommentRespondViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            VerifyRecaptcha();
+
+            if (ModelState.IsValid && ModelState.Count > 0)
             {
                 viewModel.Comment.DatePosted = DateTime.Now;
 
@@ -128,6 +138,14 @@ namespace Bazirano.Controllers
             ViewBag.CommentPosted = true;
 
             return Redirect(viewModel.ReturnUrl);
+        }
+
+        private async void VerifyRecaptcha()
+        {
+            if (!await googleRecaptchaHelper.IsRecaptchaValid(Request.Form["g-recaptcha-response"], config["GoogleReCaptcha:secret"]))
+            {
+                ModelState.AddModelError("captchaError", "CAPTCHA provjera neispravna.");
+            }
         }
     }
 }
