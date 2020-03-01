@@ -12,5 +12,10 @@ namespace Bazirano.Controllers
         {
             return View(nameof(Index));
         }
+
+        public IActionResult Article()
+        {
+            return View(nameof(Article));
+        }
     }
 }

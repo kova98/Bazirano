@@ -14,36 +14,40 @@ namespace Bazirano.Controllers
     public class NewsController : Controller
     {
         private INewsPostsRepository newsRepo;
-        private IConfiguration config;
         private NewsHelper newsHelper;
 
-        public NewsController(INewsPostsRepository repo, IConfiguration cfg)
+        public NewsController(INewsPostsRepository repo)
         {
             newsRepo = repo;
-            config = cfg;
-            newsHelper = new NewsHelper(repo);
+            newsHelper = new NewsHelper(repo);  
         }
 
         [Route("~/vijesti")]
         public IActionResult Index()
         {
-            return View(newsHelper.GetNewsPageViewModel());
+            return View(nameof(Index), newsHelper.GetNewsPageViewModel());
         }
 
         [Route("~/vijesti/clanak/{id}")]
         public IActionResult Article(long id)
         {
-            NewsPost article = newsRepo.NewsPosts.FirstOrDefault(p => p.Id == id);
-            var newsPageVm = newsHelper.GetNewsPageViewModel();
-            ArticleViewModel vm = new ArticleViewModel
+            var article = newsRepo.NewsPosts.FirstOrDefault(p => p.Id == id);
+            var newsPageViewModel = newsHelper.GetNewsPageViewModel();
+
+            if (article == null)
             {
-                Article = article,
-                LatestNews = newsPageVm.LatestPosts
-            };
+                return RedirectToAction("Article", "Error");
+            }
 
             newsRepo.IncrementViewCount(article);
 
-            return View(vm);
+            ArticleViewModel vm = new ArticleViewModel
+            {
+                Article = article,
+                LatestNews = newsPageViewModel.LatestPosts
+            };
+
+            return View(nameof(Article), vm);
         }
 
         public IActionResult PostComment(ArticleRespondViewModel vm)
@@ -58,22 +62,15 @@ namespace Bazirano.Controllers
                 }
 
                 vm.Comment.Text = vm.Comment.Text.Trim();
-
+                
                 newsRepo.AddCommentToNewsPost(vm.Comment, vm.ArticleId);
+
+                ModelState.Clear();
+
+                ViewBag.CommentPosted = true;
             }
 
-            var newsPageViewModel = newsHelper.GetNewsPageViewModel();
-
-            var articleViewModel = new ArticleViewModel
-            {
-                Article = newsRepo.NewsPosts.FirstOrDefault(p => p.Id == vm.ArticleId),
-                LatestNews = newsPageViewModel.LatestPosts,
-            };
-
-            ViewBag.CommentPosted = true;
-
-
-            return View(nameof(Article), articleViewModel);
+            return Article(vm.ArticleId);
         }
 
         //TODO: Add security!!!
@@ -105,7 +102,5 @@ namespace Bazirano.Controllers
                 return BadRequest();
             }
         }
-
-        
     }
 }

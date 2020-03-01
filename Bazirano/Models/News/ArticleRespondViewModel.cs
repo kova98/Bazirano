@@ -1,4 +1,5 @@
 ﻿using Bazirano.Models.Shared;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bazirano.Models.News
 {
@@ -10,6 +11,8 @@ namespace Bazirano.Models.News
         /// <summary>
         /// The id of the article to respond to.
         /// </summary>
+        [Required]
+        [Range(1, long.MaxValue)]
         public long ArticleId { get; set; }
 
         /// <summary>
