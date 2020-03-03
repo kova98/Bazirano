@@ -22,7 +22,7 @@ namespace Bazirano.Tests.Controllers
         void Index_DisplaysViewWithCorrectModel()
         {
             var newsPostsRepoMock = new Mock<INewsPostsRepository>();
-            var newsController = new NewsController(newsPostsRepoMock.Object);
+            var newsController = new NewsController(newsPostsRepoMock.Object, null);
 
             var result = (ViewResult)newsController.Index();
 
@@ -39,7 +39,7 @@ namespace Bazirano.Tests.Controllers
                 new NewsPost { Id = 0}, new NewsPost { Id = 1 }, new NewsPost { Id = 2}
             }
             .AsQueryable());
-            var newsController = new NewsController(newsPostsRepoMock.Object);
+            var newsController = new NewsController(newsPostsRepoMock.Object, null);
 
             var result = (ViewResult)newsController.Article(1);
             var viewModel = (ArticleViewModel)result.ViewData.Model;
@@ -58,7 +58,7 @@ namespace Bazirano.Tests.Controllers
                 new NewsPost { Id = 1}
             }
             .AsQueryable());
-            var newsController = new NewsController(newsPostsRepoMock.Object);
+            var newsController = new NewsController(newsPostsRepoMock.Object, null);
 
             var result = (RedirectToActionResult)newsController.Article(0);
 
@@ -67,10 +67,10 @@ namespace Bazirano.Tests.Controllers
         }
 
         [Fact]
-        void PostComment_ValidViewModel_DisplaysViewWithProperViewModelAndAddsComment()
+        async void PostComment_ValidViewModel_DisplaysViewWithProperViewModelAndAddsComment()
         {
             var newsPostsRepoMock = new Mock<INewsPostsRepository>();
-            var newsController = new NewsController(newsPostsRepoMock.Object);
+            var newsController = new NewsController(newsPostsRepoMock.Object, null);
             var viewModel = new ArticleRespondViewModel
             {
                 ArticleId = 1,
@@ -81,7 +81,7 @@ namespace Bazirano.Tests.Controllers
                 }
             };
 
-            var result = (RedirectToActionResult)newsController.PostComment(viewModel);
+            var result = (RedirectToActionResult)await newsController.PostComment(viewModel);
 
             Assert.Equal(nameof(newsController.Article), result.ActionName);
             Assert.Equal("test", viewModel.Comment.Text);
@@ -94,7 +94,7 @@ namespace Bazirano.Tests.Controllers
         {
             var newsPostsRepoMock = new Mock<INewsPostsRepository>();
             newsPostsRepoMock.Setup(x => x.NewsPosts).Returns(new NewsPost[] { new NewsPost { Guid = 1 } }.AsQueryable());
-            var newsController = new NewsController(newsPostsRepoMock.Object);
+            var newsController = new NewsController(newsPostsRepoMock.Object, null);
             var newsPost = new NewsPost { Guid = 2 };
 
             newsController.PostNews(newsPost);
@@ -107,7 +107,7 @@ namespace Bazirano.Tests.Controllers
         {
             var newsPostsRepoMock = new Mock<INewsPostsRepository>();
             newsPostsRepoMock.Setup(x => x.NewsPosts).Returns(new NewsPost[] { new NewsPost { Guid = 1 } }.AsQueryable());
-            var newsController = new NewsController(newsPostsRepoMock.Object);
+            var newsController = new NewsController(newsPostsRepoMock.Object, null);
             var newsPost = new NewsPost { Guid = 1 };
 
             newsController.PostNews(newsPost);

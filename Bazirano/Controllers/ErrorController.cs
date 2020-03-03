@@ -17,5 +17,10 @@ namespace Bazirano.Controllers
         {
             return View(nameof(Article));
         }
+
+        public IActionResult Thread()
+        {
+            return View(nameof(Thread));
+        }
     }
 }

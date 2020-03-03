@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,17 @@ namespace Bazirano.Infrastructure
 {
     public class GoogleRecaptchaHelper : IGoogleRecaptchaHelper
     {
-        public async Task<bool> IsRecaptchaValid(string gRecaptchaResponse, string secret)
+        private IConfiguration config;
+
+        public GoogleRecaptchaHelper(IConfiguration config)
         {
+            this.config = config;
+        }
+
+        public async Task<bool> IsRecaptchaValid(string gRecaptchaResponse)
+        {
+            string secret = config["GoogleReCaptcha:secret"];
+
             HttpClient httpClient = new HttpClient();
             var content = new FormUrlEncodedContent(new[]
             {

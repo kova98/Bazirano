@@ -1,4 +1,6 @@
-﻿namespace Bazirano.Models.Board
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Bazirano.Models.Board
 {
     /// <summary>
     /// The viewmodel class used for responding to a board post, i.e., adding a post to the thread.
@@ -13,6 +15,7 @@
         /// <summary>
         /// The board post to be posted as a response.
         /// </summary>
+        [Required]
         public BoardPost BoardPost { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "_BoardLayout";
-    ViewBag.Title = "Ploča - " +  Model.Posts.ToList()[0].Text;    
+    ViewBag.Title = "Ploča - " +  Model?.Posts?.ToList()[0].Text;    
 }
 
 @model BoardThread
@@ -33,11 +33,6 @@
 @if (ViewBag.FileError != null || ViewData.ModelState.IsValid == false)
 {
     <script>scrollToAnchor("comment");</script>
-}
-
-@if (TempData["NewPost"] != null)
-{
-    <script>scrollToAnchor(@TempData["NewPost"]);</script>
 }
 
 

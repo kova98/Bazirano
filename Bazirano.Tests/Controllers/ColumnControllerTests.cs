@@ -20,7 +20,7 @@ namespace Bazirano.Tests.Controllers
             var columnRepoMock = new Mock<IColumnRepository>();
             columnRepoMock.Setup(x => x.ColumnPosts).Returns(columnPosts.AsQueryable());
 
-            var columnController = new ColumnController(columnRepoMock.Object, null, null);
+            var columnController = new ColumnController(columnRepoMock.Object, null);
             
             var result = (ViewResult)columnController.Index();
             var model = (ColumnMainPageViewModel)result.Model;
@@ -36,7 +36,7 @@ namespace Bazirano.Tests.Controllers
         {
             var mock = new Mock<IColumnRepository>();
             mock.Setup(x => x.ColumnPosts).Returns(new List<ColumnPost>().AsQueryable());
-            var columnController = new ColumnController(mock.Object, null, null);
+            var columnController = new ColumnController(mock.Object, null);
 
             var result = (ViewResult)columnController.Index();
             var model = (ColumnMainPageViewModel)result.Model;
@@ -51,7 +51,7 @@ namespace Bazirano.Tests.Controllers
         {
             var mock = new Mock<IColumnRepository>();
             mock.Setup(x => x.ColumnPosts).Returns(columnPosts.AsQueryable());
-            var columnController = new ColumnController(mock.Object, null, null);
+            var columnController = new ColumnController(mock.Object, null);
 
             var result = (ViewResult)columnController.ColumnPost(1);
             var model = (ColumnPost)result.Model;
@@ -68,7 +68,7 @@ namespace Bazirano.Tests.Controllers
             var mock = new Mock<IColumnRepository>();
             mock.Setup(x => x.ColumnPosts).Returns(columnPosts.AsQueryable());
             mock.Setup(x => x.Authors).Returns(authors.AsQueryable());
-            var columnController = new ColumnController(mock.Object, null, null);
+            var columnController = new ColumnController(mock.Object, null);
 
             var result = (ViewResult)columnController.Author(1);
             var model = (AuthorPageViewModel)result.Model;

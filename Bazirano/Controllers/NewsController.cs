@@ -14,12 +14,14 @@ namespace Bazirano.Controllers
     public class NewsController : Controller
     {
         private INewsPostsRepository newsRepo;
+        private IGoogleRecaptchaHelper googleRecaptchaHelper;
         private NewsHelper newsHelper;
 
-        public NewsController(INewsPostsRepository repo)
+        public NewsController(INewsPostsRepository repo, IGoogleRecaptchaHelper googleRecaptchaHelper)
         {
             newsRepo = repo;
-            newsHelper = new NewsHelper(repo);  
+            newsHelper = new NewsHelper(repo);
+            this.googleRecaptchaHelper = googleRecaptchaHelper;
         }
 
         [Route("~/vijesti")]
@@ -50,8 +52,10 @@ namespace Bazirano.Controllers
             return View(nameof(Article), vm);
         }
 
-        public IActionResult PostComment(ArticleRespondViewModel vm)
+        public async Task <IActionResult> PostComment(ArticleRespondViewModel vm)
         {
+            await VerifyRecaptcha();
+
             if (ModelState.IsValid)
             {
                 vm.Comment.DatePosted = DateTime.Now;
@@ -71,6 +75,17 @@ namespace Bazirano.Controllers
             }
 
             return Article(vm.ArticleId);
+        }
+
+        private async Task VerifyRecaptcha()
+        {
+            if (Request != null) // Only when unit testing
+            {
+                if (!await googleRecaptchaHelper.IsRecaptchaValid(Request.Form["g-recaptcha-response"]))
+                {
+                    ModelState.AddModelError("captchaError", "CAPTCHA provjera neispravna.");
+                }
+            }
         }
 
         //TODO: Add security!!!

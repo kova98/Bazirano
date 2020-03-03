@@ -14,7 +14,6 @@ namespace Bazirano.Controllers
     public class BoardController : Controller
     {
         private IBoardThreadsRepository repository;
-        private IConfiguration config;
         private IGoogleRecaptchaHelper googleRecaptchaHelper;
         private IWriter writer;
 
@@ -22,10 +21,9 @@ namespace Bazirano.Controllers
         private int maxThreadCount = 40;
         private int maxImagesInThread = 50;
 
-        public BoardController(IBoardThreadsRepository repo, IConfiguration cfg, IGoogleRecaptchaHelper grHelper, IWriter writer)
+        public BoardController(IBoardThreadsRepository repo, IGoogleRecaptchaHelper grHelper, IWriter writer)
         {
             repository = repo;
-            config = cfg;
             googleRecaptchaHelper = grHelper;
             this.writer = writer;
         }
@@ -49,6 +47,11 @@ namespace Bazirano.Controllers
         {
             var thread = repository.BoardThreads.FirstOrDefault(t => t.Id == id);
 
+            if (thread == null)
+            {
+                return RedirectToAction("Thread", "Error");
+            }
+
             return View(nameof(Thread), thread);
         }
 
@@ -63,25 +66,53 @@ namespace Bazirano.Controllers
                 ModelState.AddModelError("maxImgCountError", "Maksimalni broj slika u dretvi premašen.");
             }
 
-            await RespondToThread(vm, file);
-
-            return View(nameof(Thread), thread);
-        }
-
-        private async Task RespondToThread(BoardRespondViewModel vm, IFormFile file)
-        {
-            if (file != null && IsImageFileValid(file))
+            if (ModelState.IsValid)
             {
-                await writer.UploadImage(vm.BoardPost, file);
-            }
+                if (IsImageFileValid(file))
+                {
+                    await writer.UploadImage(vm.BoardPost, file);
+                }
 
-            if (ModelState.IsValid && ModelState.Count > 0)
-            {
                 vm.BoardPost.Text = vm.BoardPost.Text.Trim();
                 repository.AddPostToThread(vm.BoardPost, vm.ThreadId);
-                TempData["NewPost"] = vm.BoardPost.Id;
                 ModelState.Clear();
             }
+
+            return Thread(thread.Id);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateThread(BoardPost post, IFormFile file)
+        {
+            await VerifyRecaptcha();
+
+            if (!ModelState.IsValid)
+            {
+                return View(nameof(Submit));
+            }
+
+            post.Text = post.Text.Trim();
+            post.DatePosted = DateTime.Now;
+
+            if (IsImageFileValid(file))
+            {
+                await writer.UploadImage(post, file);
+            }
+
+            var thread = new BoardThread
+            {
+                PostCount = 0,
+                ImageCount = file == null ? 0 : 1,
+                IsLocked = false,
+                Posts = new List<BoardPost> { post }
+            };
+
+            repository.AddThread(thread);
+            RemoveLastThread();
+
+            long threadId = repository.BoardThreads.First(t => t.Posts.Contains(post)).Id;
+
+            return Thread(threadId);
         }
 
         private bool MaxImagesCountReached(BoardThread thread)
@@ -91,57 +122,22 @@ namespace Bazirano.Controllers
 
         private async Task VerifyRecaptcha()
         {
-            if (!await googleRecaptchaHelper.IsRecaptchaValid(Request.Form["g-recaptcha-response"], config["GoogleReCaptcha:secret"]))
+            if (Request != null) // Only when unit testing
             {
-                ModelState.AddModelError("captchaError", "CAPTCHA provjera neispravna.");
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateThread(BoardPost post, IFormFile file)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(nameof(Submit));
-            }
-
-            if (!await googleRecaptchaHelper.IsRecaptchaValid(Request.Form["g-recaptcha-response"], config["GoogleReCaptcha:secret"]))
-            {
-                ViewBag.CaptchaError = "CAPTCHA provjera neispravna.";
-                return View(nameof(Submit));
-            }
-
-            if (file != null)
-            {
-                if (IsImageFileValid(file))
+                if (!await googleRecaptchaHelper.IsRecaptchaValid(Request.Form["g-recaptcha-response"]))
                 {
-                    await writer.UploadImage(post, file);
-                }
-                else
-                {
-                    return View(nameof(Submit));
+                    ModelState.AddModelError("captchaError", "CAPTCHA provjera neispravna.");
                 }
             }
-
-            post.Text = post.Text.Trim();
-            post.DatePosted = DateTime.Now;
-
-            BoardThread thread = new BoardThread
-            {
-                PostCount = 0,
-                ImageCount = file == null ? 0 : 1,
-                IsLocked = false,
-                Posts = new List<BoardPost> { post }
-            };
-
-            repository.AddThread(thread);
-            PruneLastThread();
-
-            return RedirectToAction(nameof(Thread), new { post.Id });
         }
 
         private bool IsImageFileValid(IFormFile file)
         {
+            if (file == null)
+            {
+                return false;
+            }
+
             if (!file.ContentType.StartsWith("image"))
             {
                 ModelState.AddModelError("", "Nepodržan format datoteke.");
@@ -157,29 +153,14 @@ namespace Bazirano.Controllers
             return true;
         }
 
-        private void PruneLastThread()
+        private void RemoveLastThread()
         {
-            // TODO: Change this to use a list with threads sorted by bump order. 
-            // Implement bump order sorting.
-
             int threadCount = repository.BoardThreads.Count();
+            BoardThread lastThread = repository.BoardThreads.ToList().SortByBumpOrder().Last();
 
             if (threadCount > maxThreadCount)
             {
-                BoardThread oldestThread = repository.BoardThreads.FirstOrDefault();
-
-                // Find the thread with the oldest recent post.
-                foreach (var thread in repository.BoardThreads)
-                {
-                    var newestPost = thread.Posts.OrderByDescending(x => x.DatePosted).FirstOrDefault();
-                    var newestPostFromOldestThread = oldestThread.Posts.OrderByDescending(x => x.DatePosted).FirstOrDefault();
-                    if (newestPost.DatePosted < newestPostFromOldestThread.DatePosted) // newestPost is older
-                    {
-                        oldestThread = thread;
-                    }
-                }
-
-                repository.RemoveThread(oldestThread);
+                repository.RemoveThread(lastThread);
             }
         }
     }

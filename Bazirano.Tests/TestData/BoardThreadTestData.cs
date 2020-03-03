@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Bazirano.Tests
+namespace Bazirano.Tests.TestData
 {
     public class BoardThreadTestData : IEnumerable<object[]>
     {
@@ -16,7 +16,7 @@ namespace Bazirano.Tests
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        private BoardThread[] BoardThreads => new BoardThread[]
+        public BoardThread[] BoardThreads => new BoardThread[]
         {
             new BoardThread
             {
@@ -44,7 +44,7 @@ namespace Bazirano.Tests
                 Posts = new List<BoardPost>
                 {
                     new BoardPost { Id = 6, DatePosted = DateTime.Now },
-                    new BoardPost { Id = 7, DatePosted = DateTime.Now },
+                    new BoardPost { Id = 7, DatePosted = DateTime.Now.AddHours(-1) },
                     new BoardPost { Id = 8, DatePosted = DateTime.Now },
                 }
             },

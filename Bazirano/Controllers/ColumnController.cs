@@ -6,6 +6,7 @@ using Bazirano.Infrastructure;
 using Bazirano.Models.Column;
 using Bazirano.Models.DataAccess;
 using Bazirano.Models.Shared;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -15,13 +16,11 @@ namespace Bazirano.Controllers
     {
         private IColumnRepository columnRepo;
         private IGoogleRecaptchaHelper googleRecaptchaHelper;
-        private IConfiguration config;
 
-        public ColumnController(IColumnRepository columnRepository, IGoogleRecaptchaHelper googleRecaptchaHelper, IConfiguration config)
+        public ColumnController(IColumnRepository columnRepository, IGoogleRecaptchaHelper googleRecaptchaHelper)
         {
             columnRepo = columnRepository;
             this.googleRecaptchaHelper = googleRecaptchaHelper;
-            this.config = config;
         }
 
         [Route("~/kolumna")]
@@ -142,9 +141,12 @@ namespace Bazirano.Controllers
 
         private async Task VerifyRecaptcha()
         {
-            if (!await googleRecaptchaHelper.IsRecaptchaValid(Request.Form["g-recaptcha-response"], config["GoogleReCaptcha:secret"]))
+            if (Request != null) // Only when unit testing
             {
-                ModelState.AddModelError("captchaError", "CAPTCHA provjera neispravna.");
+                if (!await googleRecaptchaHelper.IsRecaptchaValid(Request.Form["g-recaptcha-response"]))
+                {
+                    ModelState.AddModelError("captchaError", "CAPTCHA provjera neispravna.");
+                }
             }
         }
     }

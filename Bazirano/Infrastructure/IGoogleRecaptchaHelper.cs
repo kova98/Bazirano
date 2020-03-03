@@ -7,6 +7,6 @@ namespace Bazirano.Infrastructure
 {
     public interface IGoogleRecaptchaHelper
     {
-        Task<bool> IsRecaptchaValid(string gRecaptchaResponse, string secret);
+        Task<bool> IsRecaptchaValid(string gRecaptchaResponse);
     }
 }
