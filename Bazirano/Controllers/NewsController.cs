@@ -54,6 +54,13 @@ namespace Bazirano.Controllers
 
         public async Task <IActionResult> PostComment(ArticleRespondViewModel vm)
         {
+            var article = newsRepo.NewsPosts.FirstOrDefault(p => p.Id == vm.ArticleId);
+
+            if (article == null)
+            {
+                RedirectToAction("Article", "Error");
+            }
+
             await VerifyRecaptcha();
 
             if (ModelState.IsValid)

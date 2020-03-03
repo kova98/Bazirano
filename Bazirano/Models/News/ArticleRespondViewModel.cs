@@ -18,6 +18,7 @@ namespace Bazirano.Models.News
         /// <summary>
         /// The comment to post.
         /// </summary>
+        [Required]
         public Comment Comment { get; set; }
     }
 }
