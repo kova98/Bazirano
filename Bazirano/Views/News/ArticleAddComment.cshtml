@@ -1,7 +1,7 @@
 ﻿@model ArticleRespondViewModel
 @inject Microsoft.Extensions.Configuration.IConfiguration config;
 
-<div class="card m-1">
+<div class="card">
     <div class="card-header text-dark">
         <h4>Komentiraj</h4>
     </div>
@@ -11,7 +11,7 @@
             <div class="form-group">
                 <label class="text-muted">Ime</label>
                 <input class="form-control" asp-for="Comment.Username" />
-                <span asp-validation-for="Comment.Text" class="text-danger"></span>
+                <span asp-validation-for="Comment.Username" class="text-danger"></span>
             </div>
 
             <div class="form-group">
