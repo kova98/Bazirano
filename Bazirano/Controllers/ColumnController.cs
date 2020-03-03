@@ -65,7 +65,13 @@ namespace Bazirano.Controllers
         [Route("~/kolumna/{id}")]
         public IActionResult ColumnPost(long id)
         {
-            var post = columnRepo.ColumnPosts.First(p => p.Id == id);
+            var post = columnRepo.ColumnPosts.FirstOrDefault(p => p.Id == id);
+
+            if (post == null)
+            {
+                return RedirectToAction("ColumnPost", "Error");
+            }
+
             if (post.Comments == null)
             {
                 post.Comments = new List<Comment>();

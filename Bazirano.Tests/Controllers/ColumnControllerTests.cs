@@ -45,12 +45,11 @@ namespace Bazirano.Tests.Controllers
             Assert.Equal(nameof(columnController.Index), result.ViewName);
         }
 
-        [Theory]
-        [ClassData(typeof(ColumnTestData))]
-        void ColumnPost_DisplaysViewWithCorrectModel(ColumnPost[] columnPosts, Author[] authors)
+        [Fact]
+        void ColumnPost_ValidId_DisplaysViewWithCorrectModel()
         {
             var mock = new Mock<IColumnRepository>();
-            mock.Setup(x => x.ColumnPosts).Returns(columnPosts.AsQueryable());
+            mock.Setup(x => x.ColumnPosts).Returns(new ColumnPost[] { new ColumnPost { Id = 1 } }.AsQueryable);
             var columnController = new ColumnController(mock.Object, null);
 
             var result = (ViewResult)columnController.ColumnPost(1);
@@ -59,6 +58,19 @@ namespace Bazirano.Tests.Controllers
             Assert.Equal(1, model.Id);
             Assert.NotNull(model.Comments);
             Assert.Equal(nameof(columnController.ColumnPost), result.ViewName);
+        }
+
+        [Fact]
+        void ColumnPost_InvalidId_DisplaysErrorPage()
+        {
+            var mock = new Mock<IColumnRepository>();
+            mock.Setup(x => x.ColumnPosts).Returns(new ColumnPost[] { new ColumnPost { Id = 1 } }.AsQueryable);
+            var columnController = new ColumnController(mock.Object, null);
+
+            var result = (RedirectToActionResult)columnController.ColumnPost(2);
+
+            Assert.Equal("Error", result.ControllerName);
+            Assert.Equal("ColumnPost", result.ActionName);
         }
 
         [Theory]
