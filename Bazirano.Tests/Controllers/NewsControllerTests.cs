@@ -142,7 +142,7 @@ namespace Bazirano.Tests.Controllers
         }
 
         [Fact]
-        void PostNews_ExistingGuid_AddsNewsPost()
+        void PostNews_ExistingGuid_EditsPost()
         {
             var newsPostsRepoMock = new Mock<INewsPostsRepository>();
             newsPostsRepoMock.Setup(x => x.NewsPosts).Returns(new NewsPost[] { new NewsPost { Guid = 1 } }.AsQueryable());
@@ -152,6 +152,55 @@ namespace Bazirano.Tests.Controllers
             newsController.PostNews(newsPost);
 
             newsPostsRepoMock.Verify(x => x.EditNewsPost(newsPost));
+        }
+
+        [Theory]
+        [InlineData(null, 1, "a", "a", "a", "a")]
+        [InlineData("a", 0, "a", "a", "a", "a")]
+        [InlineData("a", 1, null, "a", "a", "a")]
+        [InlineData("a", 1, "a", null, "a", "a")]
+        [InlineData("a", 1, "a", "a", null, "a")]
+        [InlineData("a", 1, "a", "a", "a", null)]
+        void PostNews_InvalidModel_ReturnsBadRequest(string title, long guid, string summary, string image, string keywords, string text)
+        {
+            var newsPostsRepoMock = new Mock<INewsPostsRepository>();
+            var newsController = new NewsController(newsPostsRepoMock.Object, null);
+            var newsPost = new NewsPost
+            {
+                Title = title,
+                Guid = guid,
+                Summary = summary,
+                Image = image,
+                Keywords = keywords,
+                Text = text
+            };
+
+            TestHelper.SimulateValidation(newsController, newsPost);
+            var result = newsController.PostNews(newsPost);
+
+            Assert.IsType<BadRequestResult>(result);
+        }
+
+        [Theory]
+        [InlineData("a", 1, "a", "a", "a", "a")]
+        void PostNews_ValidModel_ReturnsOk(string title, long guid, string summary, string image, string keywords, string text)
+        {
+            var newsPostsRepoMock = new Mock<INewsPostsRepository>();
+            var newsController = new NewsController(newsPostsRepoMock.Object, null);
+            var newsPost = new NewsPost
+            {
+                Title = title,
+                Guid = guid,
+                Summary = summary,
+                Image = image,
+                Keywords = keywords,
+                Text = text
+            };
+
+            TestHelper.SimulateValidation(newsController, newsPost);
+            var result = newsController.PostNews(newsPost);
+
+            Assert.IsType<OkResult>(result);
         }
     }
 }
