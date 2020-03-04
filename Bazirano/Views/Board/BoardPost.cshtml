@@ -12,17 +12,16 @@
                 #@Model.Id | @time
             </button>
         </div>
-        <div class="">
+        <div class="row">
             @if (containsImage)
             {
-                <div class="col-12 col-md-4 text-center">
-                    <a href="~/images/@Model.Image">
-                        <img src="~/images/@Model.Image" class="img-fluid" style="max-height:300px" />
-                    </a>
-                </div>
+            <div class="col-12 col-md-4 text-center">
+                <a href="~/images/@Model.Image">
+                    <img src="~/images/@Model.Image" class="img-fluid" style="max-height:300px" />
+                </a>
+            </div>
             }
             <div class="col-12 col-md-8 m-3 p-md-3 @(containsImage ? "m-md-0" : "")">
-                djfasdčl jfačldskjfčlakd sjfčlkajdsfčka dskfaldsčfk jahdsčkhfasdčk fha sčdkjhfačkdsj hfasd kjfahds kjfhakjds hfkjdsa hkjfs
                 <post-text text="@Model.Text"></post-text>
             </div>
         </div>
