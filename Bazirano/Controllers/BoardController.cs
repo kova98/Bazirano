@@ -59,7 +59,7 @@ namespace Bazirano.Controllers
         {
             var thread = repository.BoardThreads.FirstOrDefault(t => t.Id == vm.ThreadId);
 
-            await VerifyRecaptcha();
+            await googleRecaptchaHelper.VerifyRecaptcha(Request, ModelState);
 
             if (MaxImagesCountReached(thread))
             {
@@ -84,7 +84,7 @@ namespace Bazirano.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateThread(BoardPost post, IFormFile file)
         {
-            await VerifyRecaptcha();
+            await googleRecaptchaHelper.VerifyRecaptcha(Request, ModelState);
 
             if (!ModelState.IsValid)
             {
@@ -118,17 +118,6 @@ namespace Bazirano.Controllers
         private bool MaxImagesCountReached(BoardThread thread)
         {
             return thread.ImageCount > maxImagesInThread;
-        }
-
-        private async Task VerifyRecaptcha()
-        {
-            if (Request != null) // Only when unit testing
-            {
-                if (!await googleRecaptchaHelper.IsRecaptchaValid(Request.Form["g-recaptcha-response"]))
-                {
-                    ModelState.AddModelError("captchaError", "CAPTCHA provjera neispravna.");
-                }
-            }
         }
 
         private bool IsImageFileValid(IFormFile file)

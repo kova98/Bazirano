@@ -58,10 +58,10 @@ namespace Bazirano.Controllers
 
             if (article == null)
             {
-                RedirectToAction("Article", "Error");
+                return RedirectToAction("Article", "Error");
             }
-
-            await VerifyRecaptcha();
+            
+            await googleRecaptchaHelper.VerifyRecaptcha(Request, ModelState);
 
             if (ModelState.IsValid)
             {
@@ -82,17 +82,6 @@ namespace Bazirano.Controllers
             }
 
             return Article(vm.ArticleId);
-        }
-
-        private async Task VerifyRecaptcha()
-        {
-            if (Request != null) // Only when unit testing
-            {
-                if (!await googleRecaptchaHelper.IsRecaptchaValid(Request.Form["g-recaptcha-response"]))
-                {
-                    ModelState.AddModelError("captchaError", "CAPTCHA provjera neispravna.");
-                }
-            }
         }
 
         //TODO: Add security!!!

@@ -97,7 +97,7 @@ namespace Bazirano.Controllers
 
         public async Task<IActionResult> PostComment(ColumnRespondViewModel viewModel)
         {
-            await VerifyRecaptcha();
+            await googleRecaptchaHelper.VerifyRecaptcha(Request, ModelState);
 
             if (ModelState.IsValid)
             {
@@ -122,7 +122,7 @@ namespace Bazirano.Controllers
 
         public async Task<IActionResult> RespondToComment(CommentRespondViewModel viewModel)
         {
-            await VerifyRecaptcha();
+            await googleRecaptchaHelper.VerifyRecaptcha(Request, ModelState);
 
             if (ModelState.IsValid && ModelState.Count > 0)
             {
@@ -143,17 +143,6 @@ namespace Bazirano.Controllers
             ViewBag.CommentPosted = true;
 
             return Redirect(viewModel.ReturnUrl);
-        }
-
-        private async Task VerifyRecaptcha()
-        {
-            if (Request != null) // Only when unit testing
-            {
-                if (!await googleRecaptchaHelper.IsRecaptchaValid(Request.Form["g-recaptcha-response"]))
-                {
-                    ModelState.AddModelError("captchaError", "CAPTCHA provjera neispravna.");
-                }
-            }
         }
     }
 }

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Threading.Tasks;
 
 namespace Bazirano.Infrastructure
 {
     public interface IGoogleRecaptchaHelper
     {
-        Task<bool> IsRecaptchaValid(string gRecaptchaResponse);
+        Task<bool> VerifyRecaptcha(HttpRequest request, ModelStateDictionary modelState);
     }
 }

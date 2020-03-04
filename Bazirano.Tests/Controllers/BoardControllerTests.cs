@@ -7,14 +7,12 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Xunit;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using System.Collections.Specialized;
-using System.ComponentModel.DataAnnotations;
 using Bazirano.Tests.TestData;
 using Bazirano.Tests.Infrastructure;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Bazirano.Tests.Controllers
 {
@@ -26,8 +24,8 @@ namespace Bazirano.Tests.Controllers
             mock.Setup(x => x.BoardThreads).Returns(boardThreads.AsQueryable);
 
             var googleRecaptchaHelperMock = new Mock<IGoogleRecaptchaHelper>();
-            googleRecaptchaHelperMock.Setup(x => x.IsRecaptchaValid(It.IsAny<string>())).ReturnsAsync(true);
-
+            googleRecaptchaHelperMock.Setup(x => x.VerifyRecaptcha(It.IsAny<HttpRequest>(), It.IsAny<ModelStateDictionary>())).ReturnsAsync(true);
+            
             var writerMock = new Mock<IWriter>();
 
             var boardController = new BoardController(mock.Object, googleRecaptchaHelperMock.Object, writerMock.Object);
@@ -91,7 +89,7 @@ namespace Bazirano.Tests.Controllers
         public async void CreateThread_InvalidModel_DisplaysSubmitView()
         {
             var boardThreadsRepoMock = new Mock<IBoardThreadsRepository>();
-            var boardController = new BoardController(boardThreadsRepoMock.Object, null, null);
+            var boardController = new BoardController(boardThreadsRepoMock.Object, new RecaptchaMock(), null);
             var boardPost = new BoardPost();
 
             TestHelper.SimulateValidation(boardController, boardPost);
@@ -113,7 +111,7 @@ namespace Bazirano.Tests.Controllers
             var boardThreadsRepoMock = new Mock<IBoardThreadsRepository>();
             boardThreadsRepoMock.Setup(x => x.BoardThreads).Returns(boardThreads.AsQueryable());
 
-            var boardController = new BoardController(boardThreadsRepoMock.Object, null, null);
+            var boardController = new BoardController(boardThreadsRepoMock.Object, new RecaptchaMock(), null);
 
             TestHelper.SimulateValidation(boardController, boardPost);
             var result = (ViewResult)await boardController.CreateThread(boardPost, null);
