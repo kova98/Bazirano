@@ -94,28 +94,6 @@ namespace Bazirano.Tests.Controllers
             newsPostsRepoMock.Verify(x => x.AddCommentToNewsPost(viewModel.Comment, viewModel.ArticleId), Times.Exactly(timesCalled));
         }
 
-        [Fact]
-        async void PostComment_InvalidArticleId_DisplaysError()
-        {
-            var newsPostsRepoMock = new Mock<INewsPostsRepository>();
-            newsPostsRepoMock.Setup(x => x.NewsPosts).Returns(new NewsPost[] { new NewsPost { Id = 1 } }.AsQueryable);
-            var newsController = new NewsController(newsPostsRepoMock.Object, new RecaptchaMock());
-            var viewModel = new ArticleRespondViewModel
-            {
-                ArticleId = 0,
-                Comment = new Comment
-                {
-                    Text = "text longer than 10",
-                    Username = "username < 20"
-                }
-            };
-
-            var result = (RedirectToActionResult)await newsController.PostComment(viewModel);
-
-            Assert.Equal("Error", result.ControllerName);
-            Assert.Equal("Article", result.ActionName);
-        }
-
         [Theory]
         [InlineData(0)]
         [InlineData(2)]
