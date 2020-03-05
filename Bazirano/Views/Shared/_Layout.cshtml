@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     <link rel="stylesheet" asp-href-include="/lib/bootswatch/darkly/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700|Roboto+Mono:400,700" rel="stylesheet">
     <link rel="stylesheet" asp-href-include="/style/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <script src="~/lib/jquery/jquery.min.js"></script>
     <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
     <script src="~/scripts/main.js"></script>
@@ -16,10 +18,12 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
 
     <link rel="icon" type="image/png" href="~/images/b.png" />
-
 </head>
+
 <body>
-    <div class="container">
+
+    <!-- Begin page content -->
+    <main role="main" class="container">
         <nav class="navbar navbar-expand navbar-light bg-transparent border-bottom border-light border-top p-0">
             <a class="navbar-brand bg-secondary p-2" asp-action="Index" asp-controller="Home">
                 <h4 class="font-weight-bold p-2 m-0">BAZIRANO</h4>
@@ -43,8 +47,18 @@
             </div>
         </nav>
         @RenderBody()
-    </div>
+    </main>
 
+    <footer class="footer">
+        <div class="container border-top border-light">
+            <a class="text-white-50 m-2 btn-link" asp-controller="Info" asp-action="About">O nama</a>
+            <a class="text-white-50 m-2 btn-link" asp-controller="Info" asp-action="Contact">Kontakt</a>
+
+            <div class="text-white-50 float-right">© 2020 Bazirano</div>
+            <a class="text-white-50 m-2 fa fa-instagram" href="https://www.instagram.com/bazirano/"></a>
+            <a class="text-white-50 m-2 fa fa-facebook" href="https://www.facebook.com/bazirano"></a>
+        </div>
+    </footer>
 </body>
 </html>
 
