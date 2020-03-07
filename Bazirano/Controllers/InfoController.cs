@@ -8,11 +8,13 @@ namespace Bazirano.Controllers
 {
     public class InfoController : Controller
     {
+        [Route("~/o-nama")]
         public IActionResult About()
         {
             return View(nameof(About));
         }
 
+        [Route("~/kontakt")]
         public IActionResult Contact()
         {
             return View(nameof(Contact));

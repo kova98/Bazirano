@@ -96,9 +96,7 @@ namespace Bazirano.Controllers
                 {
                     if (p.Guid == post.Guid)
                     {
-                        p.Title = post.Title;
-                        p.Text = post.Text;
-                        p.Image = post.Image;
+                        post.Id = p.Id;
                         newsRepo.EditNewsPost(post);
                         return Ok();
                     }
