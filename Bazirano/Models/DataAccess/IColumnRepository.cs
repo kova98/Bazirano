@@ -19,7 +19,10 @@ namespace Bazirano.Models.DataAccess
 
         void SaveAuthor(Author author);
 
+        void DeleteAuthor(long authorId);
+
         void AddCommentToColumn(Comment comment, long columnId);
         void AddCommentResponse(Comment comment, long commentId);
+        void DeleteColumn(long columnId);
     }
 }

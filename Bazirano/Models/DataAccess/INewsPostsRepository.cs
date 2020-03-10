@@ -23,7 +23,7 @@ namespace Bazirano.Models.DataAccess
         /// Removes a <see cref="NewsPost"/> from the database.
         /// </summary>
         /// <param name="post">The post to remove.</param>
-        void RemoveNewsPost(NewsPost post);
+        void RemoveNewsPost(long postId);
 
         /// <summary>
         /// Updates a <see cref="NewsPost"/> in the database with the new values.

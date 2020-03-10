@@ -41,8 +41,8 @@ namespace Bazirano.Controllers
         }
 
         public IActionResult DeleteArticle(long id)
-        {
-            newsRepo.RemoveNewsPost(newsRepo.NewsPosts.FirstOrDefault(x => x.Id == id));
+        {   
+            newsRepo.RemoveNewsPost(id);
 
             return RedirectToAction(nameof(News));
         }
@@ -92,7 +92,8 @@ namespace Bazirano.Controllers
             {
                 Column = new ColumnPost
                 {
-                    DatePosted = DateTime.Now
+                    DatePosted = DateTime.Now,
+                    Author = new Author()
                 },
                 Authors = columnRepo.Authors.ToList()
             });
@@ -105,6 +106,13 @@ namespace Bazirano.Controllers
             return Column();
         }
 
+        public IActionResult DeleteColumn(long id)
+        {
+            columnRepo.DeleteColumn(id);
+
+            return Column();
+        }
+
         public IActionResult AddAuthor()
         {
             return View(nameof(AddAuthor), new Author());
@@ -113,6 +121,13 @@ namespace Bazirano.Controllers
         public IActionResult SaveAuthor(Author author)
         {
             columnRepo.SaveAuthor(author);
+
+            return Column();
+        }
+
+        public IActionResult DeleteAuthor(long id)
+        {
+            columnRepo.DeleteAuthor(id);
 
             return Column();
         }

@@ -116,12 +116,17 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
-        public void RemoveNewsPost(NewsPost post)
+        public void RemoveNewsPost(long postId)
         {
-            var comments = context.Comments.Where(x => post.Comments.Contains(x));
+            var post = context.NewsPosts.FirstOrDefault(p => p.Id == postId);
 
-            context.Comments.RemoveRange(comments);
+            if (post.Comments != null && post.Comments.Count > 0)
+            {
+                var comments = context.Comments.Where(x => post.Comments.Contains(x));
 
+                context.Comments.RemoveRange(comments);
+            }
+            
             context.NewsPosts.Remove(post);
 
             context.SaveChanges();
@@ -184,6 +189,15 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
+        public void DeleteColumn(long columnId)
+        {
+            var column = context.ColumnPosts.FirstOrDefault(c => c.Id == columnId);
+
+            context.ColumnPosts.Remove(column);
+
+            context.SaveChanges();
+        }
+
         public void SaveAuthor(Author author)
         {
             var existing = context.Authors.FirstOrDefault(a => a.Id == author.Id);
@@ -212,6 +226,15 @@ namespace Bazirano.Models.DataAccess
             }
 
             post.Comments.Add(comment);
+
+            context.SaveChanges();
+        }
+
+        public void DeleteAuthor(long authorId)
+        {
+            var author = context.Authors.FirstOrDefault(a => a.Id == authorId);
+
+            context.Authors.Remove(author);
 
             context.SaveChanges();
         }
