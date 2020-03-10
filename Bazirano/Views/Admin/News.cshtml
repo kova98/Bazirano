@@ -18,11 +18,12 @@
                         <div class="col-3">
                             <div class="container">
                                 <div class="row float-right p-2">
-                                    <a asp-action="EditArticle" asp-route-id="@p.Id">
+                                    <a class="col-6 btn btn-toolbar" style="color:forestgreen" 
+                                       asp-action="EditArticle" asp-route-id="@p.Id">
                                         <h3 class="fa fa-pencil"></h3>
                                     </a>
-                                    <div class="p-2"></div>
-                                    <a style="color:orangered" asp-action="DeleteArticle" asp-route-id="@p.Id">
+                                    <a class="col-6 btn btn-toolbar" style="color:orangered" 
+                                       asp-action="DeleteArticle" asp-route-id="@p.Id">
                                         <h3 class="fa fa-trash"></h3>
                                     </a>
                                 </div>
