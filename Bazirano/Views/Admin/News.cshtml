@@ -1,31 +1,39 @@
 ﻿@model IEnumerable<NewsPost>
-@{ 
+@{
     Layout = "_AdminLayout";
 }
+<h1 class="p-2 text-center">Vijesti</h1>
 
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Naslov</th>
-                <th>Akcija</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var p in Model)
-            {
-                <tr>
-                    <td class="text-center">@p.Id</td>
-                    <td class="text-left">@p.Title</td>
-                    <td>
-                        <a asp-action="DeleteArticle" asp-route-id="@p.Id" class="btn btn-danger">
-                            Ukloni
-                        </a>
-                        <a asp-action="EditArticle" asp-route-id="@p.Id" class="btn btn-info">
-                            Uredi
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div class="row">
+    @foreach (var p in Model)
+    {
+        <div class="col-12 col-lg-6">    
+            <div class="card m-1">
+                <div class="card-body p-1">
+                    <div class="row no-gutters">
+                        <div class="col-2 text-muted text-center">
+                            <span>@p.DatePosted.ToShortTimeString()</span>
+                        </div>
+                        <div class="col-7">@p.Title</div>
+                        <div class="col-3">
+                            <div class="container">
+                                <div class="row float-right p-2">
+                                    <a asp-action="EditArticle" asp-route-id="@p.Id">
+                                        <h3 class="fa fa-pencil"></h3>
+                                    </a>
+                                    <div class="p-2"></div>
+                                    <a style="color:orangered" asp-action="DeleteArticle" asp-route-id="@p.Id">
+                                        <h3 class="fa fa-trash"></h3>
+                                    </a>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
