@@ -5,57 +5,102 @@
 @model AdminColumnViewModel
 
 <div class="p-2"></div>
-<h3>Kolumne</h3>
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Autor</th>
-            <th>Naslov</th>
-            <th>Radnja</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var column in Model.ColumnPosts)
-        {
-            <tr>
-                <td class="text-left">@column.Author.Name</td>
-                <td class="text-left">@column.Title</td>
-                <td>
-                    <a asp-action="EditColumn" asp-route-id="@column.Id" class="btn btn-info">
-                        Uredi
-                    </a>
-                </td>
-            </tr>
-        }
+<div class="row">
+    <div class="col-12 col-lg-6 container">
+        <div class="row">
+            <div class="col-6">
+                <h3>Kolumne</h3>
+            </div>
+            <div class="col-6">
+                <a class="btn btn-success float-right" asp-action="AddColumn" asp-controller="Admin">
+                    Dodaj kolumnu
+                </a>
+            </div>
 
-    </tbody>
-</table>
+            @foreach (var c in Model.ColumnPosts)
+            {
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header text-muted">
+                            <span>@c.Author.Name</span> 
+                            <span class="float-right"> @c.Id</span>
+                        </div>
+                        <div class="card-body pb-1">
+                            <div class="row">
+                                <div class="col-9">
+                                    <h5>@c.Title</h5>
+                                </div>
+                                @{ string id = $"columnMenu{c.Id}"; }
+                                <div id="@id" class="col-3">
+                                 <div class="container float-right ">
+                                        <div class="row float-right">
+                                            <a class="col-6 btn btn-toolbar" style="color:forestgreen"
+                                                    asp-action="EditColumn" asp-route-id="@c.Id">
+                                                <h3 class="fa fa-pencil"></h3>
+                                            </a>
+                                            <a class="col-6 btn btn-toolbar" style="color:orangered"
+                                                    asp-action="DeleteColumn" asp-route-id="@c.Id">
+                                                <h3 class="fa fa-trash"></h3>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-1"></div>
+            }
+        </div>
+    </div>
+    <div class="col-12 col-lg-6 container">
+        <div class="row">
+            <div class="col-6">
+                <h3>Autori</h3>
+            </div>
+            <div class="col-6">
+                <a class="btn btn-success float-right" asp-action="AddAuthor" asp-controller="Admin">
+                    Dodaj autora
+                </a>
+            </div>
 
-<a class="btn btn-success" asp-action="AddColumn" asp-controller="Admin">Dodaj kolumnu</a>
-
-<hr class="border-secondary"/>
-
-<h3>Autori</h3>
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Ime</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var author in Model.Authors)
-        {
-            <tr>
-                <td class="text-left">@author.Name</td>
-                <td>
-                    <a asp-action="EditAuthor" asp-route-id="@author.Id" class="btn btn-info">
-                        Uredi
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<a class="btn btn-success" asp-action="AddAuthor" asp-controller="Admin">Dodaj autora</a>
+            @foreach (var a in Model.Authors)
+            {
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h4>@a.Name</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-9">
+                                    <h5 class="text-muted">@a.ShortBio</h5>
+                                    <hr />
+                                    <h5 class="text-muted">@a.Bio</h5>
+                                </div>
+                                <div class="col-3">
+                                    <div class="container float-right ">
+                                        <div class="row float-right">
+                                            <a class="col-6 btn btn-toolbar" style="color:forestgreen" 
+                                                    asp-action="EditAuthor" asp-route-id="@a.Id">
+                                                <h3 class="fa fa-pencil"></h3>
+                                            </a>
+                                            <a class="col-6 btn btn-toolbar" style="color:orangered" 
+                                                    asp-action="DeleteAuthor" asp-route-id="@a.Id">
+                                                <h3 class="fa fa-trash"></h3>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-1"></div>
+            }
+        </div>
+        
+    </div>
+</div>
