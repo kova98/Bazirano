@@ -3,27 +3,41 @@
     Layout = "_AdminLayout";
 }
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Tekst</th>
-            <th>Akcija</th>
-        </tr>
-    </thead>
-    <tbody>
+    <div class="row">
+        <h3 class="col-12">Ploča</h3>
+
         @foreach (var t in Model)
         {
-            BoardPost post = t.Posts.OrderBy(x=>x.DatePosted).ToList()[0];
-            <tr>
-                <td class="text-center">@post.Id</td>
-                <td class="text-left">@post.Text</td>
-                <td>
-                    <a asp-action="DeleteBoardThread" asp-route-id="@t.Id" class="btn btn-danger">
-                        Ukloni
-                    </a>
-                </td>
-            </tr>
+            var firstPost = t.Posts.OrderByDescending(p => p.DatePosted).First();
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header text-muted">
+                        <span>@firstPost.DatePosted</span>
+                        <span class="float-right"> @firstPost.Id</span>
+                    </div>
+                    <div class="card-body pb-1">
+                        <div class="row">
+                            <div class="col-3">
+                                <img class="card-img" src="~/images/@firstPost.Image" />
+                            </div>
+                            <div class="col-8">
+                                <h5>@firstPost.Text</h5>
+                            </div>
+                            <div class="col-1">
+                                <div class="container float-right ">
+                                    <div class="row float-right">
+                                        <a class="col-6 btn btn-toolbar" style="color:orangered"
+                                           asp-action="DeleteBoardThread" asp-route-id="@t.Id">
+                                            <h3 class="fa fa-trash float-right"></h3>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-1"></div>
         }
-    </tbody>
-</table>
+    </div>
