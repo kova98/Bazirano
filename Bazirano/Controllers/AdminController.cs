@@ -9,6 +9,7 @@ using Bazirano.Models.Column;
 using System;
 using Bazirano.Models.Admin;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bazirano.Controllers
 {
@@ -19,13 +20,19 @@ namespace Bazirano.Controllers
         private IBoardThreadsRepository boardRepo;
         private IColumnRepository columnRepo;
         private NewsHelper newsHelper;
+        private UserManager<IdentityUser> userManager;
 
-        public AdminController(INewsPostsRepository newsRepository, IBoardThreadsRepository boardRepository, IColumnRepository columnRepository)
+        public AdminController(
+            INewsPostsRepository newsRepository,
+            IBoardThreadsRepository boardRepository,
+            IColumnRepository columnRepository,
+            UserManager<IdentityUser> userManager)
         {
             newsRepo = newsRepository;
             boardRepo = boardRepository;
             columnRepo = columnRepository;
             newsHelper = new NewsHelper(newsRepo);
+            this.userManager = userManager;
         }
 
         public IActionResult Index()
@@ -145,5 +152,39 @@ namespace Bazirano.Controllers
         {
             return View(nameof(AddAuthor), columnRepo.Authors.First(a => a.Id == id));
         }
+
+        public IActionResult Accounts()
+        {
+            var accounts = userManager.Users.ToList();
+
+            return View(nameof(Accounts), accounts);
+        }
+
+        public async Task<IActionResult> CreateUser(string userName, string password)
+        {
+            var user = new IdentityUser(userName);
+            var result = await userManager.CreateAsync(user, password);
+
+            if (result.Succeeded == false)
+            {
+                ViewBag.Errors = result.Errors;
+            }
+
+            return Accounts();
+        }
+        public async Task<IActionResult> DeleteUser(string name)
+        {
+            var user = await userManager.FindByNameAsync(name);
+
+            var result = await userManager.DeleteAsync(user);
+
+            if (result.Succeeded == false)
+            {
+                ViewBag.Errors = result.Errors;
+            }
+
+            return Accounts();
+        }
+
     }
 }
