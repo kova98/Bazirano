@@ -1,12 +1,18 @@
-﻿@model LoginViewModel
+﻿@{ 
+    Layout = "_BasicLayout";
+}
 
-    <div class="col-12 col-md-6">
+@model LoginViewModel
+
+    <div class="col-12 col-md-6 offset-md-3">
 
         <div class="p-3"></div>
         <h2 class="text-center">Prijavite se za nastavak</h2>
         <div class="p-3"></div>
 
         <form asp-action="Login" asp-controller="Account" method="post">
+            <div class="text-danger" asp-validation-summary="All"></div>
+
             <input type="hidden" asp-for="ReturnUrl" />
             <div class="form-group">
                 <label asp-for="Name" class="text-white-50">Ime</label>
@@ -18,7 +24,7 @@
                 <div><span asp-validation-for="Password" class="text-danger"></span></div>
                 <input asp-for="Password" class="form-control" placeholder="Unesite lozinku" />
             </div>
-            <button class="btn btn-success" type="submit">Prijava</button>
+            <button class="btn btn-success btn-block" type="submit">Prijava</button>
         </form>
     </div>
 

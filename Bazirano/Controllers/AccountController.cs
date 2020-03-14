@@ -24,7 +24,7 @@ namespace Bazirano.Controllers
         [AllowAnonymous]
         public ViewResult Login(string returnUrl)
         {
-            return View(new LoginViewModel
+            return View(nameof(Login), new LoginViewModel
             {
                 ReturnUrl = returnUrl
             });
@@ -45,14 +45,14 @@ namespace Bazirano.Controllers
 
                     if ((await signInManager.PasswordSignInAsync(user, loginModel.Password, false, false)).Succeeded)
                     {
-                        return Redirect(loginModel?.ReturnUrl ?? "/Admin"); 
+                        return Redirect(loginModel?.ReturnUrl ?? "/"); 
                     }
                 }
             }
 
             ModelState.AddModelError("", "Pogresno ime ili lozinka");
 
-            return View(loginModel);
+            return View(nameof(Login), loginModel);
         }
 
         public async Task<RedirectResult> Logout(string returnUrl = "/")

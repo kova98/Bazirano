@@ -13,26 +13,30 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Bazirano.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admins")]
     public class AdminController : Controller
     {
+        private NewsHelper newsHelper;
         private INewsPostsRepository newsRepo;
         private IBoardThreadsRepository boardRepo;
         private IColumnRepository columnRepo;
-        private NewsHelper newsHelper;
         private UserManager<IdentityUser> userManager;
+        private RoleManager<IdentityRole> roleManager;
 
         public AdminController(
-            INewsPostsRepository newsRepository,
-            IBoardThreadsRepository boardRepository,
-            IColumnRepository columnRepository,
-            UserManager<IdentityUser> userManager)
+            INewsPostsRepository newsRepo,
+            IBoardThreadsRepository boardRepo,
+            IColumnRepository columnRepo,
+            UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
-            newsRepo = newsRepository;
-            boardRepo = boardRepository;
-            columnRepo = columnRepository;
-            newsHelper = new NewsHelper(newsRepo);
+            this.newsRepo = newsRepo;
+            this.boardRepo = boardRepo;
+            this.columnRepo = columnRepo;
             this.userManager = userManager;
+            this.roleManager = roleManager;
+
+            newsHelper = new NewsHelper(this.newsRepo);
         }
 
         public IActionResult Index()
@@ -153,11 +157,24 @@ namespace Bazirano.Controllers
             return View(nameof(AddAuthor), columnRepo.Authors.First(a => a.Id == id));
         }
 
-        public IActionResult Accounts()
+        public async Task<IActionResult> Accounts()
         {
+            var users = new List<(IdentityUser, IList<string>)>();
             var accounts = userManager.Users.ToList();
+            foreach(var account in accounts)
+            {
+                var roles = await userManager.GetRolesAsync(account);
 
-            return View(nameof(Accounts), accounts);
+                users.Add((account, roles));
+            };
+
+            var viewModel = new AccountsViewModel
+            {
+                UserRolesPairs = users,
+                Roles = roleManager.Roles.ToList()
+            };
+
+            return View(nameof(Accounts), viewModel);
         }
 
         public async Task<IActionResult> CreateUser(string userName, string password)
@@ -170,8 +187,9 @@ namespace Bazirano.Controllers
                 ViewBag.Errors = result.Errors;
             }
 
-            return Accounts();
+            return await Accounts();
         }
+
         public async Task<IActionResult> DeleteUser(string name)
         {
             var user = await userManager.FindByNameAsync(name);
@@ -183,7 +201,62 @@ namespace Bazirano.Controllers
                 ViewBag.Errors = result.Errors;
             }
 
-            return Accounts();
+            return await Accounts();
+        }
+
+        public async Task<IActionResult> CreateRole(string roleName)
+        {
+            var role = new IdentityRole(roleName);
+            var result = await roleManager.CreateAsync(role);
+
+            if (result.Succeeded == false)
+            {
+                ViewBag.RoleErrors = result.Errors;
+            }
+
+            return await Accounts();
+        }
+
+        public async Task<IActionResult> DeleteRole(string roleId)
+        {
+            var role = await roleManager.FindByIdAsync(roleId);
+
+            var result = await roleManager.DeleteAsync(role);
+
+            if (result.Succeeded == false)
+            {
+                ViewBag.RoleErrors = result.Errors;
+            }
+
+            return await Accounts();
+        }
+
+        public async Task<IActionResult> AddUserToRole(string userId, string roleName)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+
+            var result = await userManager.AddToRoleAsync(user, roleName);
+
+            if (result.Succeeded == false)
+            {
+                ViewBag.RoleErrors = result.Errors;
+            }
+
+            return await Accounts();
+        }
+
+        public async Task<IActionResult> RemoveUserFromRole(string userId, string roleName)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+
+            var result = await userManager.RemoveFromRoleAsync(user, roleName);
+
+            if (result.Succeeded == false)
+            {
+                ViewBag.RoleErrors = result.Errors;
+            }
+
+            return await Accounts();
         }
 
     }

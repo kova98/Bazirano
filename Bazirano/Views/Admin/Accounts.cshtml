@@ -2,10 +2,21 @@
     Layout = "_AdminLayout";
 }
 
-@model List<IdentityUser>
+@model AccountsViewModel
 
-    <div class="row">
-        <div class="col-12 col-lg-6">
+<div class="row">
+
+    <div class="col-12 col-lg-6">
+        <h1>
+            <span>Računi</span>
+            <button class="btn btn-success float-right my-3" onclick="$('#addAccountForm').toggle('fast')">
+                Dodaj
+            </button>
+        </h1>
+
+        <div class="p-1"></div>
+
+        <div id="addAccountForm" style="display:none">
             @{ var errors = (IEnumerable<IdentityError>)ViewBag.Errors;}
             @if (errors != null)
             {
@@ -14,6 +25,7 @@
                     <p class="text-danger">@error.Description</p>
                 }
             }
+
             <form asp-action="CreateUser" method="post">
                 <div class="form-group">
                     <label class="text-white-50">Ime</label>
@@ -23,35 +35,72 @@
                     <label class="text-white-50">Lozinka</label>
                     <input name="password" type="password" class="form-control" placeholder="Lozinka" />
                 </div>
-                <button class="btn btn-success" type="submit">Dodaj korisnika</button>
+                <button class="btn btn-success" type="submit">Dodaj račun</button>
             </form>
 
             <div class="p-2"></div>
         </div>
 
-        <div class="col-12 col-lg-6">
-            <h1>Računi</h1>
-
-            @foreach (var user in Model)
-            {
-                <div class="card">
-                    <div class="card-body" onclick="toggleFooter('@user.UserName')">
-                        <h3>@user.UserName</h3>
-                        <span class="text-muted">@user.Id</span>
-                        <span class="text-muted">@user.Email</span>
-                    </div>
-                    @{ var id = $"footer{user.UserName}";}
-                    <div class="card-footer" id="@id" style="display:none">
-                        <a class="btn btn-danger float-right" asp-action="DeleteUser" asp-route-name="@user.UserName">
-                            Ukloni
-                        </a>
-                    </div>
+        @foreach (var pa in Model.UserRolesPairs)
+        {
+            <div class="card">
+                <div class="card-body" onclick="$('#@pa.Item1.Id').toggle('fast')">
+                    <h3>
+                        @pa.Item1.UserName
+                        @foreach (var role in pa.Item2)
+                        {
+                            <span class="badge badge-pill badge-info">@role</span>
+                        }
+                    </h3>
+                    <span class="text-muted">@pa.Item1.Id</span>
+                    <span class="text-muted">@pa.Item1.Email</span>
                 </div>
-                
-                <div class="p-1"></div>
-            }
-        </div>
+
+                <div class="card-footer" id="@pa.Item1.Id" style="display:none">
+
+                    <div class="dropdown float-left mr-2">
+                        <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Dodaj ulogu
+                        </button>
+                        <div class="dropdown-menu">
+                            @foreach (var role in Model.Roles)
+                            {
+                                <a class="dropdown-item" asp-action="AddUserToRole"
+                                   asp-route-roleName="@role.Name" asp-route-userId="@pa.Item1.Id">
+                                    @role.Name
+                                </a>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="dropdown float-left">
+                        <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Ukloni ulogu
+                        </button>
+                        <div class="dropdown-menu">
+                            @foreach (var role in pa.Item2)
+                            {
+                                <a class="dropdown-item" asp-action="RemoveUserFromRole"
+                                   asp-route-roleName="@role" asp-route-userId="@pa.Item1.Id">
+                                    @role
+                                </a>
+                            }
+                        </div>
+                    </div>
+                    <a class="btn btn-danger float-right" asp-action="DeleteUser" asp-route-name="@pa.Item1.UserName">
+                        Ukloni
+                    </a>
+                </div>
+            </div>
+
+            <div class="p-1"></div>
+        }
     </div>
+
+    <div class="col-12 col-lg-6">
+        <partial name="Roles" model="Model.Roles" />
+    </div>
+</div>
 
 <script>
     function toggleFooter(username) {

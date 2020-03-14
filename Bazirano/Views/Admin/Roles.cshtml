@@ -1,0 +1,47 @@
+﻿@model List<IdentityRole>
+
+<h1>
+    <span>Uloge</span>
+    <button class="btn btn-success float-right my-3" onclick="$('#addRoleForm').toggle('fast')">
+        Dodaj
+    </button>
+</h1>
+
+@{ var errors = (IEnumerable<IdentityError>)ViewBag.RoleErrors;}
+@if (errors != null)
+{
+    foreach (var error in errors)
+    {
+        <p class="text-danger">@error.Description</p>
+    }
+}
+<div id="addRoleForm" style="display:none">
+    <form asp-action="CreateRole" method="post">
+        <div class="form-group">
+            <label class="text-white-50">Ime</label>
+            <input name="roleName" class="form-control" placeholder="Ime" />
+        </div>
+        <button class="btn btn-success" type="submit">Dodaj ulogu</button>
+    </form>
+</div>
+
+<div class="p-2"></div>
+
+@foreach (var role in Model)
+{
+    <div class="card">
+        <div class="card-body" onclick="$('#@role.Id').toggle('fast')">
+            <h3>
+                @role.Name
+            </h3>
+        </div>
+        <div class="card-footer" id="@role.Id" style="display:none">
+            <a class="btn btn-danger float-right" asp-action="DeleteRole" asp-route-roleId="@role.Id">
+                Ukloni
+            </a>
+        </div>
+    </div>
+
+    <div class="p-1"></div>
+}
+
