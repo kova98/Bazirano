@@ -25,5 +25,11 @@ namespace Bazirano.Controllers
         {
             return View(nameof(Thread));
         }
+
+        [Route("~/greska-nije-autor")]
+        public IActionResult NotAuthor()
+        {
+            return View(nameof(NotAuthor));
+        }
     }
 }
