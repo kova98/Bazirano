@@ -61,6 +61,11 @@ namespace Bazirano.Controllers
 
             return Redirect(returnUrl);
         }
+
+        public IActionResult AccessDenied()
+        {
+            return View(nameof(AccessDenied));
+        }
     }
 }
 
