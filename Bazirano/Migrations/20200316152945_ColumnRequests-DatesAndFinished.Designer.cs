@@ -4,14 +4,16 @@ using Bazirano.Models.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bazirano.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200316152945_ColumnRequests-DatesAndFinished")]
+    partial class ColumnRequestsDatesAndFinished
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,15 +31,9 @@ namespace Bazirano.Migrations
 
                     b.Property<string>("AdminRemarks");
 
-                    b.Property<long?>("AuthorId");
-
                     b.Property<string>("AuthorRemarks");
 
-                    b.Property<string>("ColumnImage");
-
-                    b.Property<string>("ColumnText");
-
-                    b.Property<string>("ColumnTitle");
+                    b.Property<long>("ColumnId");
 
                     b.Property<DateTime>("DateApproved");
 
@@ -47,7 +43,7 @@ namespace Bazirano.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("ColumnId");
 
                     b.ToTable("ColumnRequests");
                 });
@@ -201,9 +197,10 @@ namespace Bazirano.Migrations
 
             modelBuilder.Entity("Bazirano.Models.AuthorInterface.ColumnRequest", b =>
                 {
-                    b.HasOne("Bazirano.Models.Column.Author", "Author")
+                    b.HasOne("Bazirano.Models.Column.ColumnPost", "Column")
                         .WithMany()
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("ColumnId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Bazirano.Models.Board.BoardPost", b =>

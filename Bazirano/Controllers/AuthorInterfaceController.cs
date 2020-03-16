@@ -33,6 +33,32 @@ namespace Bazirano.Controllers
             return View(nameof(Index));
         }
 
+        public async Task<IActionResult> SaveColumnRequest(ColumnRequest columnRequest)
+        {
+            var user = await userManager.GetUserAsync(User);
+
+            columnRequest.Author = columnRepository.Authors.FirstOrDefault(a => a.Name == user.UserName);
+            columnRequest.DateRequested = DateTime.Now;
+
+            var existing = columnRequestsRepository.ColumnRequests.FirstOrDefault(c => c.Id == columnRequest.Id);
+            if (existing == null)
+            {
+                columnRequestsRepository.AddColumnRequest(columnRequest);
+            }
+            else
+            {
+                columnRequestsRepository.EditColumnRequest(columnRequest);
+            }
+
+            return Index();
+        }
+
+        [Route("~/sucelje/obrada")]
+        public IActionResult EditColumnRequest(ColumnRequest columnRequest)
+        {
+            return View(nameof(EditColumnRequest), columnRequest);
+        }
+
         [Route("~/sucelje/nova-kolumna")]
         public async Task<IActionResult> NewColumnRequest()
         {
@@ -46,24 +72,14 @@ namespace Bazirano.Controllers
 
             var columnRequest = new ColumnRequest
             {
-                Column = new ColumnPost
-                {
-                    Author = author,
-                    DatePosted = DateTime.Now,
-                    Title = "Primjer naslova",
-                    Image = "https://i.imgur.com/DvQI0WC.png",
-                    Text = ""
-                }
+                Author = author,
+                DateRequested = DateTime.Now,
+                ColumnTitle = "Primjer naslova",
+                ColumnImage = "https://i.imgur.com/DvQI0WC.png",
+                ColumnText = ""
             };
 
-            return View(columnRequest);
-        }
-
-        public IActionResult AddColumnRequest(ColumnRequest columnRequest)
-        {
-            columnRequestsRepository.AddColumnRequest(columnRequest);
-
-            return Index();
+            return EditColumnRequest(columnRequest);
         }
     }
 }

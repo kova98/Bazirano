@@ -40,8 +40,7 @@ namespace Bazirano.Models.DataAccess
         public IQueryable<Author> Authors => context.Authors;
 
         public IQueryable<ColumnRequest> ColumnRequests => context.ColumnRequests
-            .Include(c => c.Column)
-                .ThenInclude(c => c.Author);
+            .Include(c => c.Author);
 
         public void AddCommentResponse(Comment responseComment, long commentId)
         {

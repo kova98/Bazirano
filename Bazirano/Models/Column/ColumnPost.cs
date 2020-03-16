@@ -50,13 +50,20 @@ namespace Bazirano.Models.Column
             {
                 if (string.IsNullOrEmpty(Text))
                 {
-                    return "";
+                    return " ";
                 }
 
                 int startIndex = Text.IndexOf("<p>") + 3;
                 int endIndex = Text.IndexOf("</p>") - 1;    
                 int length = endIndex - startIndex;
-                return $"{Text.Substring(startIndex, length).Trim()}..";
+                try
+                {
+                    return $"{Text.Substring(startIndex, length).Trim()}..";
+                } 
+                catch (ArgumentOutOfRangeException)
+                {
+                    return " ";
+                }
             }
         }
     }

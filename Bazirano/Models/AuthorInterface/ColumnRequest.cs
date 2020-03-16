@@ -12,12 +12,19 @@ namespace Bazirano.Models.AuthorInterface
     {
         public long Id { get; set; }
 
-        [Required]
-        public ColumnPost Column { get; set; }
+        public string ColumnImage { get; set; }
 
-        public DateTime TimeRequested { get; set; }
+        public string ColumnTitle { get; set; }
 
-        public DateTime TimeApproved { get; set; }
+        public string ColumnText { get; set; }
+
+        public Author Author { get; set; }
+
+        public bool Finished { get; set; }
+
+        public DateTime DateRequested { get; set; }
+
+        public DateTime DateApproved { get; set; }
 
         public long AdminApprovedId { get; set; }
 
