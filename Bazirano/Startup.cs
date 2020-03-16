@@ -43,6 +43,7 @@ namespace Bazirano
             services.AddTransient<IBoardPostsRepository, EFRepository>();
             services.AddTransient<INewsPostsRepository, EFRepository>();
             services.AddTransient<IColumnRepository, EFRepository>();
+            services.AddTransient<IColumnRequestsRepository, EFRepository>();
             services.AddTransient<IGoogleRecaptchaHelper, GoogleRecaptchaHelper>();
             services.AddTransient<IWriter, WriterHelper>();
 

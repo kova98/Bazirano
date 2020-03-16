@@ -43,7 +43,6 @@ namespace Bazirano.Models.News
         /// <summary>
         /// The url of the post image.
         /// </summary>
-        [Required]
         public string Image { get; set; }
 
         /// <summary>

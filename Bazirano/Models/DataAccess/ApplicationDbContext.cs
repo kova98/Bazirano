@@ -1,4 +1,5 @@
-﻿using Bazirano.Models.Board;
+﻿using Bazirano.Models.AuthorInterface;
+using Bazirano.Models.Board;
 using Bazirano.Models.Column;
 using Bazirano.Models.News;
 using Bazirano.Models.Shared;
@@ -38,5 +39,7 @@ namespace Bazirano.Models.DataAccess
         public DbSet<ColumnPost> ColumnPosts { get; set; }
 
         public DbSet<Author> Authors { get; set; }
+
+        public DbSet<ColumnRequest> ColumnRequests { get; set; }
     }
 }

@@ -1,0 +1,70 @@
+﻿@{
+    Layout = "_AuthorInterfaceLayout";
+    ViewBag.ActiveTab = "newColumnRequest";
+}
+
+@model ColumnRequest
+
+
+<div class="col-md-4 col-12">
+    <form asp-action="AddColumnRequest" asp-controller="AuthorInterface">
+        <div class="form-group">
+            <label class="form-text">Naslov</label>
+            <input id="title-input" asp-for="Column.Title" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-text">Slika</label>
+            <input id="image-input" asp-for="Column.Image" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-text">Tekst</label>
+            <textarea rows="15" id="text-input" asp-for="Column.Text" class="form-control"></textarea>
+        </div>
+
+        <input class="form-control invisible" asp-for="Column.Id" value="@Model.Column.Id" hidden />
+        <input id="title-input" asp-for="Column.Author.Id" class="form-control" hidden />
+
+        <button class="btn btn-primary" onclick="refresh()" type="button">
+            <span class="fas fa-sync-alt"></span><span class="pl-1">Osvježi</span>
+        </button>
+
+        <button class="btn btn-success" type="submit">Spremi</button>
+
+    </form>
+</div>
+
+<div class="col-md-8 col-12" id="preview">
+    <div class="card">
+        <img id="image" class="card-img-top img-fluid" src="@Model.Column.Image" />
+        <div class="card-body">
+            <div class="card-title">
+                <h1 id="title">@Model.Column.Title</h1>
+            </div>
+            <span class="float-right text-muted">@Model.Column.DatePosted.ToString("dd.MM.yyyy.")</span>
+            <div class="text-muted">
+                Piše: <span id="author">@Model.Column.Author.Name</span>
+            </div>
+
+            <hr class="bg-secondary" />
+            <div class="text-body" id="text">@Html.Raw(Model.Column.Text)</div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        refresh();
+
+        $('.form-control').on('input', function (e) {
+            refresh();
+        });
+    });
+
+    function refresh() {
+        $("#title").text($("#title-input").val());
+        $("#text").html($("#text-input").val());
+        $("#image").attr("src", $("#image-input").val());
+    }
+</script>

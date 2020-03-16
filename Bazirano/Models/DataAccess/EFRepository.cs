@@ -1,4 +1,5 @@
 ﻿using Bazirano.Infrastructure;
+using Bazirano.Models.AuthorInterface;
 using Bazirano.Models.Board;
 using Bazirano.Models.Column;
 using Bazirano.Models.News;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 namespace Bazirano.Models.DataAccess
 {
 
-    public class EFRepository : IBoardThreadsRepository, IBoardPostsRepository, INewsPostsRepository, IColumnRepository
+    public class EFRepository : IBoardThreadsRepository, IBoardPostsRepository, INewsPostsRepository, IColumnRepository, IColumnRequestsRepository
     {
         private ApplicationDbContext context;
         private IWriter writer;
@@ -37,6 +38,10 @@ namespace Bazirano.Models.DataAccess
                 .ThenInclude(c => c.Responses);
 
         public IQueryable<Author> Authors => context.Authors;
+
+        public IQueryable<ColumnRequest> ColumnRequests => context.ColumnRequests
+            .Include(c => c.Column)
+                .ThenInclude(c => c.Author);
 
         public void AddCommentResponse(Comment responseComment, long commentId)
         {
@@ -235,6 +240,34 @@ namespace Bazirano.Models.DataAccess
             var author = context.Authors.FirstOrDefault(a => a.Id == authorId);
 
             context.Authors.Remove(author);
+
+            context.SaveChanges();
+        }
+
+        public void AddColumnRequest(ColumnRequest columnRequest)
+        {
+            context.ColumnRequests.Add(columnRequest);
+
+            context.SaveChanges();
+        }
+
+        public void RemoveColumnRequest(long columnRequestId)
+        {
+            var columnRequest = context.ColumnRequests.FirstOrDefault(c => c.Id == columnRequestId);
+
+            if (columnRequest == null)
+            {
+                throw new InvalidOperationException($"Tried to remove a non existing ColumnRequest (columnRequestId = {columnRequestId})");
+            }
+
+            context.ColumnRequests.Remove(columnRequest);
+
+            context.SaveChanges();
+        }
+
+        public void EditColumnRequest(ColumnRequest columnRequest)
+        {
+            context.ColumnRequests.Update(columnRequest);
 
             context.SaveChanges();
         }
