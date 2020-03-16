@@ -15,6 +15,16 @@
     {
       "library": "jquery@3.4.1",
       "destination": "wwwroot/lib/jquery/"
+    },
+    {
+      "library": "font-awesome@5.12.1",
+      "destination": "wwwroot/lib/font-awesome/",
+      "files": [
+        "css/all.min.css",
+        "webfonts/fa-solid-900.woff2",
+        "webfonts/fa-regular-400.woff2",
+        "webfonts/fa-brands-400.woff2"
+      ]
     }
   ]
 }
