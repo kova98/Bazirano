@@ -22,6 +22,16 @@ namespace Bazirano.Controllers
         }
 
         [AllowAnonymous]
+        [Route("~/prijava")]
+        public IActionResult LoginRedirect(string returnUrl)
+        {
+            return View(nameof(Login), new LoginViewModel
+            {
+                ReturnUrl = returnUrl
+            });
+        }
+
+        [AllowAnonymous]
         public ViewResult Login(string returnUrl)
         {
             return View(nameof(Login), new LoginViewModel
