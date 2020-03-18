@@ -23,7 +23,7 @@ namespace Bazirano.Controllers
             this.googleRecaptchaHelper = googleRecaptchaHelper;
         }
 
-        [Route("~/kolumna")]
+        [Route("~/kolumne")]
         public IActionResult Index()
         {
             var columns = columnRepo.ColumnPosts
@@ -62,7 +62,7 @@ namespace Bazirano.Controllers
             return columnPosts;
         }
 
-        [Route("~/kolumna/{id}")]
+        [Route("~/kolumne/{id}")]
         public IActionResult ColumnPost(long id)
         {
             var post = columnRepo.ColumnPosts.FirstOrDefault(p => p.Id == id);
