@@ -8,21 +8,47 @@
 <div class="col-md-4 col-12">
     <form asp-action="SaveColumnRequest" asp-controller="AuthorInterface">
         <div class="form-group">
-            <label class="form-text">Naslov</label>
-            <input id="title-input" asp-for="ColumnTitle" class="form-control" />
+            <label class="form-text text-muted">Naslov</label>
+            <input id="title-input" asp-for="ColumnTitle" class="form-control"
+                   placeholder="Naslov kolumne" />
         </div>
 
         <div class="form-group">
-            <label class="form-text">Slika</label>
-            <input id="image-input" asp-for="ColumnImage" class="form-control" />
+            <label class="form-text text-muted">Slika</label>
+            <input id="image-input" asp-for="ColumnImage" class="form-control"
+                   placeholder="Link na naslovnu sliku" />
         </div>
 
         <div class="form-group">
-            <label class="form-text">Tekst</label>
-            <textarea rows="15" id="text-input" asp-for="ColumnText" class="form-control"></textarea>
+            <label class="form-text text-muted">Tekst</label>
+            <textarea rows="15" id="text-input" asp-for="ColumnText" class="form-control"
+                      placeholder="Sadržaj kolumne"></textarea>
         </div>
 
-        <button class="btn btn-success" type="submit">Sačuvaj</button>
+        <div class="form-group">
+            <label class="form-text text-muted">Napomena</label>
+            <textarea id="text-input" asp-for="AuthorRemarks" class="form-control"
+                      placeholder="Ako imate bilo kakvu napomenu, upišite je ovdje"></textarea>
+        </div>
+
+        <button class="btn btn-primary btn-block" type="submit" name="command" value="save">
+            <span class="fa fa-save mr-1"></span>
+            Spremi
+        </button>
+        @if (Model.Status == ColumnRequestStatus.Draft)
+        {
+            <button class="btn btn-success btn-block my-2" type="submit" name="command" value="saveAndSend">
+                <span class="fa fa-paper-plane mr-1"></span>
+                Spremi i pošalji
+            </button>
+        }
+
+        <input id="title-input" asp-for="Id" class="form-control" hidden />
+        <input id="title-input" asp-for="Author.Name" class="form-control" hidden />
+        <input id="title-input" asp-for="Author.ShortBio" class="form-control" hidden />
+        <input id="title-input" asp-for="Author.Bio" class="form-control" hidden />
+        <input id="title-input" asp-for="Author.Image" class="form-control" hidden />
+
 
     </form>
 </div>

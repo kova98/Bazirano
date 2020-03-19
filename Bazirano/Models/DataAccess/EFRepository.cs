@@ -266,6 +266,9 @@ namespace Bazirano.Models.DataAccess
 
         public void EditColumnRequest(ColumnRequest columnRequest)
         {
+            var existing = context.ColumnRequests.FirstOrDefault(c => c.Id == columnRequest.Id);
+
+            context.Entry(existing).State = EntityState.Detached;
             context.ColumnRequests.Update(columnRequest);
 
             context.SaveChanges();

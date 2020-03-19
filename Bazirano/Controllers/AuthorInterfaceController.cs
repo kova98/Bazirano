@@ -1,4 +1,5 @@
-﻿using Bazirano.Models.AuthorInterface;
+﻿using Bazirano.Infrastructure;
+using Bazirano.Models.AuthorInterface;
 using Bazirano.Models.Column;
 using Bazirano.Models.DataAccess;
 using Microsoft.AspNetCore.Authorization;
@@ -33,29 +34,54 @@ namespace Bazirano.Controllers
             return View(nameof(Index));
         }
 
-        public async Task<IActionResult> SaveColumnRequest(ColumnRequest columnRequest)
+        [Route("~/sucelje/moje-kolumne")]
+        public ViewResult ColumnRequestsOverview()
         {
-            var user = await userManager.GetUserAsync(User);
+            var requests = columnRequestsRepository.ColumnRequests.Where(c => c.Author.Name == User.Identity.Name).ToList();
 
-            columnRequest.Author = columnRepository.Authors.FirstOrDefault(a => a.Name == user.UserName);
+            var viewModel = new ColumnRequestsOverviewViewModel
+            {
+                DraftRequests = requests.Where(r => r.Status == ColumnRequestStatus.Draft).ToList(),
+                PendingRequests = requests.Where(r => r.Status == ColumnRequestStatus.Pending).ToList(),
+                ApprovedRequests = requests.Where(r => r.Status == ColumnRequestStatus.Approved).ToList(),
+                RejectedRequests = requests.Where(r => r.Status == ColumnRequestStatus.Rejected).ToList()
+            };
+
+            return View(nameof(ColumnRequestsOverview), viewModel);
+        }
+
+        public IActionResult SaveColumnRequest(ColumnRequest columnRequest, string command)
+        {
+            string message = "Kolumna uspješno spremljena u skice.";
             columnRequest.DateRequested = DateTime.Now;
 
-            var existing = columnRequestsRepository.ColumnRequests.FirstOrDefault(c => c.Id == columnRequest.Id);
-            if (existing == null)
+            if (command == "saveAndSend")
             {
-                columnRequestsRepository.AddColumnRequest(columnRequest);
+                message = "Kolumna uspješno spremljena i poslana na pregled.";
+                columnRequest.Status = ColumnRequestStatus.Pending;
             }
-            else
+
+            var columnRequestExists = columnRequestsRepository.ColumnRequests.Any(c => c.Id == columnRequest.Id);
+            if (columnRequestExists)
             {
                 columnRequestsRepository.EditColumnRequest(columnRequest);
             }
+            else
+            {
+                columnRequestsRepository.AddColumnRequest(columnRequest);
+            }
 
-            return Index();
+            return ColumnRequestsOverview()
+                .WithAlert(AlertType.Success, message);
         }
 
         [Route("~/sucelje/obrada")]
-        public IActionResult EditColumnRequest(ColumnRequest columnRequest)
+        public async Task<IActionResult> EditColumnRequest(long id)
         {
+            var columnRequest
+                = columnRequestsRepository.ColumnRequests.FirstOrDefault(r => r.Id == id)
+                ?? await GetPlaceholderColumnRequest();
+
             return View(nameof(EditColumnRequest), columnRequest);
         }
 
@@ -70,16 +96,24 @@ namespace Bazirano.Controllers
                 return RedirectToAction("NotAuthor", "Error");
             }
 
+            return await EditColumnRequest(0);
+        }
+
+        private async Task<ColumnRequest> GetPlaceholderColumnRequest()
+        {
+            var user = await userManager.GetUserAsync(User);
+            var author = columnRepository.Authors.FirstOrDefault(a => a.Name == user.UserName);
+
             var columnRequest = new ColumnRequest
             {
                 Author = author,
                 DateRequested = DateTime.Now,
                 ColumnTitle = "Primjer naslova",
                 ColumnImage = "https://i.imgur.com/DvQI0WC.png",
-                ColumnText = ""
+                ColumnText = System.IO.File.ReadAllText("sample-article.html")
             };
 
-            return EditColumnRequest(columnRequest);
+            return columnRequest;
         }
     }
 }

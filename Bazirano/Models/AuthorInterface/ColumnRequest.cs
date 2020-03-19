@@ -20,7 +20,7 @@ namespace Bazirano.Models.AuthorInterface
 
         public Author Author { get; set; }
 
-        public bool Finished { get; set; }
+        public ColumnRequestStatus Status { get; set; }
 
         public DateTime DateRequested { get; set; }
 
