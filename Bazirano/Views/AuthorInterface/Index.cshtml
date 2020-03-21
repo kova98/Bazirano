@@ -3,7 +3,45 @@
     ViewBag.ActiveTab = "index";
 }
 
-<div class="col-md-4 col-12">
+@model AuthorInterfaceIndexViewModel
 
-    <h1>[uskoro]</h1>
+<div class="col-md-4 col-12 text-center">
+    <div class="card">
+        <img src="@Model.Author.Image" class="card-img-top" />
+        <div class="card-body">
+            <h1>@Model.Author.Name</h1>
+            <h3 class="text-muted">@Model.Author.ShortBio</h3>
+            <hr class="my-4 bg-secondary" />
+            <p class="text-dark">@Model.Author.Bio</p>
+        </div>
+        <div class="card-footer bg-light">
+            <button class="btn btn-primary">
+                <span class="fa fa-pencil-alt mr-1"></span>
+                Uredi profil
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-4 col-12">
+    <div class="card">
+        <div class="card-header text-center">
+            <h2>Pregled</h2>
+
+        </div>
+        <div class="card-body">
+            <a asp-action="ColumnRequestsOverview" class="text-white">
+                <p class="text-white">@Model.DraftRequests.Count skica/e</p>
+            </a>
+            <a asp-action="ColumnRequestsOverview" class="text-warning">
+                <p class="text-warning">@Model.PendingRequests.Count čeka odobrenje</p>
+            </a>
+            <a asp-action="ColumnRequestsOverview" class="text-danger">
+                <p class="text-danger">@Model.RejectedRequests.Count odbijenih</p>
+            </a>
+            <a asp-action="ColumnRequestsOverview" class="text-success">
+                <p class="text-success">@Model.ApprovedRequests.Count odobrenih</p>
+            </a>
+        </div>
+    </div>
 </div>
