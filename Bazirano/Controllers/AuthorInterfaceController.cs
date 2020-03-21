@@ -57,6 +57,7 @@ namespace Bazirano.Controllers
         {
             string message = "Kolumna uspješno spremljena kao skica.";
             columnRequest.DateRequested = DateTime.Now;
+            columnRequest.Author = columnRepository.Authors.FirstOrDefault(a => a.Id == columnRequest.Author.Id);
 
             if (command == "saveAndSend")
             {
