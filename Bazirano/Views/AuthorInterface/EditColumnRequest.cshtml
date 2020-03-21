@@ -33,13 +33,17 @@
 
         <button class="btn btn-primary btn-block" type="submit" name="command" value="save">
             <span class="fa fa-save mr-1"></span>
-            Spremi
+            Spremi kao skicu
         </button>
         @if (Model.Status == ColumnRequestStatus.Draft)
         {
             <button class="btn btn-success btn-block my-2" type="submit" name="command" value="saveAndSend">
                 <span class="fa fa-paper-plane mr-1"></span>
                 Spremi i pošalji
+            </button>
+            <button type="button" class="btn btn-danger btn-block my-2" data-toggle="modal" data-target="#confirmDelete">
+                <span class="fa fa-trash mr-1"></span>
+                Izbriši
             </button>
         }
 
@@ -48,9 +52,30 @@
         <input id="title-input" asp-for="Author.ShortBio" class="form-control" hidden />
         <input id="title-input" asp-for="Author.Bio" class="form-control" hidden />
         <input id="title-input" asp-for="Author.Image" class="form-control" hidden />
-
-
     </form>
+</div>
+
+
+
+<!-- Confirm deletion modal -->
+<div class="modal fade" id="confirmDelete">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Potvrda</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Jeste li sigurni da želite izbrisati ovu skicu?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
+                <a class="btn btn-danger"asp-action="RemoveColumnRequest" asp-route-id="@Model.Id">Izbriši skicu</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="col-md-8 col-12" id="preview">

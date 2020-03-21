@@ -1,6 +1,6 @@
 ﻿@if (ViewData.ContainsKey("Alert.Message"))
 {
-    <div class="alert @ViewData["Alert.Type"] alert-dismissible fade show" role="alert" style="display:none">
+    <div class="alert @ViewData["Alert.Type"] alert-dismissible fade show" role="alert">
         <div class="">
             @ViewData["Alert.Message"]
         </div>
@@ -9,10 +9,3 @@
         </button>
     </div>
 }
-
-<script>
-    window.onload = function () {
-        $(".alert").show("slow");
-    }
-</script>
-

@@ -31,28 +31,31 @@ namespace Bazirano.Controllers
         [Route("~/sucelje")]
         public IActionResult Index()
         {
-            return View(nameof(Index));
+            var requests = GetAuthorRequests(User.Identity.Name);
+
+            var viewModel = new AuthorInterfaceIndexViewModel
+            {
+                Author = columnRepository.Authors.FirstOrDefault(a => a.Name == User.Identity.Name),
+                DraftRequests = requests.DraftRequests,
+                PendingRequests = requests.PendingRequests,
+                ApprovedRequests = requests.ApprovedRequests,
+                RejectedRequests = requests.RejectedRequests
+            };
+
+            return View(nameof(Index), viewModel);
         }
+
 
         [Route("~/sucelje/moje-kolumne")]
         public ViewResult ColumnRequestsOverview()
         {
-            var requests = columnRequestsRepository.ColumnRequests.Where(c => c.Author.Name == User.Identity.Name).ToList();
-
-            var viewModel = new ColumnRequestsOverviewViewModel
-            {
-                DraftRequests = requests.Where(r => r.Status == ColumnRequestStatus.Draft).ToList(),
-                PendingRequests = requests.Where(r => r.Status == ColumnRequestStatus.Pending).ToList(),
-                ApprovedRequests = requests.Where(r => r.Status == ColumnRequestStatus.Approved).ToList(),
-                RejectedRequests = requests.Where(r => r.Status == ColumnRequestStatus.Rejected).ToList()
-            };
-
-            return View(nameof(ColumnRequestsOverview), viewModel);
+            var columnRequestsOverviewViewModel = GetAuthorRequests(User.Identity.Name);
+            return View(nameof(ColumnRequestsOverview), columnRequestsOverviewViewModel);
         }
 
         public IActionResult SaveColumnRequest(ColumnRequest columnRequest, string command)
         {
-            string message = "Kolumna uspješno spremljena u skice.";
+            string message = "Kolumna uspješno spremljena kao skica.";
             columnRequest.DateRequested = DateTime.Now;
 
             if (command == "saveAndSend")
@@ -68,6 +71,7 @@ namespace Bazirano.Controllers
             }
             else
             {
+                columnRequest.Id = 0;
                 columnRequestsRepository.AddColumnRequest(columnRequest);
             }
 
@@ -76,33 +80,50 @@ namespace Bazirano.Controllers
         }
 
         [Route("~/sucelje/obrada")]
-        public async Task<IActionResult> EditColumnRequest(long id)
+        public IActionResult EditColumnRequest(long id)
         {
             var columnRequest
-                = columnRequestsRepository.ColumnRequests.FirstOrDefault(r => r.Id == id)
-                ?? await GetPlaceholderColumnRequest();
+                = columnRequestsRepository.ColumnRequests
+                    .FirstOrDefault(r => r.Id == id && r.Author.Name == User.Identity.Name)
+                ?? GetPlaceholderColumnRequest();
 
             return View(nameof(EditColumnRequest), columnRequest);
         }
 
         [Route("~/sucelje/nova-kolumna")]
-        public async Task<IActionResult> NewColumnRequest()
+        public IActionResult NewColumnRequest()
         {
-            var user = await userManager.GetUserAsync(User);
-            var author = columnRepository.Authors.FirstOrDefault(a => a.Name == user.UserName);
+            var author = columnRepository.Authors.FirstOrDefault(a => a.Name == User.Identity.Name);
 
             if (author == null)
             {
                 return RedirectToAction("NotAuthor", "Error");
             }
 
-            return await EditColumnRequest(0);
+            return EditColumnRequest(0);
         }
 
-        private async Task<ColumnRequest> GetPlaceholderColumnRequest()
+        [Route("~/sucelje/izbrisi-skicu")]
+        public IActionResult RemoveColumnRequest(long id)
         {
-            var user = await userManager.GetUserAsync(User);
-            var author = columnRepository.Authors.FirstOrDefault(a => a.Name == user.UserName);
+            var columnRequestExists = columnRequestsRepository.ColumnRequests
+                    .Any(r => r.Id == id && r.Author.Name == User.Identity.Name);
+
+            if (columnRequestExists)
+            {
+                columnRequestsRepository.RemoveColumnRequest(id);
+
+                return ColumnRequestsOverview()
+                    .WithAlert(AlertType.Success, "Skica uspješno izbrisana.");
+            }
+
+            return ColumnRequestsOverview()
+                .WithAlert(AlertType.Error, "Greška: Skica ne postoji!");
+        }
+
+        private ColumnRequest GetPlaceholderColumnRequest()
+        {
+            var author = columnRepository.Authors.FirstOrDefault(a => a.Name == User.Identity.Name);
 
             var columnRequest = new ColumnRequest
             {
@@ -114,6 +135,21 @@ namespace Bazirano.Controllers
             };
 
             return columnRequest;
+        }
+
+        private ColumnRequestsOverviewViewModel GetAuthorRequests(string authorName)
+        {
+            var requests = columnRequestsRepository.ColumnRequests.Where(c => c.Author.Name == authorName).ToList();
+
+            var viewModel = new ColumnRequestsOverviewViewModel
+            {
+                DraftRequests = requests.Where(r => r.Status == ColumnRequestStatus.Draft).ToList(),
+                PendingRequests = requests.Where(r => r.Status == ColumnRequestStatus.Pending).ToList(),
+                ApprovedRequests = requests.Where(r => r.Status == ColumnRequestStatus.Approved).ToList(),
+                RejectedRequests = requests.Where(r => r.Status == ColumnRequestStatus.Rejected).ToList()
+            };
+
+            return viewModel;
         }
     }
 }

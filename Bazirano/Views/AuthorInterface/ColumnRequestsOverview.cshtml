@@ -34,58 +34,67 @@
     </div>
 </div>
 
-<div class="col-md-4 col-12 mb-3">
-    <div class="card bg-warning">
-        <ul class="list-group">
-            <li class="list-group-item card-header">
-                <h3 class="my-0 text-warning">
-                    Čeka odobrenje
-                </h3>
-            </li>
-            @foreach (var req in Model.PendingRequests)
-            {
-                <li class="list-group-item">
-                    <a asp-action="EditColumnRequest" asp-route-id="@req.Id" class="text-muted">
-                        @req.ColumnTitle
-                    </a>
+@if (Model.PendingRequests.Count > 0)
+{
+    <div class="col-md-4 col-12 mb-3">
+        <div class="card bg-warning">
+            <ul class="list-group">
+                <li class="list-group-item card-header">
+                    <h3 class="my-0 text-warning">
+                        Čeka odobrenje
+                    </h3>
                 </li>
-            }
-        </ul>
+                @foreach (var req in Model.PendingRequests)
+                {
+                    <li class="list-group-item">
+                        <a asp-action="EditColumnRequest" asp-route-id="@req.Id" class="text-muted">
+                            @req.ColumnTitle
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
     </div>
-</div>
+}
 
-<div class="col-md-4 col-12 mb-3">
-    <div class="card bg-danger">
-        <ul class="list-group">
-            <li class="list-group-item card-header">
-                <h3 class="my-0 text-danger">Odbijeno</h3>
-            </li>
-            @foreach (var req in Model.RejectedRequests)
-            {
-                <li class="list-group-item">
-                    <a asp-action="EditColumnRequest" asp-route-id="@req.Id">
-                        @req.ColumnTitle
-                    </a>
+@if (Model.RejectedRequests.Count > 0)
+{
+    <div class="col-md-4 col-12 mb-3">
+        <div class="card bg-danger">
+            <ul class="list-group">
+                <li class="list-group-item card-header">
+                    <h3 class="my-0 text-danger">Odbijeno</h3>
                 </li>
-            }
-        </ul>
+                @foreach (var req in Model.RejectedRequests)
+                {
+                    <li class="list-group-item">
+                        <a asp-action="EditColumnRequest" asp-route-id="@req.Id">
+                            @req.ColumnTitle
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
     </div>
-</div>
+}
 
-<div class="col-md-4 col-12 mb-3">
-    <div class="card bg-success">
-        <ul class="list-group">
-            <li class="list-group-item card-header">
-                <h3 class="my-0 text-success">Odobreno</h3>
-            </li>
-            @foreach (var req in Model.ApprovedRequests)
-            {
-                <li class="list-group-item">
-                    <a asp-action="EditColumnRequest" asp-route-id="@req.Id">
-                        @req.ColumnTitle
-                    </a>
+@if (Model.ApprovedRequests.Count > 0)
+{
+    <div class="col-md-4 col-12 mb-3">
+        <div class="card bg-success">
+            <ul class="list-group">
+                <li class="list-group-item card-header">
+                    <h3 class="my-0 text-success">Odobreno</h3>
                 </li>
-            }
-        </ul>
+                @foreach (var req in Model.ApprovedRequests)
+                {
+                    <li class="list-group-item">
+                        <a asp-action="EditColumnRequest" asp-route-id="@req.Id">
+                            @req.ColumnTitle
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
     </div>
-</div>
+}
