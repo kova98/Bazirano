@@ -32,10 +32,16 @@ namespace Bazirano.Controllers
         public IActionResult Index()
         {
             var requests = GetAuthorRequests(User.Identity.Name);
+            var author = columnRepository.Authors.FirstOrDefault(a => a.Name == User.Identity.Name);
+
+            if (author == null)
+            {
+                return RedirectToAction("NotAuthor", "Error");
+            }
 
             var viewModel = new AuthorInterfaceIndexViewModel
             {
-                Author = columnRepository.Authors.FirstOrDefault(a => a.Name == User.Identity.Name),
+                Author = author,
                 DraftRequests = requests.DraftRequests,
                 PendingRequests = requests.PendingRequests,
                 ApprovedRequests = requests.ApprovedRequests,
@@ -111,6 +117,14 @@ namespace Bazirano.Controllers
                                "Odbijeno",
                                "Administrator je odbio vašu kolumnu.",
                                columnRequest.AdminRemarks);
+            }
+
+            if (columnRequest.Status == ColumnRequestStatus.Approved)
+            {
+                return View(nameof(EditColumnRequest), columnRequest)
+                    .WithAlert(AlertType.Success,
+                               "Odobreno",
+                               "Administrator je odobrio i objavio vašu kolumnu!");
             }
 
             return View(nameof(EditColumnRequest), columnRequest);
