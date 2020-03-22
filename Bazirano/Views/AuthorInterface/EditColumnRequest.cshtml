@@ -4,6 +4,9 @@
 
 @model ColumnRequest
 
+<div class="col-12">
+    <partial name="Alert" />
+</div>
 
 <div class="col-md-4 col-12">
     <form asp-action="SaveColumnRequest" asp-controller="AuthorInterface">
@@ -35,7 +38,9 @@
             <span class="fa fa-save mr-1"></span>
             Spremi kao skicu
         </button>
-        @if (Model.Status == ColumnRequestStatus.Draft)
+
+        @if (Model.Status == ColumnRequestStatus.Draft ||
+            Model.Status == ColumnRequestStatus.Revised)
         {
             <button class="btn btn-success btn-block my-2" type="submit" name="command" value="saveAndSend">
                 <span class="fa fa-paper-plane mr-1"></span>
@@ -48,10 +53,7 @@
         }
 
         <input id="title-input" asp-for="Id" class="form-control" hidden />
-        <input id="title-input" asp-for="Author.Name" class="form-control" hidden />
-        <input id="title-input" asp-for="Author.ShortBio" class="form-control" hidden />
-        <input id="title-input" asp-for="Author.Bio" class="form-control" hidden />
-        <input id="title-input" asp-for="Author.Image" class="form-control" hidden />
+        <input id="title-input" asp-for="Author.Id" class="form-control" hidden />
     </form>
 </div>
 
@@ -68,11 +70,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                Jeste li sigurni da želite izbrisati ovu skicu?
+                Jeste li sigurni da želite izbrisati "@Model.ColumnTitle"?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
-                <a class="btn btn-danger"asp-action="RemoveColumnRequest" asp-route-id="@Model.Id">Izbriši skicu</a>
+                <a class="btn btn-danger"asp-action="RemoveColumnRequest" asp-route-id="@Model.Id">Izbriši</a>
             </div>
         </div>
     </div>

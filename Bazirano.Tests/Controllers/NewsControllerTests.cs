@@ -155,7 +155,7 @@ namespace Bazirano.Tests.Controllers
         [InlineData(null, 1, "a", "a", "a", "a")] // invalid title
         [InlineData("a", 0, "a", "a", "a", "a")]  // invalid guid
         [InlineData("a", 1, null, "a", "a", "a")] // invalid summary
-        [InlineData("a", 1, "a", null, "a", "a")] // invalid image
+        //[InlineData("a", 1, "a", null, "a", "a")] // invalid image
         [InlineData("a", 1, "a", "a", null, "a")] // invalid keywords
         [InlineData("a", 1, "a", "a", "a", null)] // invalid text
         void PostNews_InvalidModel_ReturnsBadRequest(string title, long guid, string summary, string image, string keywords, string text)

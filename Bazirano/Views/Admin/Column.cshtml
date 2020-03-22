@@ -5,7 +5,11 @@
 @model AdminColumnViewModel
 
 <div class="row">
-    <div class="col-12 col-lg-6 container">
+    <div class="col-12">
+        <partial name="Alert" />
+    </div>
+
+    <div class="col-12 col-lg-4">
         <div class="row">
             <div class="col-6">
                 <h3>Kolumne</h3>
@@ -18,33 +22,24 @@
 
             @foreach (var c in Model.ColumnPosts)
             {
-                <div class="col-12">
+                <div class="col-12" onclick="$('#columnMenu-@c.Id').toggle('fast')">
                     <div class="card">
                         <div class="card-header text-muted">
-                            <span>@c.Author.Name</span> 
+                            <span>@c.Author.Name</span>
                             <span class="float-right"> @c.Id</span>
                         </div>
                         <div class="card-body pb-1">
-                            <div class="row">
-                                <div class="col-9">
-                                    <h5>@c.Title</h5>
-                                </div>
-                                @{ string id = $"columnMenu{c.Id}"; }
-                                <div id="@id" class="col-3">
-                                 <div class="container float-right ">
-                                        <div class="row float-right">
-                                            <a class="col-6 btn btn-toolbar" style="color:forestgreen"
-                                                    asp-action="EditColumn" asp-route-id="@c.Id">
-                                                <h3 class="fa fa-pencil"></h3>
-                                            </a>
-                                            <a class="col-6 btn btn-toolbar" style="color:orangered"
-                                                    asp-action="DeleteColumn" asp-route-id="@c.Id">
-                                                <h3 class="fa fa-trash"></h3>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <h5>@c.Title</h5>
+                        </div>
+                        <div class="card-footer" id="columnMenu-@c.Id" style="display:none">
+                            <a class="btn btn-primary" asp-action="EditColumn" asp-route-id="@c.Id">
+                                <span class="fa fa-pencil-alt"></span>
+                                Uredi
+                            </a>
+                            <a class="btn btn-danger" asp-action="DeleteColumn" asp-route-id="@c.Id">
+                                <span class="fa fa-trash-alt"></span>
+                                Izbriši
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -52,7 +47,7 @@
             }
         </div>
     </div>
-    <div class="col-12 col-lg-6 container">
+    <div class="col-12 col-lg-4">
         <div class="row">
             <div class="col-6">
                 <h3>Autori</h3>
@@ -65,7 +60,7 @@
 
             @foreach (var a in Model.Authors)
             {
-                <div class="col-12">
+                <div class="col-12" onclick="$('#authorMenu-@a.Id').toggle('fast')">
                     <div class="card">
                         <div class="card-header">
                             <div>
@@ -73,27 +68,20 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-9">
-                                    <h5 class="text-muted">@a.ShortBio</h5>
-                                    <hr />
-                                    <h5 class="text-muted">@a.Bio</h5>
-                                </div>
-                                <div class="col-3">
-                                    <div class="container float-right ">
-                                        <div class="row float-right">
-                                            <a class="col-6 btn btn-toolbar" style="color:forestgreen" 
-                                                    asp-action="EditAuthor" asp-route-id="@a.Id">
-                                                <h3 class="fa fa-pencil"></h3>
-                                            </a>
-                                            <a class="col-6 btn btn-toolbar" style="color:orangered" 
-                                                    asp-action="DeleteAuthor" asp-route-id="@a.Id">
-                                                <h3 class="fa fa-trash"></h3>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <h5 class="text-muted">@a.ShortBio</h5>
+                            <hr />
+                            <h5 class="text-muted">@a.Bio</h5>
+                        </div>
+                        <div class="card-footer" id="authorMenu-@a.Id" style="display:none">
+                            <a class="btn btn-primary"asp-action="EditAuthor" asp-route-id="@a.Id">
+                                <span class="fa fa-pencil-alt"></span>
+                                Uredi 
+                            </a>
+                            <a class="btn btn-danger"
+                               asp-action="DeleteAuthor" asp-route-id="@a.Id">
+                                <span class="fa fa-trash-alt"></span>
+                                Izbriši
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -101,5 +89,32 @@
             }
         </div>
         
+    </div>
+    <div class="col-12 col-lg-4">
+        @{ var pendingRequests = Model.ColumnRequests.Where(r => r.Status == ColumnRequestStatus.Pending);}
+        <h3 class="ml-0">Zahtjevi</h3>
+        @if (pendingRequests.Count() == 0)
+        {
+            <p class="text-muted">Nema zahtjeva koji čekaju odobrenje.</p>
+        }
+
+        @foreach (var r in pendingRequests) 
+        {
+            <div class="card mb-2">
+                <div class="card-header">
+                    <span class="text-info">
+                        @r.Author?.Name
+                    </span>
+                    <span class="float-right text-muted">
+                        @r.DateRequested.ToEuTimeFormat()
+                    </span>
+                </div>
+                <div class="card-body">
+                    <a asp-action="ColumnRequest" asp-route-id="@r.Id">
+                        @r.ColumnTitle
+                    </a>
+                </div>
+            </div>
+        }
     </div>
 </div>

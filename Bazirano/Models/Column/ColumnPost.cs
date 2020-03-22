@@ -42,7 +42,7 @@ namespace Bazirano.Models.Column
         /// <summary>
         /// The collection of all the <see cref="Comment"/>s on the column.
         /// </summary>
-        public ICollection<Comment> Comments { get; set; }
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
         public string FirstParagraph
         {

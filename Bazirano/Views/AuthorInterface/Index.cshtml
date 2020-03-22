@@ -5,7 +5,7 @@
 
 @model AuthorInterfaceIndexViewModel
 
-<div class="col-md-4 col-12 text-center">
+<div class="col-lg-4 col-md-6 col-12 text-center">
     <div class="card">
         <img src="@Model.Author.Image" class="card-img-top" />
         <div class="card-body">
@@ -14,33 +14,35 @@
             <hr class="my-4 bg-secondary" />
             <p class="text-dark">@Model.Author.Bio</p>
         </div>
-        <div class="card-footer bg-light">
+        @*<div class="card-footer bg-light">
             <button class="btn btn-primary">
                 <span class="fa fa-pencil-alt mr-1"></span>
                 Uredi profil
             </button>
-        </div>
+        </div>*@
     </div>
 </div>
 
-<div class="col-md-4 col-12">
+<div class="col-lg-4 col-md-6 col-12">
     <div class="card">
-        <div class="card-header text-center">
-            <h2>Pregled</h2>
-
+        <div class="card-header">
+            <h3 class="my-0">Zahtjevi</h3>
         </div>
-        <div class="card-body">
+        <div class="card-body pb-0">
             <a asp-action="ColumnRequestsOverview" class="text-white">
-                <p class="text-white">@Model.DraftRequests.Count skica/e</p>
+                <p>@Model.DraftRequests.Count skice</p>
             </a>
             <a asp-action="ColumnRequestsOverview" class="text-warning">
-                <p class="text-warning">@Model.PendingRequests.Count čeka odobrenje</p>
+                <p>@Model.RevisedRequests.Count revidirano</p>
+            </a>
+            <a asp-action="ColumnRequestsOverview" class="text-warning">
+                <p>@Model.PendingRequests.Count čeka odobrenje</p>
             </a>
             <a asp-action="ColumnRequestsOverview" class="text-danger">
-                <p class="text-danger">@Model.RejectedRequests.Count odbijenih</p>
+                <p>@Model.RejectedRequests.Count odbijeno</p>
             </a>
             <a asp-action="ColumnRequestsOverview" class="text-success">
-                <p class="text-success">@Model.ApprovedRequests.Count odobrenih</p>
+                <p>@Model.ApprovedRequests.Count odobreno</p>
             </a>
         </div>
     </div>

@@ -1,0 +1,93 @@
+﻿@model ColumnRequest
+
+<div class="row">
+    <div class="col-md-4 col-12">
+        <form asp-action="UpdateColumnRequest">
+            <div class="form-group">
+                <label class="form-text text-muted">Naslov</label>
+                <input id="title-input" asp-for="ColumnTitle" class="form-control"
+                       placeholder="Naslov kolumne" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-text text-muted">Slika</label>
+                <input id="image-input" asp-for="ColumnImage" class="form-control"
+                       placeholder="Link na naslovnu sliku" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-text text-muted">Tekst</label>
+                <textarea rows="15" id="text-input" asp-for="ColumnText" class="form-control"
+                          placeholder="Sadržaj kolumne"></textarea>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.AuthorRemarks))
+            {
+                <div class="form-group">
+                    <label class="form-text text-muted">Autorova napomena</label>
+                    <div class="alert alert-info">
+                        @Model.AuthorRemarks
+                    </div>
+                    <textarea id="text-input" asp-for="AuthorRemarks" class="form-control" hidden></textarea>
+                </div>
+            }
+
+            <div class="form-group">
+                <label class="form-text text-muted">Napomena autoru</label>
+                <textarea id="text-input" asp-for="AdminRemarks" class="form-control"></textarea>
+            </div>
+
+            <button class="btn btn-primary btn-block" type="submit" name="command" value="revision">
+                <span class="fa fa-save mr-1"></span>
+                Spremi kao reviziju
+            </button>
+
+            <button class="btn btn-success btn-block my-2" type="submit" name="command" value="publish">
+                <span class="fa fa-check mr-1"></span>
+                Odobri i objavi
+            </button>
+            <button class="btn btn-danger btn-block my-2" type="submit" name="command" value="reject">
+                <span class="fa fa-ban mr-1"></span>
+                Odbij
+            </button>
+
+            <input id="title-input" asp-for="Id" class="form-control" hidden />
+            <input id="title-input" asp-for="Status" class="form-control" hidden />
+            <input id="title-input" asp-for="Author.Id" class="form-control" hidden />
+        </form>
+    </div>
+
+    <div class="col-md-8 col-12" id="preview">
+        <div class="card">
+            <img id="image" class="card-img-top img-fluid" src="@Model.ColumnImage" />
+            <div class="card-body">
+                <div class="card-title">
+                    <h1 id="title">@Model.ColumnTitle</h1>
+                </div>
+                <span class="float-right text-muted">@Model.DateRequested.ToString("dd.MM.yyyy.")</span>
+                <div class="text-muted">
+                    Piše: <span id="author">@Model.Author.Name</span>
+                </div>
+
+                <hr class="bg-secondary" />
+                <div class="text-body" id="text">@Html.Raw(Model.ColumnText)</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            refresh();
+
+            $('.form-control').on('input', function (e) {
+                refresh();
+            });
+        });
+
+        function refresh() {
+            $("#title").text($("#title-input").val());
+            $("#text").html($("#text-input").val());
+            $("#image").attr("src", $("#image-input").val());
+        }
+    </script>
+
+</div>

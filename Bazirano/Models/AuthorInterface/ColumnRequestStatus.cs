@@ -11,5 +11,6 @@ namespace Bazirano.Models.AuthorInterface
         Pending,
         Rejected,
         Approved,
+        Revised
     }
 }

@@ -20,6 +20,20 @@ namespace Bazirano.Infrastructure
             return viewResult;
         }
 
+        public static ViewResult WithAlert(this ViewResult viewResult, AlertType alertType, string title, string message)
+        {
+            viewResult.ViewData["Alert.Title"] = title;
+
+            return WithAlert(viewResult, alertType, message);
+        }
+
+        public static ViewResult WithAlert(this ViewResult viewResult, AlertType alertType, string title, string subtitle, string message)
+        {
+            viewResult.ViewData["Alert.Subtitle"] = subtitle;
+
+            return WithAlert(viewResult, alertType, title, message);
+        }
+
         private static object GetBootstrapClassForAlertType(AlertType alertType)
         {
             switch (alertType)

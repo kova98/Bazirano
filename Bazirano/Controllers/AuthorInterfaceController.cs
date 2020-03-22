@@ -39,7 +39,8 @@ namespace Bazirano.Controllers
                 DraftRequests = requests.DraftRequests,
                 PendingRequests = requests.PendingRequests,
                 ApprovedRequests = requests.ApprovedRequests,
-                RejectedRequests = requests.RejectedRequests
+                RejectedRequests = requests.RejectedRequests,
+                RevisedRequests = requests.RevisedRequests
             };
 
             return View(nameof(Index), viewModel);
@@ -55,6 +56,12 @@ namespace Bazirano.Controllers
 
         public IActionResult SaveColumnRequest(ColumnRequest columnRequest, string command)
         {
+            if (columnRequest.Status == ColumnRequestStatus.Approved)
+            {
+                return ColumnRequestsOverview()
+                    .WithAlert(AlertType.Error, "Odobrene kolumne se ne mogu uređivati!");
+            }
+
             string message = "Kolumna uspješno spremljena kao skica.";
             columnRequest.DateRequested = DateTime.Now;
             columnRequest.Author = columnRepository.Authors.FirstOrDefault(a => a.Id == columnRequest.Author.Id);
@@ -87,6 +94,24 @@ namespace Bazirano.Controllers
                 = columnRequestsRepository.ColumnRequests
                     .FirstOrDefault(r => r.Id == id && r.Author.Name == User.Identity.Name)
                 ?? GetPlaceholderColumnRequest();
+
+            if (columnRequest.Status == ColumnRequestStatus.Revised)
+            {
+                return View(nameof(EditColumnRequest), columnRequest)
+                    .WithAlert(AlertType.Warning,
+                               "Revizija", 
+                               "Administrator je pregledao vašu kolumnu i predložio izmjene:",
+                               columnRequest.AdminRemarks);
+            }
+
+            if (columnRequest.Status == ColumnRequestStatus.Rejected)
+            {
+                return View(nameof(EditColumnRequest), columnRequest)
+                    .WithAlert(AlertType.Error,
+                               "Odbijeno",
+                               "Administrator je odbio vašu kolumnu.",
+                               columnRequest.AdminRemarks);
+            }
 
             return View(nameof(EditColumnRequest), columnRequest);
         }
@@ -147,7 +172,8 @@ namespace Bazirano.Controllers
                 DraftRequests = requests.Where(r => r.Status == ColumnRequestStatus.Draft).ToList(),
                 PendingRequests = requests.Where(r => r.Status == ColumnRequestStatus.Pending).ToList(),
                 ApprovedRequests = requests.Where(r => r.Status == ColumnRequestStatus.Approved).ToList(),
-                RejectedRequests = requests.Where(r => r.Status == ColumnRequestStatus.Rejected).ToList()
+                RejectedRequests = requests.Where(r => r.Status == ColumnRequestStatus.Rejected).ToList(),
+                RevisedRequests = requests.Where(r => r.Status == ColumnRequestStatus.Revised).ToList()
             };
 
             return viewModel;

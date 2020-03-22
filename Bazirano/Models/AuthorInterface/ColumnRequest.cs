@@ -26,7 +26,7 @@ namespace Bazirano.Models.AuthorInterface
 
         public DateTime DateApproved { get; set; }
 
-        public long AdminApprovedId { get; set; }
+        public string AdminApproved { get; set; }
 
         public string AuthorRemarks { get; set; }
 

@@ -11,6 +11,7 @@ namespace Bazirano.Models.AuthorInterface
         public List<ColumnRequest> PendingRequests { get; set; }
         public List<ColumnRequest> RejectedRequests { get; set; }
         public List<ColumnRequest> ApprovedRequests { get; set; }
+        public List<ColumnRequest> RevisedRequests { get; set; }
 
     }
 }

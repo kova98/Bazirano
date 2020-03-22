@@ -23,7 +23,7 @@ namespace Bazirano.Tests.Controllers
         void Index_DisplaysView()
         {
             var mock = new Mock<INewsPostsRepository>();
-            var adminController = new AdminController(mock.Object, null, null, null, null);
+            var adminController = new AdminController(mock.Object, null, null, null, null, null);
 
             var result = (ViewResult)adminController.Index(); 
 
@@ -36,7 +36,7 @@ namespace Bazirano.Tests.Controllers
         {
             var mock = new Mock<INewsPostsRepository>(); 
             mock.Setup(x => x.NewsPosts).Returns(newsPosts.AsQueryable());
-            var adminController = new AdminController(mock.Object, null, null, null, null);
+            var adminController = new AdminController(mock.Object, null, null, null, null, null);
 
             var result = (ViewResult)adminController.News();
             var newsPostsModel = (List<NewsPost>)result.Model;
@@ -49,7 +49,7 @@ namespace Bazirano.Tests.Controllers
         void DeleteArticle_RedirectsToNews()
         {
             var mock = new Mock<INewsPostsRepository>();
-            var adminController = new AdminController(mock.Object, null, null, null, null);
+            var adminController = new AdminController(mock.Object, null, null, null, null, null);
 
             var result = (RedirectToActionResult)adminController.DeleteArticle(1);
 
@@ -62,7 +62,7 @@ namespace Bazirano.Tests.Controllers
         {
             var mock = new Mock<INewsPostsRepository>();
             mock.Setup(x => x.NewsPosts).Returns(newsPosts.AsQueryable());
-            var adminController = new AdminController(mock.Object, null, null, null, null);
+            var adminController = new AdminController(mock.Object, null, null, null, null, null);
 
             var result = (ViewResult)adminController.EditArticle(1);
             var postModel = (NewsPost)result.Model;
@@ -75,7 +75,7 @@ namespace Bazirano.Tests.Controllers
         void SaveArticle_RedirectsToNews()
         {
             var mock = new Mock<INewsPostsRepository>();
-            var adminController = new AdminController(mock.Object, null, null, null, null);
+            var adminController = new AdminController(mock.Object, null, null, null, null, null);
 
             var result = (RedirectToActionResult)adminController.SaveArticle(new NewsPost());
 
@@ -87,7 +87,7 @@ namespace Bazirano.Tests.Controllers
         void DeleteBoardThread_RedirectsToBoard(long id)
         {
             var mock = new Mock<IBoardThreadsRepository>();
-            var adminController = new AdminController(null, mock.Object, null, null, null);
+            var adminController = new AdminController(null, mock.Object, null, null, null, null);
 
             var result = (RedirectToActionResult)adminController.DeleteBoardThread(id);
 
@@ -100,7 +100,7 @@ namespace Bazirano.Tests.Controllers
         {
             var mock = new Mock<IBoardThreadsRepository>();
             mock.Setup(x => x.BoardThreads).Returns(boardThreads.AsQueryable());
-            var adminController = new AdminController(null, mock.Object, null, null, null);
+            var adminController = new AdminController(null, mock.Object, null, null, null, null);
 
             var result = (ViewResult)adminController.Board();
             var firstThread = (result.Model as List<BoardThread>).First();
@@ -112,8 +112,9 @@ namespace Bazirano.Tests.Controllers
         [Fact]
         void Column_DisplaysView()
         {
-            var mock = new Mock<IColumnRepository>();
-            var adminController = new AdminController(null, null, mock.Object, null, null);
+            var columnRepoMock = new Mock<IColumnRepository>();
+            var columnRequestsRepoMock = new Mock<IColumnRequestsRepository>();
+            var adminController = new AdminController(null, null, columnRepoMock.Object, columnRequestsRepoMock.Object, null, null);
 
             var result = (ViewResult)adminController.Column();
             var viewModel = (AdminColumnViewModel)result.Model;
@@ -127,7 +128,7 @@ namespace Bazirano.Tests.Controllers
         void AddColumn_DisplaysView()
         {
             var mock = new Mock<IColumnRepository>();
-            var adminController = new AdminController(null, null, mock.Object, null, null);
+            var adminController = new AdminController(null, null, mock.Object, null, null, null);
 
             var result = (ViewResult)adminController.AddColumn();
             var viewModel = (AddColumnViewModel)result.Model;
@@ -140,8 +141,9 @@ namespace Bazirano.Tests.Controllers
         [Fact]
         void SaveColumn_DisplaysColumnView()
         {
-            var mock = new Mock<IColumnRepository>();
-            var adminController = new AdminController(null, null, mock.Object, null, null);
+            var columnRepoMock = new Mock<IColumnRepository>();
+            var columnRequestsRepoMock = new Mock<IColumnRequestsRepository>();
+            var adminController = new AdminController(null, null, columnRepoMock.Object, columnRequestsRepoMock.Object, null, null);
             var columnPost = new ColumnPost();
 
             var result = (ViewResult)adminController.SaveColumn(columnPost);
@@ -153,7 +155,7 @@ namespace Bazirano.Tests.Controllers
         void AddAuthor_DisplaysView()
         {
             var mock = new Mock<INewsPostsRepository>();
-            var adminController = new AdminController(mock.Object, null, null, null, null);
+            var adminController = new AdminController(mock.Object, null, null, null, null, null);
 
             var result = (ViewResult)adminController.AddAuthor();
             var author = (Author)result.Model;
@@ -176,8 +178,9 @@ namespace Bazirano.Tests.Controllers
         [Fact]
         void SaveAuthor_DisplaysColumnView()
         {
-            var mock = new Mock<IColumnRepository>();
-            var adminController = new AdminController(null, null, mock.Object, null, null); 
+            var columnRepoMock = new Mock<IColumnRepository>();
+            var columnRequestsRepoMock = new Mock<IColumnRequestsRepository>();
+            var adminController = new AdminController(null, null, columnRepoMock.Object, columnRequestsRepoMock.Object, null, null); 
             var author = new Author();
 
             var result = (ViewResult)adminController.SaveAuthor(author);
@@ -192,7 +195,7 @@ namespace Bazirano.Tests.Controllers
             var mock = new Mock<IColumnRepository>();
             mock.Setup(x => x.ColumnPosts).Returns(columnPosts.AsQueryable());
             mock.Setup(x => x.Authors).Returns(authors.AsQueryable());
-            var adminController = new AdminController(null, null, mock.Object, null, null);
+            var adminController = new AdminController(null, null, mock.Object, null, null, null);
 
             var result = (ViewResult)adminController.EditColumn(1);
             var viewModel = (AddColumnViewModel)result.Model;
@@ -208,7 +211,7 @@ namespace Bazirano.Tests.Controllers
             var authors = new List<Author> { new Author { Id = 0 }, new Author { Id = 1 }, new Author { Id = 2 } };
             var mock = new Mock<IColumnRepository>();
             mock.Setup(x => x.Authors).Returns(authors.AsQueryable());
-            var adminController = new AdminController(null, null, mock.Object, null, null);
+            var adminController = new AdminController(null, null, mock.Object, null, null, null);
 
             var result = (ViewResult)adminController.EditAuthor(1);
             var author = (Author)result.Model;

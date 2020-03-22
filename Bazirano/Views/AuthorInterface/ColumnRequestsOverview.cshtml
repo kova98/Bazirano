@@ -57,6 +57,28 @@
     </div>
 }
 
+@if (Model.RevisedRequests.Count > 0)
+{
+    <div class="col-md-4 col-12 mb-3">
+        <div class="card bg-warning">
+            <ul class="list-group">
+                <li class="list-group-item card-header">
+                    <h3 class="my-0 text-warning">Revidirano</h3>
+                </li>
+                @foreach (var req in Model.RevisedRequests)
+                {
+                    <li class="list-group-item">
+                        <a asp-action="EditColumnRequest" asp-route-id="@req.Id" class="text-muted">
+                            @req.ColumnTitle
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+
+
 @if (Model.RejectedRequests.Count > 0)
 {
     <div class="col-md-4 col-12 mb-3">
@@ -68,7 +90,7 @@
                 @foreach (var req in Model.RejectedRequests)
                 {
                     <li class="list-group-item">
-                        <a asp-action="EditColumnRequest" asp-route-id="@req.Id">
+                        <a asp-action="EditColumnRequest" asp-route-id="@req.Id" class="text-muted">
                             @req.ColumnTitle
                         </a>
                     </li>
@@ -89,7 +111,7 @@
                 @foreach (var req in Model.ApprovedRequests)
                 {
                     <li class="list-group-item">
-                        <a asp-action="EditColumnRequest" asp-route-id="@req.Id">
+                        <a asp-action="EditColumnRequest" asp-route-id="@req.Id" class="text-muted">
                             @req.ColumnTitle
                         </a>
                     </li>
