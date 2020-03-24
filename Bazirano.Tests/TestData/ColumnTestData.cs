@@ -15,20 +15,19 @@ namespace Bazirano.Tests.TestData
 
         public static IEnumerator<object[]> GetAuthors()
         {
-            var instance = new ColumnTestData();
-            yield return new object[] { instance.Authors };
+            yield return new object[] { Authors };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        private ColumnPost[] Columns => new ColumnPost[]
+        private static ColumnPost[] Columns => new ColumnPost[]
         {
             new ColumnPost { Id = 0, DatePosted = DateTime.Now.AddHours(-1) , Author = new Author{ Id = 0 } },
             new ColumnPost { Id = 1, DatePosted = DateTime.Now.AddHours(1) , Author = new Author{ Id = 1 }},
             new ColumnPost { Id = 2, DatePosted = DateTime.Now, Author = new Author{ Id = 1 }},
         };
 
-        private Author[] Authors => new Author[]
+        private static Author[] Authors => new Author[]
         {
             new Author { Id = 0 },
             new Author { Id = 1 },

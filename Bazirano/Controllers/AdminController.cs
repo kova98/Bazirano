@@ -78,9 +78,15 @@ namespace Bazirano.Controllers
 
         public IActionResult DeleteBoardThread(long id)
         {
-            boardRepo.RemoveThread(boardRepo.BoardThreads.FirstOrDefault(x => x.Id == id));
+            var threadExists = boardRepo.BoardThreads.Any(t => t.Id == id);
+
+            if (threadExists)
+            {
+                boardRepo.RemoveThread(id);
+            }
 
             return RedirectToAction(nameof(Board));
+
         }
 
         public IActionResult Board()
@@ -159,8 +165,8 @@ namespace Bazirano.Controllers
         {
             return View(nameof(AddColumn), new AddColumnViewModel
             {
-                Column = columnRepo.ColumnPosts.First(p => p.Id == id),
-                Authors = columnRepo.Authors.ToList()
+                Column = columnRepo.ColumnPosts?.First(p => p.Id == id),
+                Authors = columnRepo.Authors?.ToList()
             });
         }
 
@@ -205,7 +211,6 @@ namespace Bazirano.Controllers
         public async Task<IActionResult> DeleteUser(string name)
         {
             var user = await userManager.FindByNameAsync(name);
-
             var result = await userManager.DeleteAsync(user);
 
             if (result.Succeeded == false)
@@ -283,7 +288,7 @@ namespace Bazirano.Controllers
             columnRequest.Author = columnRepo.Authors.FirstOrDefault(a => a.Id == columnRequest.Author.Id);
             columnRequest.AdminApproved = User.Identity.Name;
 
-            if (command == "revision")
+            if (command == "revise")
             {
                 return ReviseColumnRequest(columnRequest);
             }
@@ -304,18 +309,19 @@ namespace Bazirano.Controllers
             columnRequest.Status = ColumnRequestStatus.Rejected;
             columnRequestsRepo.EditColumnRequest(columnRequest);
 
-            return Column()
-                .WithAlert(AlertType.Error, "Kolumna odbijena.");
+            Alert.Add(this, AlertType.Error, "Kolumna odbijena.");
+            return Column();
         }
 
         private ViewResult PublishColumnRequest(ColumnRequest columnRequest)
         {
             columnRequest.Status = ColumnRequestStatus.Approved;
+            columnRequest.DateApproved = DateTime.Now;
             columnRequestsRepo.EditColumnRequest(columnRequest);
 
             var columnPost = new ColumnPost
             {
-                DatePosted = DateTime.Now,
+                DatePosted = columnRequest.DateApproved,
                 Author = columnRequest.Author,
                 Title = columnRequest.ColumnTitle,
                 Image = columnRequest.ColumnImage,
@@ -324,8 +330,8 @@ namespace Bazirano.Controllers
 
             columnRepo.AddColumn(columnPost);
 
-            return Column()
-                .WithAlert(AlertType.Success, "Kolumna objavljena!");
+            Alert.Add(this, AlertType.Success, "Kolumna objavljena!");
+            return Column();
         }
 
         private ViewResult ReviseColumnRequest(ColumnRequest columnRequest)
@@ -333,8 +339,8 @@ namespace Bazirano.Controllers
             columnRequest.Status = ColumnRequestStatus.Revised;
             columnRequestsRepo.EditColumnRequest(columnRequest);
 
-            return Column()
-                .WithAlert(AlertType.Warning, "Kolumna spremljena kao revizija.");
+            Alert.Add(this, AlertType.Warning, "Kolumna spremljena kao revizija.");
+            return Column();
         }
     }
 }

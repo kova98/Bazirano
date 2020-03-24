@@ -23,7 +23,7 @@ namespace Bazirano.Models.DataAccess
         /// Removes a <see cref="BoardThread"/> from the database.
         /// </summary>
         /// <param name="thread">The thread to remove.</param>
-        void RemoveThread(BoardThread thread);
+        void RemoveThread(long id);
 
         /// <summary>
         /// Adds a new <see cref="BoardPost"/> to a <see cref="BoardThread"/>.

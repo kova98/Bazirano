@@ -64,8 +64,8 @@ namespace Bazirano.Controllers
         {
             if (columnRequest.Status == ColumnRequestStatus.Approved)
             {
-                return ColumnRequestsOverview()
-                    .WithAlert(AlertType.Error, "Odobrene kolumne se ne mogu uređivati!");
+                Alert.Add(this, AlertType.Error, "Odobrene kolumne se ne mogu uređivati!");
+                return ColumnRequestsOverview();
             }
 
             string message = "Kolumna uspješno spremljena kao skica.";
@@ -89,8 +89,8 @@ namespace Bazirano.Controllers
                 columnRequestsRepository.AddColumnRequest(columnRequest);
             }
 
-            return ColumnRequestsOverview()
-                .WithAlert(AlertType.Success, message);
+            Alert.Add(this, AlertType.Success, message);
+            return ColumnRequestsOverview();
         }
 
         [Route("~/sucelje/obrada")]
@@ -103,28 +103,34 @@ namespace Bazirano.Controllers
 
             if (columnRequest.Status == ColumnRequestStatus.Revised)
             {
-                return View(nameof(EditColumnRequest), columnRequest)
-                    .WithAlert(AlertType.Warning,
-                               "Revizija", 
-                               "Administrator je pregledao vašu kolumnu i predložio izmjene:",
-                               columnRequest.AdminRemarks);
+                Alert.Add(this, 
+                    AlertType.Warning,
+                    "Revizija",
+                    "Administrator je pregledao vašu kolumnu i predložio izmjene.",
+                    columnRequest.AdminRemarks);
+
+                return View(nameof(EditColumnRequest), columnRequest);
             }
 
             if (columnRequest.Status == ColumnRequestStatus.Rejected)
             {
-                return View(nameof(EditColumnRequest), columnRequest)
-                    .WithAlert(AlertType.Error,
-                               "Odbijeno",
-                               "Administrator je odbio vašu kolumnu.",
-                               columnRequest.AdminRemarks);
+                Alert.Add(this, 
+                    AlertType.Error,
+                    "Odbijeno",
+                    "Administrator je odbio vašu kolumnu.",
+                    columnRequest.AdminRemarks);
+
+                return View(nameof(EditColumnRequest), columnRequest);
             }
 
             if (columnRequest.Status == ColumnRequestStatus.Approved)
-            {
-                return View(nameof(EditColumnRequest), columnRequest)
-                    .WithAlert(AlertType.Success,
-                               "Odobreno",
-                               "Administrator je odobrio i objavio vašu kolumnu!");
+            {     
+                Alert.Add(this,
+                    AlertType.Success,
+                    "Odobreno",
+                    "Administrator je odobrio i objavio vašu kolumnu!");
+
+                return View(nameof(EditColumnRequest), columnRequest);
             }
 
             return View(nameof(EditColumnRequest), columnRequest);
@@ -153,12 +159,14 @@ namespace Bazirano.Controllers
             {
                 columnRequestsRepository.RemoveColumnRequest(id);
 
-                return ColumnRequestsOverview()
-                    .WithAlert(AlertType.Success, "Skica uspješno izbrisana.");
+                Alert.Add(this, AlertType.Success, "Skica uspješno izbrisana.");
+
+                return ColumnRequestsOverview();
             }
 
-            return ColumnRequestsOverview()
-                .WithAlert(AlertType.Error, "Greška: Skica ne postoji!");
+            Alert.Add(this, AlertType.Error, "Greška: Skica ne postoji!");
+
+            return ColumnRequestsOverview();
         }
 
         private ColumnRequest GetPlaceholderColumnRequest()

@@ -23,7 +23,7 @@ namespace Bazirano.Controllers
             this.googleRecaptchaHelper = googleRecaptchaHelper;
         }
 
-        [Route("~/kolumne")]
+        [Route("~/kolumne")] 
         public IActionResult Index()
         {
             var columns = columnRepo.ColumnPosts

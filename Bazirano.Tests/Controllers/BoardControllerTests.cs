@@ -117,7 +117,7 @@ namespace Bazirano.Tests.Controllers
             var result = (ViewResult)await boardController.CreateThread(boardPost, null);
 
             Assert.Equal(nameof(boardController.Thread), result.ViewName);
-            boardThreadsRepoMock.Verify(x => x.RemoveThread(oldestThread), Times.Exactly(timesRemoveThreadCalled));
+            boardThreadsRepoMock.Verify(x => x.RemoveThread(oldestThread.Id), Times.Exactly(timesRemoveThreadCalled));
         }
 
         private List<BoardThread> GetBoardThreadsListContaining(int threadCount, params BoardThread[] threads)

@@ -141,8 +141,9 @@ namespace Bazirano.Models.DataAccess
             throw new NotImplementedException();
         }
 
-        public void RemoveThread(BoardThread thread)
+        public void RemoveThread(long id)
         {
+            var thread = context.BoardThreads.FirstOrDefault(x => x.Id == id);
             var posts = context.BoardPosts.Where(x => thread.Posts.Contains(x));
 
             foreach (var post in posts)

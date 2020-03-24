@@ -149,7 +149,7 @@ namespace Bazirano.Controllers
 
             if (threadCount > maxThreadCount)
             {
-                repository.RemoveThread(lastThread);
+                repository.RemoveThread(lastThread.Id);
             }
         }
     }

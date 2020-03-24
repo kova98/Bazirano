@@ -17,7 +17,7 @@ namespace Bazirano.Tests.Controllers
 {
     public class HomeControllerTests
     {
-        [Fact]
+        [Fact]  
         void Index_DisplaysViewWithCorrectModel()
         {
             var boardThreadsRepoMock = new Mock<IBoardThreadsRepository>();
