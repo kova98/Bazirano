@@ -17,14 +17,17 @@ namespace Bazirano.Controllers
         private IColumnRequestsRepository columnRequestsRepository;
         private IColumnRepository columnRepository;
         private UserManager<IdentityUser> userManager;
+        private IWriter writerHelper;
 
         public AuthorInterfaceController(
             IColumnRequestsRepository columnRequestsRepository,
             IColumnRepository columnRepository,
+            IWriter writerHelper,
             UserManager<IdentityUser> userManager)
         {
             this.columnRequestsRepository = columnRequestsRepository;
             this.columnRepository = columnRepository;
+            this.writerHelper = writerHelper;
             this.userManager = userManager;
         }
 
@@ -60,41 +63,71 @@ namespace Bazirano.Controllers
             return View(nameof(ColumnRequestsOverview), columnRequestsOverviewViewModel);
         }
 
-        public IActionResult SaveColumnRequest(ColumnRequest columnRequest, string command)
+        public RedirectToActionResult SaveColumnRequest(ColumnRequest columnRequest, string command)
         {
-            if (columnRequest.Status == ColumnRequestStatus.Approved)
-            {
-                Alert.Add(this, AlertType.Error, "Odobrene kolumne se ne mogu uređivati!");
-                return ColumnRequestsOverview();
-            }
-
-            string message = "Kolumna uspješno spremljena kao skica.";
-            columnRequest.DateRequested = DateTime.Now;
             columnRequest.Author = columnRepository.Authors.FirstOrDefault(a => a.Id == columnRequest.Author.Id);
-
-            if (command == "saveAndSend")
-            {
-                message = "Kolumna uspješno spremljena i poslana na pregled.";
-                columnRequest.Status = ColumnRequestStatus.Pending;
-            }
 
             var columnRequestExists = columnRequestsRepository.ColumnRequests.Any(c => c.Id == columnRequest.Id);
             if (columnRequestExists)
             {
+                EditExistingColumnRequest(columnRequest, command);
+            }
+            else
+            {
+                AddNewColumnRequest(columnRequest, command);
+            }
+
+            return RedirectToAction(nameof(ColumnRequestsOverview), nameof(AuthorInterfaceController));
+        }
+
+        private void AddNewColumnRequest(ColumnRequest columnRequest, string command)
+        {
+            if (columnRequest.Status == ColumnRequestStatus.Draft)
+            {
+                if (command == "saveAndSend")
+                {
+                    Alert.Add(this, AlertType.Success, "Kolumna uspješno spremljena i poslana na pregled.");
+                    columnRequest.Status = ColumnRequestStatus.Pending;
+                    columnRequest.DateRequested = DateTime.Now;
+                }
+                else
+                {
+                    Alert.Add(this, AlertType.Success, "Kolumna uspješno spremljena kao skica.");
+                }
+
+                columnRequest.Id = 0;
+                columnRequestsRepository.AddColumnRequest(columnRequest);
+            }
+            else
+            {
+                throw new InvalidOperationException("Tried to Add a new ColumnRequest with a non-default (Draft) Status");
+            }
+        }
+
+        private void EditExistingColumnRequest(ColumnRequest columnRequest, string command)
+        {
+            if (columnRequest.Status != ColumnRequestStatus.Rejected &&
+                columnRequest.Status != ColumnRequestStatus.Approved)
+            {
+                if (command == "saveAndSend")
+                {
+                    Alert.Add(this, AlertType.Success, "Kolumna uspješno spremljena i poslana na pregled.");
+                    columnRequest.Status = ColumnRequestStatus.Pending;
+                    columnRequest.DateRequested = DateTime.Now;
+                }
+
                 columnRequestsRepository.EditColumnRequest(columnRequest);
             }
             else
             {
-                columnRequest.Id = 0;
-                columnRequestsRepository.AddColumnRequest(columnRequest);
+                Alert.Add(this, AlertType.Error,
+                    "Greška",
+                    "Mogu se uređivati samo skice ");
             }
-
-            Alert.Add(this, AlertType.Success, message);
-            return ColumnRequestsOverview();
         }
 
         [Route("~/sucelje/obrada")]
-        public IActionResult EditColumnRequest(long id)
+        public ViewResult EditColumnRequest(long id)
         {
             var columnRequest
                 = columnRequestsRepository.ColumnRequests
@@ -108,8 +141,6 @@ namespace Bazirano.Controllers
                     "Revizija",
                     "Administrator je pregledao vašu kolumnu i predložio izmjene.",
                     columnRequest.AdminRemarks);
-
-                return View(nameof(EditColumnRequest), columnRequest);
             }
 
             if (columnRequest.Status == ColumnRequestStatus.Rejected)
@@ -119,8 +150,6 @@ namespace Bazirano.Controllers
                     "Odbijeno",
                     "Administrator je odbio vašu kolumnu.",
                     columnRequest.AdminRemarks);
-
-                return View(nameof(EditColumnRequest), columnRequest);
             }
 
             if (columnRequest.Status == ColumnRequestStatus.Approved)
@@ -129,8 +158,6 @@ namespace Bazirano.Controllers
                     AlertType.Success,
                     "Odobreno",
                     "Administrator je odobrio i objavio vašu kolumnu!");
-
-                return View(nameof(EditColumnRequest), columnRequest);
             }
 
             return View(nameof(EditColumnRequest), columnRequest);
@@ -150,23 +177,23 @@ namespace Bazirano.Controllers
         }
 
         [Route("~/sucelje/izbrisi-skicu")]
-        public IActionResult RemoveColumnRequest(long id)
+        public RedirectToActionResult RemoveColumnRequest(long id)
         {
             var columnRequestExists = columnRequestsRepository.ColumnRequests
-                    .Any(r => r.Id == id && r.Author.Name == User.Identity.Name);
+                .Any(r => r.Id == id && r.Author.Name == User.Identity.Name);
 
             if (columnRequestExists)
             {
                 columnRequestsRepository.RemoveColumnRequest(id);
 
                 Alert.Add(this, AlertType.Success, "Skica uspješno izbrisana.");
-
-                return ColumnRequestsOverview();
+            }
+            else
+            {
+                Alert.Add(this, AlertType.Error, "Greška: Skica ne postoji!");
             }
 
-            Alert.Add(this, AlertType.Error, "Greška: Skica ne postoji!");
-
-            return ColumnRequestsOverview();
+            return RedirectToAction(nameof(ColumnRequestsOverview), nameof(AuthorInterfaceController));
         }
 
         private ColumnRequest GetPlaceholderColumnRequest()
@@ -179,7 +206,7 @@ namespace Bazirano.Controllers
                 DateRequested = DateTime.Now,
                 ColumnTitle = "Primjer naslova",
                 ColumnImage = "https://i.imgur.com/DvQI0WC.png",
-                ColumnText = System.IO.File.ReadAllText("sample-article.html")
+                ColumnText = writerHelper.GetSampleColumnText()
             };
 
             return columnRequest;

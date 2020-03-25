@@ -9,6 +9,11 @@ namespace Bazirano.Infrastructure
 {
     public class WriterHelper : IWriter
     {
+        public string GetSampleColumnText()
+        {
+            return File.ReadAllText("sample-article.html");
+        }
+
         public async Task UploadImage(BoardPost post, IFormFile file)
         {
             Random rnd = new Random();

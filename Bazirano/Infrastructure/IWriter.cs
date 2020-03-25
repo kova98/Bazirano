@@ -11,5 +11,7 @@ namespace Bazirano.Infrastructure
         double ByteToMegabyte(long bytes);
 
         void DeleteImage(string image);
+
+        string GetSampleColumnText();
     }
 }

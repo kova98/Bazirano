@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -11,25 +13,43 @@ namespace Bazirano.Tests
 {
     public static class MockHelper
     {
-        public static UserManager<TUser> GetTestUserManager<TUser>(IUserStore<TUser> store = null) where TUser : class
+        public static UserManager<IdentityUser> GetMockUserManager()
         {
-            store = store ?? new Mock<IUserStore<TUser>>().Object;
-            var options = new Mock<IOptions<IdentityOptions>>();
-            var idOptions = new IdentityOptions();
-            idOptions.Lockout.AllowedForNewUsers = false;
-            options.Setup(o => o.Value).Returns(idOptions);
-            var userValidators = new List<IUserValidator<TUser>>();
-            var validator = new Mock<IUserValidator<TUser>>();
-            userValidators.Add(validator.Object);
-            var pwdValidators = new List<PasswordValidator<TUser>>();
-            pwdValidators.Add(new PasswordValidator<TUser>());
-            var userManager = new UserManager<TUser>(store, options.Object, new PasswordHasher<TUser>(),
-                userValidators, pwdValidators, new UpperInvariantLookupNormalizer(),
-                new IdentityErrorDescriber(), null,
-                new Mock<ILogger<UserManager<TUser>>>().Object);
-            validator.Setup(v => v.ValidateAsync(userManager, It.IsAny<TUser>()))
-                .Returns(Task.FromResult(IdentityResult.Success)).Verifiable();
-            return userManager;
+            return new Mock<UserManager<IdentityUser>>
+            (
+                new Mock<IUserStore<IdentityUser>>().Object,
+                new Mock<IOptions<IdentityOptions>>().Object,
+                new Mock<IPasswordHasher<IdentityUser>>().Object,
+                new IUserValidator<IdentityUser>[0],
+                new IPasswordValidator<IdentityUser>[0],
+                new Mock<ILookupNormalizer>().Object,
+                new Mock<IdentityErrorDescriber>().Object,
+                new Mock<IServiceProvider>().Object,
+                new Mock<ILogger<UserManager<IdentityUser>>>().Object
+            )
+            .Object;
+        }
+
+        public static RoleManager<IdentityRole> GetMockRoleManager()
+        {
+            return new Mock<RoleManager<IdentityRole>>
+            (
+                new Mock<IRoleStore<IdentityRole>>().Object,
+                new IRoleValidator<IdentityRole>[0],
+                new Mock<ILookupNormalizer>().Object,
+                new Mock<IdentityErrorDescriber>().Object,
+                new Mock<ILogger<RoleManager<IdentityRole>>>().Object
+            )
+            .Object;
+        }
+
+        public static ITempDataDictionary GetMockTempData()
+        {
+            ITempDataProvider tempDataProvider = Mock.Of<ITempDataProvider>();
+            TempDataDictionaryFactory tempDataDictionaryFactory = new TempDataDictionaryFactory(tempDataProvider);
+            ITempDataDictionary tempData = tempDataDictionaryFactory.GetTempData(new DefaultHttpContext());
+
+            return tempData;
         }
     }
 }

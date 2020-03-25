@@ -431,8 +431,8 @@ namespace Bazirano.Tests.Controllers
                 boardThreadsRepo != null ? boardThreadsRepo.Object : Mock.Of<IBoardThreadsRepository>(),
                 columnRepo != null ? columnRepo.Object : Mock.Of<IColumnRepository>(),
                 columnRequestsRepo != null ? columnRequestsRepo.Object : Mock.Of<IColumnRequestsRepository>(),
-                GetMockUserManager(),
-                GetMockRoleManager()
+                MockHelper.GetMockUserManager(),
+                MockHelper.GetMockRoleManager()
             );
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
@@ -445,10 +445,7 @@ namespace Bazirano.Tests.Controllers
                 HttpContext = new DefaultHttpContext() { User = user }
             };
 
-            ITempDataProvider tempDataProvider = Mock.Of<ITempDataProvider>();
-            TempDataDictionaryFactory tempDataDictionaryFactory = new TempDataDictionaryFactory(tempDataProvider);
-            ITempDataDictionary tempData = tempDataDictionaryFactory.GetTempData(new DefaultHttpContext());
-            controller.TempData = tempData;
+            controller.TempData = MockHelper.GetMockTempData();
 
             return controller;
         }
@@ -461,39 +458,9 @@ namespace Bazirano.Tests.Controllers
                 new Mock<IBoardThreadsRepository>().Object,
                 new Mock<IColumnRepository>().Object,
                 new Mock<IColumnRequestsRepository>().Object,
-                GetMockUserManager(),
-                GetMockRoleManager()
+                MockHelper.GetMockUserManager(),
+                MockHelper.GetMockRoleManager()
             );
-        }
-
-        private UserManager<IdentityUser> GetMockUserManager()
-        {
-            return new Mock<UserManager<IdentityUser>>
-            (
-                new Mock<IUserStore<IdentityUser>>().Object,
-                new Mock<IOptions<IdentityOptions>>().Object,
-                new Mock<IPasswordHasher<IdentityUser>>().Object,
-                new IUserValidator<IdentityUser>[0],
-                new IPasswordValidator<IdentityUser>[0],
-                new Mock<ILookupNormalizer>().Object,
-                new Mock<IdentityErrorDescriber>().Object,
-                new Mock<IServiceProvider>().Object,
-                new Mock<ILogger<UserManager<IdentityUser>>>().Object
-            )
-            .Object;
-        }
-
-        private RoleManager<IdentityRole> GetMockRoleManager()
-        {
-            return new Mock<RoleManager<IdentityRole>>
-            (
-                new Mock<IRoleStore<IdentityRole>>().Object,
-                new IRoleValidator<IdentityRole>[0],
-                new Mock<ILookupNormalizer>().Object,
-                new Mock<IdentityErrorDescriber>().Object,
-                new Mock<ILogger<RoleManager<IdentityRole>>>().Object
-            )
-            .Object;
         }
 
         #endregion
