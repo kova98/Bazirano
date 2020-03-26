@@ -5,24 +5,13 @@
 
 @model AuthorInterfaceIndexViewModel
 
-<div class="col-lg-4 col-md-6 col-12 text-center">
-    <div class="card mb-3">
-        <img src="@Model.Author.Image" class="card-img-top" />
-        <div class="card-body">
-            <h1>@Model.Author.Name</h1>
-            <h3 class="text-muted">@Model.Author.ShortBio</h3>
-            <hr class="my-4 bg-secondary" />
-            <p class="text-dark">@Model.Author.Bio</p>
-        </div>
-        @*<div class="card-footer bg-light">
-            <button class="btn btn-primary">
-                <span class="fa fa-pencil-alt mr-1"></span>
-                Uredi profil
-            </button>
-        </div>*@
-    </div>
+<div class="col-12">
+    <partial name="Alert" />
 </div>
 
+<div class="col-lg-4 col-md-6 col-12 text-center">
+    <partial name="Profile" model="Model.Author" />
+</div>
 <div class="col-lg-4 col-md-6 col-12">
     <div class="card">
         <div class="card-header">

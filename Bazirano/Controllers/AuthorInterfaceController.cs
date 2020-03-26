@@ -55,7 +55,6 @@ namespace Bazirano.Controllers
             return View(nameof(Index), viewModel);
         }
 
-
         [Route("~/sucelje/moje-kolumne")]
         public ViewResult ColumnRequestsOverview()
         {
@@ -194,6 +193,23 @@ namespace Bazirano.Controllers
             }
 
             return RedirectToAction(nameof(ColumnRequestsOverview), nameof(AuthorInterfaceController));
+        }
+
+        public IActionResult EditProfile(Author author)
+        {
+            if (ModelState.IsValid)
+            {
+                columnRepository.SaveAuthor(author);
+                Alert.Add(this, AlertType.Success, "Profil uspješno izmijenjen!");
+                return RedirectToAction("Index", "AuthorInterface");
+            }
+            else
+            {
+                Alert.Add(this, AlertType.Error,
+                    "Greška",
+                    "Došlo je do pogreške. Molimo provjerite upisane podatke");
+                return Index();
+            }
         }
 
         private ColumnRequest GetPlaceholderColumnRequest()

@@ -3,6 +3,7 @@ using Bazirano.Infrastructure;
 using Bazirano.Models.AuthorInterface;
 using Bazirano.Models.Column;
 using Bazirano.Models.DataAccess;
+using Bazirano.Tests.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -284,6 +285,49 @@ namespace Bazirano.Tests.Controllers
 
             Assert.Equal(nameof(AuthorInterfaceController), result.ControllerName);
             Assert.Equal(nameof(controller.ColumnRequestsOverview), result.ActionName);
+        }
+
+        [Fact]
+        public void EditProfile_ValidModel_RedirectsToIndex()
+        {
+            var author = new Author { Name = "test", Image = "test", Bio = "test", ShortBio = "test" };
+            var controller = GetMockAuthorInterfaceController();
+
+            TestHelper.SimulateValidation(controller, author);
+            var result = (RedirectToActionResult)controller.EditProfile(author);
+
+            Assert.Equal("Index", result.ActionName);
+            Assert.Equal("AuthorInterface", result.ControllerName);
+        }
+
+        [Theory]
+        [InlineData("", "test", "test", "test")] // invalid name
+        [InlineData("test", "", "test", "test")] // invalid image
+        [InlineData("test", "test", "", "test")] // invalid bio
+        [InlineData("test", "test", "test", "")] // invalid shortBio
+        public void EditProfile_InvalidModel_DisplaysIndex(string name, string image, string bio, string shortBio)
+        {
+            var author = new Author { Name = name, Image = image, Bio = bio, ShortBio = shortBio };
+            var controller = GetMockAuthorInterfaceController();
+
+            TestHelper.SimulateValidation(controller, author);
+            var result = (ViewResult)controller.EditProfile(author);
+
+            Assert.Equal(nameof(controller.Index), result.ViewName);
+        }
+
+        [Fact]
+        public void EditProfile_InvalidModel_ReturnsModel()
+        {
+            var author = new Author();
+            var mock = new Mock<IColumnRepository>();
+            mock.Setup(x => x.Authors).Returns(new Author[] { new Author { Name = "TestUser" } }.AsQueryable);
+            var controller = GetMockAuthorInterfaceController(columnRepo: mock.Object);
+
+            TestHelper.SimulateValidation(controller, author);
+            var result = (ViewResult)controller.EditProfile(author);
+
+            Assert.IsType<AuthorInterfaceIndexViewModel>(result.Model);
         }
 
         private AuthorInterfaceController GetMockAuthorInterfaceController(

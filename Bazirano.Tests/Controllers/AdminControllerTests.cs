@@ -5,6 +5,7 @@ using Bazirano.Models.Board;
 using Bazirano.Models.Column;
 using Bazirano.Models.DataAccess;
 using Bazirano.Models.News;
+using Bazirano.Tests.Helpers;
 using Bazirano.Tests.TestData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
