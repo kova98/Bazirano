@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bazirano.Tests
+namespace Bazirano.Tests.Helpers
 {
     public static class MockHelper
     {

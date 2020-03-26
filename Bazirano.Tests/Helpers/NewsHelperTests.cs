@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using Xunit;
 
-namespace Bazirano.Tests.Infrastructure
+namespace Bazirano.Tests.Helpers
 {
     public class NewsHelperTests
     {

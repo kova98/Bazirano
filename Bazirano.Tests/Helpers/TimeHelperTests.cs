@@ -8,7 +8,7 @@ using Bazirano.Models.DataAccess;
 using Bazirano.Models.News;
 using System.Linq;
 
-namespace Bazirano.Tests.Infrastructure
+namespace Bazirano.Tests.Helpers
 {
     public class TimeHelperTests
     {

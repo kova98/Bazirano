@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
-namespace Bazirano.Tests.Infrastructure
+namespace Bazirano.Tests.Helpers
 {
     internal static class TestHelper
     {
