@@ -6,7 +6,7 @@ using Bazirano.Models.DataAccess;
 using Bazirano.Models.Home;
 using Bazirano.Models.News;
 using Bazirano.Models.Shared;
-using Bazirano.Tests.Infrastructure;
+using Bazirano.Tests.Helpers;
 using Bazirano.Tests.TestData;
 using Microsoft.AspNetCore.Mvc;
 using Moq;

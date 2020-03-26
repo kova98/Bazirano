@@ -10,7 +10,7 @@ using System.Linq;
 using Xunit;
 using System.Threading.Tasks;
 using Bazirano.Tests.TestData;
-using Bazirano.Tests.Infrastructure;
+using Bazirano.Tests.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
