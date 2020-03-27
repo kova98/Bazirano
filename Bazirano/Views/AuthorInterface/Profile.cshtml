@@ -9,13 +9,23 @@
         <p class="text-dark">@Model.Bio</p>
     </div>
     <div class="card-footer bg-light">
+
+        <button class="btn btn-primary" onclick="$('#changePasswordForm').toggle('fast'); scrollToAnchor('changePasswordForm')">
+            <span class="fa fa-key mr-1"></span>
+            Promijeni lozinku
+        </button>
+
         <button class="btn btn-primary" onclick="$('#profileForm').toggle('fast'); scrollToAnchor('profileForm')">
-            <span class="fa fa-pencil-alt mr-1"></span>
+            <span class="fa fa-user mr-1"></span>
             Uredi profil
         </button>
 
+        <div class="my-3" id="changePasswordForm" style="display:none">
+            <partial name="ChangePassword" model="@(new ChangePasswordViewModel("", "", ""))" />
+        </div>
+
         <form asp-action="EditProfile" asp-controller="AuthorInterface" id="profileForm" style="display:none" method="post"
-              class="mt-3">
+              class="mt-3 text-left">
             <div class="form-group">
                 <label class="form-text text-muted">Slika</label>
                 <div><span asp-validation-for="Image" class="text-danger"></span></div>
@@ -37,7 +47,7 @@
                           placeholder="Opširni opis (o vama, zanimanja, interesi, utjecaji...)"></textarea>
             </div>
 
-            <button class="btn btn-primary btn-block" type="submit" name="command" value="save">
+            <button class="btn btn-success btn-block" type="submit" name="command" value="save">
                 <span class="fa fa-save mr-1"></span>
                 Spremi
             </button>

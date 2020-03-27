@@ -16,8 +16,8 @@ namespace Bazirano.Controllers
     {
         private IColumnRequestsRepository columnRequestsRepository;
         private IColumnRepository columnRepository;
-        private UserManager<IdentityUser> userManager;
         private IWriter writerHelper;
+        private UserManager<IdentityUser> userManager;
 
         public AuthorInterfaceController(
             IColumnRequestsRepository columnRequestsRepository,
@@ -210,6 +210,27 @@ namespace Bazirano.Controllers
                     "Došlo je do pogreške. Molimo provjerite upisane podatke");
                 return Index();
             }
+        }
+
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (model.NewPassword != model.ConfirmPassword)
+            {
+                return Index();
+            }
+
+            var user = await userManager.FindByNameAsync(User.Identity.Name);
+            var result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (result.Succeeded)
+            {
+                Alert.Add(this, AlertType.Success, "Lozinka uspješno promijenjena!");
+            }
+            else
+            {
+                Alert.Add(this, AlertType.Error, "Došlo je do pogreške. Molimo, provjerite upisane podatke.");
+            }
+
+            return RedirectToAction("Index", "AuthorInterface");
         }
 
         private ColumnRequest GetPlaceholderColumnRequest()

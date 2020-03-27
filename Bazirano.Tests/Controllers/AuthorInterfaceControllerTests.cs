@@ -308,7 +308,9 @@ namespace Bazirano.Tests.Controllers
         public void EditProfile_InvalidModel_DisplaysIndex(string name, string image, string bio, string shortBio)
         {
             var author = new Author { Name = name, Image = image, Bio = bio, ShortBio = shortBio };
-            var controller = GetMockAuthorInterfaceController();
+            var mock = new Mock<IColumnRepository>();
+            mock.Setup(x => x.Authors).Returns(new Author[] { new Author { Name = "TestUser" } }.AsQueryable);
+            var controller = GetMockAuthorInterfaceController(columnRepo: mock.Object);
 
             TestHelper.SimulateValidation(controller, author);
             var result = (ViewResult)controller.EditProfile(author);
@@ -330,12 +332,27 @@ namespace Bazirano.Tests.Controllers
             Assert.IsType<AuthorInterfaceIndexViewModel>(result.Model);
         }
 
+        [Fact]
+        public async void ChangePassword_NewPasswordsDoNotMatch_DisplaysIndex()
+        {
+            var mock = new Mock<IColumnRepository>();
+            mock.Setup(x => x.Authors).Returns(new Author[] { new Author { Name = "TestUser" } }.AsQueryable);
+            var controller = GetMockAuthorInterfaceController(columnRepo: mock.Object);
+
+            var result = (ViewResult)await controller.ChangePassword(new ChangePasswordViewModel("", "test", ""));
+
+            Assert.Equal("Index", result.ViewName);
+        }
+
+        #region Helper Methods
+
         private AuthorInterfaceController GetMockAuthorInterfaceController(
             IColumnRepository columnRepo = null,
             IColumnRequestsRepository columnRequestsRepo = null)
         {
             columnRepo = columnRepo ?? Mock.Of<IColumnRepository>();
             columnRequestsRepo = columnRequestsRepo ?? Mock.Of<IColumnRequestsRepository>();
+
             var userManager = MockHelper.GetMockUserManager();
 
             var writerMock = new Mock<IWriter>();
@@ -345,7 +362,7 @@ namespace Bazirano.Tests.Controllers
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.Name, "TestUser")
+                new Claim(ClaimTypes.Name, "TestUser"),
             }, "mock"));
 
             controller.ControllerContext = new ControllerContext
@@ -362,7 +379,7 @@ namespace Bazirano.Tests.Controllers
 
             return controller;
         }
+
+        #endregion
     }
-
-
 }
