@@ -214,8 +214,9 @@ namespace Bazirano.Controllers
 
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
-            if (model.NewPassword != model.ConfirmPassword)
+            if (ModelState.IsValid == false)
             {
+                Alert.Add(this, AlertType.Error, "Došlo je do pogreške. Molimo, provjerite upisane podatke.");
                 return Index();
             }
 

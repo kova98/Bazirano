@@ -10,14 +10,14 @@
     </div>
     <div class="card-footer bg-light">
 
-        <button class="btn btn-primary" onclick="$('#changePasswordForm').toggle('fast'); scrollToAnchor('changePasswordForm')">
-            <span class="fa fa-key mr-1"></span>
-            Promijeni lozinku
-        </button>
-
-        <button class="btn btn-primary" onclick="$('#profileForm').toggle('fast'); scrollToAnchor('profileForm')">
+        <button class="btn btn-primary btn-block" onclick="toggleMenu('profileForm')">
             <span class="fa fa-user mr-1"></span>
             Uredi profil
+        </button>
+
+        <button class="btn btn-primary btn-block" onclick="toggleMenu('changePasswordForm')">
+            <span class="fa fa-key mr-1"></span>
+            Promijeni lozinku
         </button>
 
         <div class="my-3" id="changePasswordForm" style="display:none">
@@ -57,3 +57,33 @@
         </form>
     </div>
 </div>
+
+<script>
+    function toggleMenu(menuId) {
+        let profileFormHidden = $('#profileForm').css('display') == 'none';
+        let changePasswordFormHidden = $('#changePasswordForm').css('display') == 'none';
+
+        // If both forms are hidden, animate
+        if (profileFormHidden && changePasswordFormHidden) {
+            $('#' + menuId).toggle('fast');
+            scrollToAnchor(menuId);
+        } else {
+            // If it's the same button again (closing), animate
+            if ($('#' + menuId).css('display') != 'none') {
+                $('#' + menuId).toggle('fast');
+            }
+            // Otherwise, switch between them without animating
+            else {
+                $('#' + menuId).toggle();
+
+                if (menuId == 'profileForm') {
+                    $('#changePasswordForm').hide();
+                } 
+
+                if (menuId == 'changePasswordForm') {
+                    $('#profileForm').hide();
+                } 
+            }
+        }
+    }
+</script>

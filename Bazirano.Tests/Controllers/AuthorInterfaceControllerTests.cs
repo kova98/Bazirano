@@ -332,15 +332,24 @@ namespace Bazirano.Tests.Controllers
             Assert.IsType<AuthorInterfaceIndexViewModel>(result.Model);
         }
 
-        [Fact]
-        public async void ChangePassword_NewPasswordsDoNotMatch_DisplaysIndex()
+        [Theory]
+        [InlineData("", "test", "test")]      // currentPassword empty
+        [InlineData(null, "test", "test")]    // currentPassword null
+        [InlineData("test", "", "test")]      // newPassword empty
+        [InlineData("test", null, "test")]    // newPassword null
+        [InlineData("test", "test", "")]      // confirmPassword empty
+        [InlineData("test", "test", null)]    // confirmPassword null
+        [InlineData("test", "test", "test2")] // passwords don't match
+        public async void ChangePassword_InvalidModel_DisplaysIndex(string currentPassword, string newPassword, string confirmPassword )
         {
             var mock = new Mock<IColumnRepository>();
             mock.Setup(x => x.Authors).Returns(new Author[] { new Author { Name = "TestUser" } }.AsQueryable);
             var controller = GetMockAuthorInterfaceController(columnRepo: mock.Object);
+            var model = new ChangePasswordViewModel(currentPassword, newPassword, confirmPassword);
 
-            var result = (ViewResult)await controller.ChangePassword(new ChangePasswordViewModel("", "test", ""));
-
+            TestHelper.SimulateValidation(controller, model);
+            var result = (ViewResult)await controller.ChangePassword(model);
+            
             Assert.Equal("Index", result.ViewName);
         }
 

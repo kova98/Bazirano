@@ -19,7 +19,10 @@ namespace Bazirano.Tests.Helpers
             Validator.TryValidateObject(model, validationContext, validationResults, true);
             foreach (var validationResult in validationResults)
             {
-                controller.ModelState.AddModelError(validationResult.MemberNames.First(), validationResult.ErrorMessage);
+                string key = validationResult.MemberNames.Count() > 0 
+                    ? validationResult.MemberNames?.First() 
+                    : "";
+                controller.ModelState.AddModelError(key, validationResult.ErrorMessage);
             }
         }
     }
