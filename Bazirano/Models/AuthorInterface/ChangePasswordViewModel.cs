@@ -18,7 +18,7 @@ namespace Bazirano.Models.AuthorInterface
         public ChangePasswordViewModel(string currentPassword, string newPassword, string confirmPassword)
         {
             CurrentPassword = currentPassword;
-            NewPassword = NewPassword;
+            NewPassword = newPassword;
             ConfirmPassword = confirmPassword;
         }
     }
