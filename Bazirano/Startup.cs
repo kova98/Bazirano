@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Bazirano
@@ -56,7 +57,7 @@ namespace Bazirano
             });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -67,8 +68,14 @@ namespace Bazirano
                 app.UseExceptionHandler("/Error");
             }
 
+            app.UseRouting();
             app.UseAuthentication();
-            app.UseMvcWithDefaultRoute();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}");
+            });
+
             app.UseStaticFiles();
             app.UseStatusCodePages();
 
