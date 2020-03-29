@@ -14,15 +14,14 @@ namespace Bazirano.Components
             repository = repo;
         }
 
-        public IViewComponentResult Invoke(BoardPost post)
+        public IViewComponentResult Invoke(BoardPostViewModel viewModel)
         {
-            BoardThread thread = repository.BoardThreads.FirstOrDefault(t => t.Posts.Contains(post));
-
-            var responses = thread.Posts
-                .Where(p => p.Text.Contains($"#{post.Id}"))
+            var responses = viewModel.ParentThread.Posts
+                .Where(p => p.Text.Contains($"#{viewModel.Post.Id}"))
                 .Select(x => x.Id);
 
             return View(responses);
         }
     }
 }
+

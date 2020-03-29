@@ -1,16 +1,16 @@
 ﻿@{
     Layout = "_BoardLayout";
-    ViewBag.Title = Model?.Posts?.ToList()[0].Text;    
+    ViewBag.Title = Model?.Posts?.OrderBy(p=>p.DatePosted).FirstOrDefault()?.Text;    
 }
 
 @model BoardThread
 
 <div class="row">
 
-    @foreach (var thread in Model.Posts)
+    @foreach (var post in Model.Posts)
     {
         <div class="col-12">
-            <partial name="BoardPost" model="thread" />
+            <partial name="BoardPost" model="@(new BoardPostViewModel { ParentThread = Model, Post = post })" />
         </div>
     }
 
