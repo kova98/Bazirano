@@ -13,6 +13,10 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NReco.Logging.File" Version="1.0.5" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Bazirano.Scraper\Bazirano.Scraper.csproj" />
+  </ItemGroup>
   
 </Project>
 

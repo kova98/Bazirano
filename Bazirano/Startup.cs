@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Bazirano.Infrastructure;
 using Bazirano.Models.DataAccess;
 using Bazirano.Models.Identity;
+using Bazirano.Scraper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -55,6 +56,8 @@ namespace Bazirano
             {
                 loggingBuilder.AddFile(loggingSection);
             });
+
+            services.AddHostedService<ScraperService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -75,7 +78,6 @@ namespace Bazirano
             {
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}");
             });
-
             app.UseStaticFiles();
             app.UseStatusCodePages();
 
