@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bazirano", "Bazirano\Bazirano.csproj", "{3206FAC1-846E-4789-9A7D-FCB8C151C11D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bazirano", "Bazirano\Bazirano.csproj", "{3206FAC1-846E-4789-9A7D-FCB8C151C11D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bazirano.Tests", "Bazirano.Tests\Bazirano.Tests.csproj", "{1A3E3C49-3B45-40C2-9A30-8EE1EB14979F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bazirano.Tests", "Bazirano.Tests\Bazirano.Tests.csproj", "{1A3E3C49-3B45-40C2-9A30-8EE1EB14979F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bazirano.Scraper", "Bazirano.Scraper\Bazirano.Scraper.csproj", "{8FEC80DC-C444-485F-9AA5-6CFA73CE7779}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{1A3E3C49-3B45-40C2-9A30-8EE1EB14979F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A3E3C49-3B45-40C2-9A30-8EE1EB14979F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A3E3C49-3B45-40C2-9A30-8EE1EB14979F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FEC80DC-C444-485F-9AA5-6CFA73CE7779}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FEC80DC-C444-485F-9AA5-6CFA73CE7779}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FEC80DC-C444-485F-9AA5-6CFA73CE7779}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FEC80DC-C444-485F-9AA5-6CFA73CE7779}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
