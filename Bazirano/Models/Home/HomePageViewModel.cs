@@ -12,12 +12,12 @@ namespace Bazirano.Models.Home
         /// <summary>
         /// The main post to display.
         /// </summary>
-        public NewsPost MainPost { get; set; }
+        public Article MainPost { get; set; }
 
         /// <summary>
         /// The list of popular posts to display.
         /// </summary>
-        public List<NewsPost> PopularPosts { get; set; }
+        public List<Article> PopularPosts { get; set; }
 
         /// <summary>
         /// The list of board threads to display.

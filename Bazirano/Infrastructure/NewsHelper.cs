@@ -14,21 +14,21 @@ namespace Bazirano.Infrastructure
         private const int LatestPostsCount = 6;
         private const int MainPostRelatedPostsCount = 6;
 
-        private INewsPostsRepository repository;
+        private IArticleRepository repository;
 
-        public NewsHelper(INewsPostsRepository repo)
+        public NewsHelper(IArticleRepository repo)
         {
             repository = repo;
         }
 
         public NewsPageViewModel GetNewsPageViewModel()
         {
-            List<NewsPost> recentPosts = repository.NewsPosts.OrderByDescending(x => x.DatePosted).Take(25).ToList();
-            List<NewsPost> popularPosts = recentPosts.OrderByDescending(x => x.ViewCount).ToList();
+            List<Article> recentPosts = repository.Articles.OrderByDescending(x => x.DatePosted).Take(25).ToList();
+            List<Article> popularPosts = recentPosts.OrderByDescending(x => x.ViewCount).ToList();
 
             while (popularPosts.Count < 7)
             {
-                popularPosts.Add(new NewsPost());
+                popularPosts.Add(new Article());
             }
 
             var newsPageViewModel = new NewsPageViewModel()
@@ -43,9 +43,9 @@ namespace Bazirano.Infrastructure
             return newsPageViewModel;
         }
 
-        public async Task<List<NewsPost>> GetLatestNewsPostsAsync(int count)
+        public async Task<List<Article>> GetLatestArticlesAsync(int count)
         {
-            return await repository.NewsPosts.OrderByDescending(x => x.DatePosted).Take(count).ToListAsync();
+            return await repository.Articles.OrderByDescending(x => x.DatePosted).Take(count).ToListAsync();
         }
     }
 }

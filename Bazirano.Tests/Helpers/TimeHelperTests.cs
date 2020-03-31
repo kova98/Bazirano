@@ -68,24 +68,24 @@ namespace Bazirano.Tests.Helpers
         public void Can_Get_Main_Post_Related_Posts()
         {
             // Arrange
-            Mock<INewsPostsRepository> mock = new Mock<INewsPostsRepository>();
-            mock.Setup(x => x.NewsPosts).Returns((new NewsPost[]
+            Mock<IArticleRepository> mock = new Mock<IArticleRepository>();
+            mock.Setup(x => x.Articles).Returns((new Article[]
             {
-                new NewsPost{ KeywordsList = new List<string>{ "keyword1", "keyword6", "keyword7"} },
-                new NewsPost{ KeywordsList = new List<string>{ "keyword1", "keyword2" } },
-                new NewsPost{ KeywordsList = new List<string>{ "keyword1", "keyword2", "keyword3", "keyword6", "keyword7" } },
-                new NewsPost{ KeywordsList = new List<string>{ "keyword1", "keyword7", "keyword8", "keyword9", "keyword10" } },
-                new NewsPost{ KeywordsList = new List<string>{ "keyword7", "keyword9", "keyword10" } },
+                new Article{ KeywordsList = new List<string>{ "keyword1", "keyword6", "keyword7"} },
+                new Article{ KeywordsList = new List<string>{ "keyword1", "keyword2" } },
+                new Article{ KeywordsList = new List<string>{ "keyword1", "keyword2", "keyword3", "keyword6", "keyword7" } },
+                new Article{ KeywordsList = new List<string>{ "keyword1", "keyword7", "keyword8", "keyword9", "keyword10" } },
+                new Article{ KeywordsList = new List<string>{ "keyword7", "keyword9", "keyword10" } },
             })
             .AsQueryable());
 
-            NewsPost mainPost = new NewsPost
+            Article mainPost = new Article
             {
                 KeywordsList = new List<string> { "keyword1", "keyword2", "keyword3", "keyword4", "keyword5" }
             };
 
             // Act
-            var matches = mock.Object.NewsPosts
+            var matches = mock.Object.Articles
                 .Where(p => p.KeywordsList.KeywordMatches(mainPost.KeywordsList) > 1)
                 .ToList();
 

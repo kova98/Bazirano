@@ -6,42 +6,42 @@ using System.Threading.Tasks;
 
 namespace Bazirano.Models.DataAccess
 {
-    public interface INewsPostsRepository
+    public interface IArticleRepository
     {
         /// <summary>
-        /// The <see cref="IQueryable"/> collection of all the <see cref="NewsPost"/>s in the database.
+        /// The <see cref="IQueryable"/> collection of all the <see cref="Article"/>s in the database.
         /// </summary>
-        IQueryable<NewsPost> NewsPosts { get; }
+        IQueryable<Article> Articles { get; }
 
         /// <summary>
-        /// Adds a new <see cref="NewsPost"/> to the database.
+        /// Adds a new <see cref="Article"/> to the database.
         /// </summary>
         /// <param name="post">The post to add.</param>
-        void AddNewsPost(NewsPost post);
+        void AddArticle(Article article);
 
         /// <summary>
-        /// Removes a <see cref="NewsPost"/> from the database.
+        /// Removes an <see cref="Article"/> from the database.
         /// </summary>
         /// <param name="post">The post to remove.</param>
-        void RemoveNewsPost(long postId);
+        void RemoveArticle(long articleId);
 
         /// <summary>
-        /// Updates a <see cref="NewsPost"/> in the database with the new values.
+        /// Updates a <see cref="Article"/> in the database with the new values.
         /// </summary>
         /// <param name="post">The post to edit.</param>
-        void EditNewsPost(NewsPost post);
+        void EditArticle(Article article);
 
         /// <summary>
-        /// Adds a new <see cref="Comment"/> to a <see cref="NewsPost"/>.
+        /// Adds a new <see cref="Comment"/> to a <see cref="Article"/>.
         /// </summary>
         /// <param name="comment">The comment to add.</param>
         /// <param name="postId">The id of the post which to add the comment to.</param>
-        void AddCommentToNewsPost(Comment comment, long postId);
+        void AddCommentToArticle(Comment comment, long postId);
 
         /// <summary>
-        /// Increases the <see cref="NewsPost.ViewCount"/> by 1.
+        /// Increases the <see cref="Article.ViewCount"/> by 1.
         /// </summary>
         /// <param name="post">The post which view count to increment.</param>
-        void IncrementViewCount(NewsPost post);       
+        void IncrementViewCount(Article post);       
     }
 }

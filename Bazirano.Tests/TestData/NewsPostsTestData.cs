@@ -6,22 +6,22 @@ using System.Text;
 
 namespace Bazirano.Tests.TestData
 {
-    class NewsPostsTestData : IEnumerable<object[]>
+    class ArticlesTestData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            yield return new object[] { NewsPosts };
+            yield return new object[] { Articles };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        private NewsPost[] NewsPosts => new NewsPost[]
+        private Article[] Articles => new Article[]
         {
-            new NewsPost { Id = 0, DatePosted = DateTime.Now.AddHours(-1) },
-            new NewsPost { Id = 1, DatePosted = DateTime.Now.AddHours(-5) },
-            new NewsPost { Id = 2, DatePosted = DateTime.Now.AddHours(1) },
-            new NewsPost { Id = 3, DatePosted = DateTime.Now.AddHours(-2) },
-            new NewsPost { Id = 4, DatePosted = DateTime.Now.AddHours(-10) }
+            new Article { Id = 0, DatePosted = DateTime.Now.AddHours(-1) },
+            new Article { Id = 1, DatePosted = DateTime.Now.AddHours(-5) },
+            new Article { Id = 2, DatePosted = DateTime.Now.AddHours(1) },
+            new Article { Id = 3, DatePosted = DateTime.Now.AddHours(-2) },
+            new Article { Id = 4, DatePosted = DateTime.Now.AddHours(-10) }
         };
     }
 }

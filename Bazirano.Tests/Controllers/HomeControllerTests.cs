@@ -21,8 +21,8 @@ namespace Bazirano.Tests.Controllers
         void Index_DisplaysViewWithCorrectModel()
         {
             var boardThreadsRepoMock = new Mock<IBoardThreadsRepository>();
-            var newsPostsRepoMock = new Mock<INewsPostsRepository>();
-            var homeController = new HomeController(boardThreadsRepoMock.Object, newsPostsRepoMock.Object);
+            var articlesRepoMock = new Mock<IArticleRepository>();
+            var homeController = new HomeController(boardThreadsRepoMock.Object, articlesRepoMock.Object);
 
             var result = (ViewResult)homeController.Index();
 

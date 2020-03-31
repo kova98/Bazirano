@@ -16,19 +16,19 @@ namespace Bazirano.Tests.Helpers
         void Can_Get_NewsPageViewModel()
         {
             // Arrange
-            Mock<INewsPostsRepository> mock = new Mock<INewsPostsRepository>();
-            mock.Setup(x => x.NewsPosts).Returns((new NewsPost[]
+            Mock<IArticleRepository> mock = new Mock<IArticleRepository>();
+            mock.Setup(x => x.Articles).Returns((new Article[]
             {
-                new NewsPost{ Id = 0, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1},
-                new NewsPost{ Id = 1, DatePosted = DateTime.Now.AddHours(-4), ViewCount = 5},
-                new NewsPost{ Id = 2, DatePosted = DateTime.Now.AddHours(-5), ViewCount = 10},
-                new NewsPost{ Id = 3, DatePosted = DateTime.Now, ViewCount = 1},
-                new NewsPost{ Id = 4, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1},
-                new NewsPost{ Id = 5, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1},
-                new NewsPost{ Id = 6, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 20},
-                new NewsPost{ Id = 7, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1},
-                new NewsPost{ Id = 8, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1},
-                new NewsPost{ Id = 9, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1}
+                new Article{ Id = 0, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1},
+                new Article{ Id = 1, DatePosted = DateTime.Now.AddHours(-4), ViewCount = 5},
+                new Article{ Id = 2, DatePosted = DateTime.Now.AddHours(-5), ViewCount = 10},
+                new Article{ Id = 3, DatePosted = DateTime.Now, ViewCount = 1},
+                new Article{ Id = 4, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1},
+                new Article{ Id = 5, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1},
+                new Article{ Id = 6, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 20},
+                new Article{ Id = 7, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1},
+                new Article{ Id = 8, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1},
+                new Article{ Id = 9, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1}
             })
             .AsQueryable());
 

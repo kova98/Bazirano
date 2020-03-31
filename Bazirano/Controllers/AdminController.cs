@@ -18,7 +18,7 @@ namespace Bazirano.Controllers
     public class AdminController : Controller
     {
         private NewsHelper newsHelper;
-        private INewsPostsRepository newsRepo;
+        private IArticleRepository newsRepo;
         private IBoardThreadsRepository boardRepo;
         private IColumnRepository columnRepo;
         private IColumnRequestsRepository columnRequestsRepo;
@@ -26,7 +26,7 @@ namespace Bazirano.Controllers
         private RoleManager<IdentityRole> roleManager;
 
         public AdminController(
-            INewsPostsRepository newsRepo,
+            IArticleRepository newsRepo,
             IBoardThreadsRepository boardRepo,
             IColumnRepository columnRepo,
             IColumnRequestsRepository columnRequestsRepo,
@@ -50,28 +50,28 @@ namespace Bazirano.Controllers
 
         public IActionResult News()
         {
-            List<NewsPost> newsPosts = newsRepo.NewsPosts.OrderByDescending(x => x.DatePosted).Take(100).ToList();
+            List<Article> articles = newsRepo.Articles.OrderByDescending(x => x.DatePosted).Take(100).ToList();
 
-            return View(nameof(News), newsPosts);
+            return View(nameof(News), articles);
         }
 
         public IActionResult DeleteArticle(long id)
         {   
-            newsRepo.RemoveNewsPost(id);
+            newsRepo.RemoveArticle(id);
 
             return RedirectToAction(nameof(News));
         }
 
         public IActionResult EditArticle(long id)
         {
-            NewsPost post = newsRepo.NewsPosts.FirstOrDefault(x => x.Id == id);
+            Article post = newsRepo.Articles.FirstOrDefault(x => x.Id == id);
 
             return View(nameof(EditArticle), post);
         }
 
-        public IActionResult SaveArticle(NewsPost article)
+        public IActionResult SaveArticle(Article article)
         {
-            newsRepo.EditNewsPost(article);
+            newsRepo.EditArticle(article);
 
             return RedirectToAction(nameof(News));
         }

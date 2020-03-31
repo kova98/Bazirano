@@ -27,9 +27,9 @@ namespace Bazirano.Models.DataAccess
         public DbSet<BoardThread> BoardThreads { get; set; }
 
         /// <summary>
-        /// The collection of <see cref="NewsPost"/>s in the application database.
+        /// The collection of <see cref="Article"/>s in the application database.
         /// </summary>
-        public DbSet<NewsPost> NewsPosts { get; set; }
+        public DbSet<Article> Articles { get; set; }
 
         /// <summary>
         /// The collection of <see cref="Comment"/>s in the application database.

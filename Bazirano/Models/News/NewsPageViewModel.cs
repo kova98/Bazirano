@@ -8,28 +8,28 @@ namespace Bazirano.Models.News
     public class NewsPageViewModel
     {
         /// <summary>
-        /// The main <see cref="NewsPost"/>.
+        /// The main <see cref="Article"/>.
         /// </summary>
-        public NewsPost MainPost { get; set; }
+        public Article MainPost { get; set; }
 
         /// <summary>
         /// The list of posts related to the main post.
         /// </summary>
-        public List<NewsPost> MainPostRelatedPosts { get; set; }
+        public List<Article> MainPostRelatedPosts { get; set; }
 
         /// <summary>
         /// The second post displayed next to the main post.
         /// </summary>
-        public NewsPost SecondaryPost { get; set; }
+        public Article SecondaryPost { get; set; }
 
         /// <summary>
         /// The list of posts displayed next to the second post. 
         /// </summary>
-        public List<NewsPost> PostList { get; set; }
+        public List<Article> PostList { get; set; }
 
         /// <summary>
-        /// The list containing the latest <see cref="NewsPost"/>s.
+        /// The list containing the latest <see cref="Article"/>s.
         /// </summary>
-        public List<NewsPost> LatestPosts { get; set; }
+        public List<Article> LatestPosts { get; set; }
     }
 }

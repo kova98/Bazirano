@@ -43,7 +43,7 @@ namespace Bazirano
 
             services.AddTransient<IBoardThreadsRepository, EFRepository>();
             services.AddTransient<IBoardPostsRepository, EFRepository>();
-            services.AddTransient<INewsPostsRepository, EFRepository>();
+            services.AddTransient<IArticleRepository, EFRepository>();
             services.AddTransient<IColumnRepository, EFRepository>();
             services.AddTransient<IColumnRequestsRepository, EFRepository>();
             services.AddTransient<IGoogleRecaptchaHelper, GoogleRecaptchaHelper>();
@@ -56,8 +56,6 @@ namespace Bazirano
             {
                 loggingBuilder.AddFile(loggingSection);
             });
-
-            services.AddHostedService<ScraperService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

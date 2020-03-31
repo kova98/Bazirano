@@ -13,11 +13,11 @@ namespace Bazirano.Controllers
 {
     public class NewsController : Controller
     {
-        private INewsPostsRepository newsRepo;
+        private IArticleRepository newsRepo;
         private IGoogleRecaptchaHelper googleRecaptchaHelper;
         private NewsHelper newsHelper;
 
-        public NewsController(INewsPostsRepository repo, IGoogleRecaptchaHelper googleRecaptchaHelper)
+        public NewsController(IArticleRepository repo, IGoogleRecaptchaHelper googleRecaptchaHelper)
         {
             newsRepo = repo;
             newsHelper = new NewsHelper(repo);
@@ -33,7 +33,7 @@ namespace Bazirano.Controllers
         [Route("~/vijesti/clanak/{id}")]
         public IActionResult Article(long id)
         {
-            var article = newsRepo.NewsPosts.FirstOrDefault(p => p.Id == id);
+            var article = newsRepo.Articles.FirstOrDefault(p => p.Id == id);
             var newsPageViewModel = newsHelper.GetNewsPageViewModel();
 
             if (article == null)
@@ -54,7 +54,7 @@ namespace Bazirano.Controllers
 
         public async Task <IActionResult> PostComment(ArticleRespondViewModel vm)
         {
-            var article = newsRepo.NewsPosts.FirstOrDefault(p => p.Id == vm.ArticleId);
+            var article = newsRepo.Articles.FirstOrDefault(p => p.Id == vm.ArticleId);
 
             if (article == null)
             {
@@ -74,7 +74,7 @@ namespace Bazirano.Controllers
 
                 vm.Comment.Text = vm.Comment.Text.Trim();
                 
-                newsRepo.AddCommentToNewsPost(vm.Comment, vm.ArticleId);
+                newsRepo.AddCommentToArticle(vm.Comment, vm.ArticleId);
 
                 ModelState.Clear();
 
@@ -86,18 +86,18 @@ namespace Bazirano.Controllers
 
         //TODO: Add security!!!
         [HttpPost("~/api/postNews")]
-        public IActionResult PostNews([FromBody]NewsPost post)
+        public IActionResult PostNews([FromBody]Article post)
         {
             if (ModelState.IsValid)
             {
-                var latestPosts = newsRepo.NewsPosts.OrderByDescending(x => x.DatePosted).Take(15).ToList();
+                var latestPosts = newsRepo.Articles.OrderByDescending(x => x.DatePosted).Take(15).ToList();
 
                 foreach (var p in latestPosts)
                 {
                     if (p.Guid == post.Guid)
                     {
                         post.Id = p.Id;
-                        newsRepo.EditNewsPost(post);
+                        newsRepo.EditArticle(post);
                         return Ok();
                     }
                 }
@@ -105,7 +105,7 @@ namespace Bazirano.Controllers
                 post.DatePosted = DateTime.Now;
                 post.Comments = new List<Comment>();
 
-                newsRepo.AddNewsPost(post);
+                newsRepo.AddArticle(post);
 
                 return Ok();
             }

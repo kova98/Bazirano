@@ -50,21 +50,21 @@ namespace Bazirano.Tests.Controllers
         [Fact]
         void News_ReturnsCorrectModel()
         {
-            var mock = new Mock<INewsPostsRepository>();
-            mock.Setup(x => x.NewsPosts).Returns(new NewsPost[] 
+            var mock = new Mock<IArticleRepository>();
+            mock.Setup(x => x.Articles).Returns(new Article[] 
             {
-                new NewsPost { Id = 0, DatePosted = DateTime.Now.AddHours(-1) },
-                new NewsPost { Id = 1, DatePosted = DateTime.Now.AddHours(0) },
-                new NewsPost { Id = 2, DatePosted = DateTime.Now.AddHours(2) },
-                new NewsPost { Id = 3, DatePosted = DateTime.Now.AddHours(1) },
+                new Article { Id = 0, DatePosted = DateTime.Now.AddHours(-1) },
+                new Article { Id = 1, DatePosted = DateTime.Now.AddHours(0) },
+                new Article { Id = 2, DatePosted = DateTime.Now.AddHours(2) },
+                new Article { Id = 3, DatePosted = DateTime.Now.AddHours(1) },
             }
             .AsQueryable);
             var adminController = GetMockAdminController(newsRepo: mock);
 
             var result = (ViewResult)adminController.News();
-            var newsPostsModel = (List<NewsPost>)result.Model;
+            var articleModel = (List<Article>)result.Model;
 
-            Assert.Equal(2, newsPostsModel.First().Id);
+            Assert.Equal(2, articleModel.First().Id);
         }
 
         [Fact]
@@ -88,16 +88,16 @@ namespace Bazirano.Tests.Controllers
         }
 
         [Theory]
-        [ClassData(typeof(NewsPostsTestData))]
-        void EditArticle_ReturnsCorrectModel(NewsPost[] newsPosts)
+        [ClassData(typeof(ArticlesTestData))]
+        void EditArticle_ReturnsCorrectModel(Article[] articles)
         {
-            var mock = new Mock<INewsPostsRepository>();
-            mock.Setup(x => x.NewsPosts).Returns(newsPosts.AsQueryable());
+            var mock = new Mock<IArticleRepository>();
+            mock.Setup(x => x.Articles).Returns(articles.AsQueryable());
             var adminController = new AdminController(mock.Object, null, null, null, null, null);
 
             var result = (ViewResult)adminController.EditArticle(1);
 
-            var postModel = Assert.IsType<NewsPost>(result.Model);
+            var postModel = Assert.IsType<Article>(result.Model);
             Assert.Equal(1, postModel.Id);
         }
 
@@ -106,7 +106,7 @@ namespace Bazirano.Tests.Controllers
         {
             var adminController = GetMockAdminController();
 
-            var result = (RedirectToActionResult)adminController.SaveArticle(new NewsPost());
+            var result = (RedirectToActionResult)adminController.SaveArticle(new Article());
 
             Assert.Equal(nameof(adminController.News), result.ActionName);
         }
@@ -421,14 +421,14 @@ namespace Bazirano.Tests.Controllers
         #region Helper Methods
 
         private AdminController GetMockAdminController(
-            Mock<INewsPostsRepository> newsRepo = null,
+            Mock<IArticleRepository> newsRepo = null,
             Mock<IBoardThreadsRepository> boardThreadsRepo = null,
             Mock<IColumnRepository> columnRepo = null,
             Mock<IColumnRequestsRepository> columnRequestsRepo = null)
         {
             var controller = new AdminController
             (
-                newsRepo != null ? newsRepo.Object : Mock.Of<INewsPostsRepository>(),
+                newsRepo != null ? newsRepo.Object : Mock.Of<IArticleRepository>(),
                 boardThreadsRepo != null ? boardThreadsRepo.Object : Mock.Of<IBoardThreadsRepository>(),
                 columnRepo != null ? columnRepo.Object : Mock.Of<IColumnRepository>(),
                 columnRequestsRepo != null ? columnRequestsRepo.Object : Mock.Of<IColumnRequestsRepository>(),
@@ -455,7 +455,7 @@ namespace Bazirano.Tests.Controllers
         {
             return new AdminController
             (
-                new Mock<INewsPostsRepository>().Object,
+                new Mock<IArticleRepository>().Object,
                 new Mock<IBoardThreadsRepository>().Object,
                 new Mock<IColumnRepository>().Object,
                 new Mock<IColumnRequestsRepository>().Object,

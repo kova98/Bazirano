@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Bazirano.Models.DataAccess
 {
 
-    public class EFRepository : IBoardThreadsRepository, IBoardPostsRepository, INewsPostsRepository, IColumnRepository, IColumnRequestsRepository
+    public class EFRepository : IBoardThreadsRepository, IBoardPostsRepository, IArticleRepository, IColumnRepository, IColumnRequestsRepository
     {
         private ApplicationDbContext context;
         private IWriter writer;
@@ -29,7 +29,7 @@ namespace Bazirano.Models.DataAccess
 
         public IQueryable<BoardPost> BoardPosts => context.BoardPosts;
 
-        public IQueryable<NewsPost> NewsPosts => context.NewsPosts
+        public IQueryable<Article> Articles => context.Articles
             .Include(x=>x.Comments);
 
         public IQueryable<ColumnPost> ColumnPosts => context.ColumnPosts
@@ -56,9 +56,9 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
-        public void AddCommentToNewsPost(Comment comment, long postId)
+        public void AddCommentToArticle(Comment comment, long postId)
         {
-            NewsPost post = context.NewsPosts.FirstOrDefault(p => p.Id == postId);
+            Article post = context.Articles.FirstOrDefault(p => p.Id == postId);
             if (post.Comments == null)
             {
                 post.Comments = new List<Comment>();
@@ -69,16 +69,16 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
-        public void AddNewsPost(NewsPost post)
+        public void AddArticle(Article post)
         {
-            context.NewsPosts.Add(post);
+            context.Articles.Add(post);
 
             context.SaveChanges();
         }
 
-        public void EditNewsPost(NewsPost post)
+        public void EditArticle(Article post)
         {
-            NewsPost postToEdit = context.NewsPosts.FirstOrDefault(x => x.Id == post.Id);
+            Article postToEdit = context.Articles.FirstOrDefault(x => x.Id == post.Id);
 
             postToEdit.Title = post.Title;
             postToEdit.Text = post.Text;
@@ -120,9 +120,9 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
-        public void RemoveNewsPost(long postId)
+        public void RemoveArticle(long postId)
         {
-            var post = context.NewsPosts.FirstOrDefault(p => p.Id == postId);
+            var post = context.Articles.FirstOrDefault(p => p.Id == postId);
 
             if (post.Comments != null && post.Comments.Count > 0)
             {
@@ -131,7 +131,7 @@ namespace Bazirano.Models.DataAccess
                 context.Comments.RemoveRange(comments);
             }
             
-            context.NewsPosts.Remove(post);
+            context.Articles.Remove(post);
 
             context.SaveChanges();
         }
@@ -158,9 +158,9 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
-        public void IncrementViewCount(NewsPost post)
+        public void IncrementViewCount(Article post)
         {
-            context.NewsPosts.FirstOrDefault(x=>x.Id == post.Id).ViewCount += 1;
+            context.Articles.FirstOrDefault(x=>x.Id == post.Id).ViewCount += 1;
 
             context.SaveChanges();
         }

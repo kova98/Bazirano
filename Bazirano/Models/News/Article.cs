@@ -10,7 +10,7 @@ namespace Bazirano.Models.News
     /// <summary>
     /// The news post model.
     /// </summary>
-    public class NewsPost
+    public class Article
     {
         /// <summary>
         /// The id of the post. Used as the primary key in the database.

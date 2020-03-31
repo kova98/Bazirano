@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Bazirano.Models.News
 {
     /// <summary>
-    /// The viewmodel class used for responding to an article (a <see cref="NewsPost"/>).
+    /// The viewmodel class used for responding to an article (a <see cref="Article"/>).
     /// </summary>
     public class ArticleRespondViewModel
     {

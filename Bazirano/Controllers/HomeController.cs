@@ -15,10 +15,10 @@ namespace Bazirano.Controllers
     public class HomeController : Controller
     {
         private IBoardThreadsRepository boardRepo;
-        private INewsPostsRepository newsRepo;
+        private IArticleRepository newsRepo;
         private NewsHelper newsHelper;
 
-        public HomeController(IBoardThreadsRepository boardRepo, INewsPostsRepository newsRepo)
+        public HomeController(IBoardThreadsRepository boardRepo, IArticleRepository newsRepo)
         {
             this.boardRepo = boardRepo;
             this.newsRepo = newsRepo;

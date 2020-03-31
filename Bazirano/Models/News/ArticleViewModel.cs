@@ -3,19 +3,19 @@
 namespace Bazirano.Models.News
 {
     /// <summary>
-    /// The viewmodel class used for displaying a <see cref="NewsPost"/>
+    /// The viewmodel class used for displaying a <see cref="News.Article"/>
     /// </summary>
     public class ArticleViewModel
     {
         /// <summary>
-        /// The <see cref="NewsPost"/> to display.
+        /// The <see cref="News.Article"/> to display.
         /// </summary>
-        public NewsPost Article { get; set; }
+        public Article Article { get; set; }
 
         /// <summary>
-        /// The list of latest <see cref="NewsPost"/>s to display on the side.
+        /// The list of latest <see cref="News.Article"/>s to display on the side.
         /// </summary>
-        public List<NewsPost> LatestNews { get; set; }
+        public List<Article> LatestNews { get; set; }
 
         /// <summary>
         /// The property splitting the article text into sentences ^

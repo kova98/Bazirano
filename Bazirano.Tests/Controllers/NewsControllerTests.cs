@@ -22,8 +22,8 @@ namespace Bazirano.Tests.Controllers
         [Fact]
         void Index_DisplaysViewWithCorrectModel()
         {
-            var newsPostsRepoMock = new Mock<INewsPostsRepository>();
-            var newsController = new NewsController(newsPostsRepoMock.Object, null);
+            var articlesRepoMock = new Mock<IArticleRepository>();
+            var newsController = new NewsController(articlesRepoMock.Object, null);
 
             var result = (ViewResult)newsController.Index();
 
@@ -34,32 +34,32 @@ namespace Bazirano.Tests.Controllers
         [Fact]
         void Article_DisplaysViewWithCorrectModel()
         {
-            var newsPostsRepoMock = new Mock<INewsPostsRepository>();
-            newsPostsRepoMock.Setup(x => x.NewsPosts).Returns(new NewsPost[]
+            var articlesRepoMock = new Mock<IArticleRepository>();
+            articlesRepoMock.Setup(x => x.Articles).Returns(new Article[]
             {
-                new NewsPost { Id = 0}, new NewsPost { Id = 1 }, new NewsPost { Id = 2}
+                new Article { Id = 0}, new Article { Id = 1 }, new Article { Id = 2}
             }
             .AsQueryable());
-            var newsController = new NewsController(newsPostsRepoMock.Object, null);
+            var newsController = new NewsController(articlesRepoMock.Object, null);
 
             var result = (ViewResult)newsController.Article(1);
             var viewModel = (ArticleViewModel)result.ViewData.Model;
 
             Assert.Equal(nameof(newsController.Article), result.ViewName);
             Assert.Equal(1, viewModel.Article.Id);
-            newsPostsRepoMock.Verify(x => x.IncrementViewCount(viewModel.Article));
+            articlesRepoMock.Verify(x => x.IncrementViewCount(viewModel.Article));
         }
 
         [Fact]
         void Article_InvalidArticleId_RedirectsToErrorView()
         {
-            var newsPostsRepoMock = new Mock<INewsPostsRepository>();
-            newsPostsRepoMock.Setup(x => x.NewsPosts).Returns(new NewsPost[]
+            var articlesRepoMock = new Mock<IArticleRepository>();
+            articlesRepoMock.Setup(x => x.Articles).Returns(new Article[]
             {
-                new NewsPost { Id = 1}
+                new Article { Id = 1}
             }
             .AsQueryable());
-            var newsController = new NewsController(newsPostsRepoMock.Object, null);
+            var newsController = new NewsController(articlesRepoMock.Object, null);
 
             var result = (RedirectToActionResult)newsController.Article(0);
 
@@ -73,9 +73,9 @@ namespace Bazirano.Tests.Controllers
         [InlineData("text longer than 10", "username longer than 20", 0)]
         async void PostComment_ValidModel_DisplaysArticleViewAndAddsComment(string commentText, string commentUsername, int timesCalled)
         {
-            var newsPostsRepoMock = new Mock<INewsPostsRepository>();
-            newsPostsRepoMock.Setup(x => x.NewsPosts).Returns(new NewsPost[] { new NewsPost { Id = 1 } }.AsQueryable);
-            var newsController = new NewsController(newsPostsRepoMock.Object, new RecaptchaMock());
+            var articlesRepoMock = new Mock<IArticleRepository>();
+            articlesRepoMock.Setup(x => x.Articles).Returns(new Article[] { new Article { Id = 1 } }.AsQueryable);
+            var newsController = new NewsController(articlesRepoMock.Object, new RecaptchaMock());
             var viewModel = new ArticleRespondViewModel
             {
                 ArticleId = 1,
@@ -91,7 +91,7 @@ namespace Bazirano.Tests.Controllers
             var result = (ViewResult)await newsController.PostComment(viewModel);
 
             Assert.Equal(nameof(newsController.Article), result.ViewName);
-            newsPostsRepoMock.Verify(x => x.AddCommentToNewsPost(viewModel.Comment, viewModel.ArticleId), Times.Exactly(timesCalled));
+            articlesRepoMock.Verify(x => x.AddCommentToArticle(viewModel.Comment, viewModel.ArticleId), Times.Exactly(timesCalled));
         }
 
         [Theory]
@@ -99,9 +99,9 @@ namespace Bazirano.Tests.Controllers
         [InlineData(2)]
         async void PostComment_InvalidArticleId_DisplaysErrorView(long articleId)
         {
-            var newsPostsRepoMock = new Mock<INewsPostsRepository>();
-            newsPostsRepoMock.Setup(x => x.NewsPosts).Returns(new NewsPost[] { new NewsPost { Id = 1 } }.AsQueryable);
-            var newsController = new NewsController(newsPostsRepoMock.Object, null);
+            var articlesRepoMock = new Mock<IArticleRepository>();
+            articlesRepoMock.Setup(x => x.Articles).Returns(new Article[] { new Article { Id = 1 } }.AsQueryable);
+            var newsController = new NewsController(articlesRepoMock.Object, null);
             var viewModel = new ArticleRespondViewModel { ArticleId = articleId };
 
             TestHelper.SimulateValidation(newsController, viewModel);
@@ -114,9 +114,9 @@ namespace Bazirano.Tests.Controllers
         [Fact]
         async void PostComment_TrimsText()
         {
-            var newsPostsRepoMock = new Mock<INewsPostsRepository>();
-            newsPostsRepoMock.Setup(x => x.NewsPosts).Returns(new NewsPost[] { new NewsPost { Id = 1 } }.AsQueryable);
-            var newsController = new NewsController(newsPostsRepoMock.Object, new RecaptchaMock());
+            var articlesRepoMock = new Mock<IArticleRepository>();
+            articlesRepoMock.Setup(x => x.Articles).Returns(new Article[] { new Article { Id = 1 } }.AsQueryable);
+            var newsController = new NewsController(articlesRepoMock.Object, new RecaptchaMock());
             var viewModel = new ArticleRespondViewModel { ArticleId = 1, Comment = new Comment { Text = "   test    " } };
 
             TestHelper.SimulateValidation(newsController, viewModel);
@@ -126,29 +126,29 @@ namespace Bazirano.Tests.Controllers
         }
 
         [Fact]
-        void PostNews_DistinctGuid_AddsNewsPost()
+        void PostNews_DistinctGuid_AddsArticle()
         {
-            var newsPostsRepoMock = new Mock<INewsPostsRepository>();
-            newsPostsRepoMock.Setup(x => x.NewsPosts).Returns(new NewsPost[] { new NewsPost { Guid = 1 } }.AsQueryable());
-            var newsController = new NewsController(newsPostsRepoMock.Object, null);
-            var newsPost = new NewsPost { Guid = 2 };
+            var articlesRepoMock = new Mock<IArticleRepository>();
+            articlesRepoMock.Setup(x => x.Articles).Returns(new Article[] { new Article { Guid = 1 } }.AsQueryable());
+            var newsController = new NewsController(articlesRepoMock.Object, null);
+            var article = new Article { Guid = 2 };
 
-            newsController.PostNews(newsPost);
+            newsController.PostNews(article);
 
-            newsPostsRepoMock.Verify(x => x.AddNewsPost(newsPost));
+            articlesRepoMock.Verify(x => x.AddArticle(article));
         }
 
         [Fact]
         void PostNews_ExistingGuid_EditsPost()
         {
-            var newsPostsRepoMock = new Mock<INewsPostsRepository>();
-            newsPostsRepoMock.Setup(x => x.NewsPosts).Returns(new NewsPost[] { new NewsPost { Guid = 1 } }.AsQueryable());
-            var newsController = new NewsController(newsPostsRepoMock.Object, null);
-            var newsPost = new NewsPost { Guid = 1 };
+            var articlesRepoMock = new Mock<IArticleRepository>();
+            articlesRepoMock.Setup(x => x.Articles).Returns(new Article[] { new Article { Guid = 1 } }.AsQueryable());
+            var newsController = new NewsController(articlesRepoMock.Object, null);
+            var article = new Article { Guid = 1 };
 
-            newsController.PostNews(newsPost);
+            newsController.PostNews(article);
 
-            newsPostsRepoMock.Verify(x => x.EditNewsPost(newsPost));
+            articlesRepoMock.Verify(x => x.EditArticle(article));
         }
 
         [Theory]
@@ -160,9 +160,9 @@ namespace Bazirano.Tests.Controllers
         [InlineData("a", 1, "a", "a", "a", null)] // invalid text
         void PostNews_InvalidModel_ReturnsBadRequest(string title, long guid, string summary, string image, string keywords, string text)
         {
-            var newsPostsRepoMock = new Mock<INewsPostsRepository>();
-            var newsController = new NewsController(newsPostsRepoMock.Object, null);
-            var newsPost = new NewsPost
+            var articlesRepoMock = new Mock<IArticleRepository>();
+            var newsController = new NewsController(articlesRepoMock.Object, null);
+            var article = new Article
             {
                 Title = title,
                 Guid = guid,
@@ -172,8 +172,8 @@ namespace Bazirano.Tests.Controllers
                 Text = text
             };
 
-            TestHelper.SimulateValidation(newsController, newsPost);
-            var result = newsController.PostNews(newsPost);
+            TestHelper.SimulateValidation(newsController, article);
+            var result = newsController.PostNews(article);
 
             Assert.IsType<BadRequestResult>(result);
         }
@@ -182,9 +182,9 @@ namespace Bazirano.Tests.Controllers
         [InlineData("a", 1, "a", "a", "a", "a")]
         void PostNews_ValidModel_ReturnsOk(string title, long guid, string summary, string image, string keywords, string text)
         {
-            var newsPostsRepoMock = new Mock<INewsPostsRepository>();
-            var newsController = new NewsController(newsPostsRepoMock.Object, null);
-            var newsPost = new NewsPost
+            var articlesRepoMock = new Mock<IArticleRepository>();
+            var newsController = new NewsController(articlesRepoMock.Object, null);
+            var article = new Article
             {
                 Title = title,
                 Guid = guid,
@@ -194,8 +194,8 @@ namespace Bazirano.Tests.Controllers
                 Text = text
             };
 
-            TestHelper.SimulateValidation(newsController, newsPost);
-            var result = newsController.PostNews(newsPost);
+            TestHelper.SimulateValidation(newsController, article);
+            var result = newsController.PostNews(article);
 
             Assert.IsType<OkResult>(result);
         }
