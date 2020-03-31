@@ -18,8 +18,8 @@ namespace Bazirano.Models.News
         public List<Article> LatestNews { get; set; }
 
         /// <summary>
-        /// The property splitting the article text into sentences ^
+        /// The property splitting the article text into paragraphs
         /// </summary>
-        public string[] ArticleSentences => Article.Text.Split('~');
+        public string[] Paragraphs => Article.Text.Split('\n');
     }
 }

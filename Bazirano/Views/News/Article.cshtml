@@ -14,9 +14,9 @@
             </div>
             <img class="card-img-bottom" src="@Model.Article.Image" />
             <div class="card-body text-body">
-                @foreach (var sentence in Model.ArticleSentences)
+                @foreach (var paragraph in Model.Paragraphs)
                 {
-                    <p>@sentence</p>
+                    <p>@paragraph</p>
                 }
             </div>
         </div>
