@@ -9,7 +9,7 @@ namespace Bazirano.Scraper
 
         private static ArticlePoster articlePoster;
 
-        static Program()
+        private static async Task Main(string[] args)
         {
             var repo = new InMemoryPostedArticlesRepository();
             var httpHelper = new HttpHelper();
@@ -18,10 +18,7 @@ namespace Bazirano.Scraper
             (
                 new IndexHrScraper(repo, httpHelper)
             );
-        }
 
-        private static async Task Main(string[] args)
-        {
             while (true)
             {
                 try

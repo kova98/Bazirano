@@ -12,8 +12,8 @@ namespace Bazirano.Scraper
     {
         private const string PostUrl = "https://localhost:44326/api/postNews";
 
-        private Queue<Article> ArticleQueue { get; set; }
-        private List<IScraper> Scrapers { get; set; }
+        private Queue<Article> ArticleQueue { get; set; } = new Queue<Article>();
+        private List<IScraper> Scrapers { get; set; } = new List<IScraper>();
 
         public ArticlePoster(params IScraper[] scrapers)
         {
