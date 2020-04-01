@@ -1,95 +1,121 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using AngleSharp;
 using Microsoft.Toolkit.Parsers.Rss;
-using Markdig;
 using System.Text;
+using System.Collections.Generic;
+using Bazirano.Scraper.Interfaces;
 
 namespace Bazirano.Scraper
 {
-    internal class IndexHrScraper
+    public class IndexHrScraper
     {
-        string url = "https://www.index.hr/rss/najcitanije";
-        Article lastArticle;
+        private const string Url = "https://www.index.hr/rss/najcitanije";
 
-        public async Task<Article> GetArticle()
+        IPostedArticlesRepository repo;
+        IHttpHelper httpHelper;
+        private Article lastArticle;
+
+        public IndexHrScraper(IPostedArticlesRepository repo, IHttpHelper httpHelper)
         {
-            var article = await ScraperGetArticle();
-
-            if (lastArticle == null || article.Guid != lastArticle.Guid)
-            {
-                lastArticle = article;
-                return article;
-            } 
-            else
-            {
-                return null;
-            }
+            this.repo = repo;
+            this.httpHelper = httpHelper;
         }
 
-        private async Task<Article> ScraperGetArticle()
+        public async Task<Article> GetArticleAsync()
         {
-            string feed = "";
+            var articles = await ScraperGetArticles();
 
-            using (var client = new HttpClient())
+            foreach (var article in articles)
             {
-                feed = await client.GetStringAsync(url);
+                if (IsLastArticle(article) == false)
+                {
+                    if (repo.ArticleHasNotBeenPosted(article) || repo.PostedArticles.Count == 0)
+                    {
+                        lastArticle = article;
+                        repo.AddArticle(article);
+
+                        return article;
+                    }
+                }
             }
-
-            if (string.IsNullOrEmpty(feed))
-            {
-                throw new NullReferenceException($"Could not get feed from url {url}");
-            }
-
-            var parser = new RssParser();
-            var rss = parser.Parse(feed);
-            var newestArticle = rss.OrderByDescending(x => x.PublishDate).First();
-
-            var article = new Article
-            {
-                Guid = GetGuid(newestArticle.InternalID),
-                Title = newestArticle.Title,
-                Image = newestArticle.ImageUrl,
-                Text = await GetArticleText(newestArticle.InternalID),
-                Summary = newestArticle.Summary,
-                Keywords = GetKeywords(newestArticle.Title),
-                DatePosted = DateTime.Now,
-            };
-
-            return article;
-        }
-
-        private string GetKeywords(string title)
-        {
-            return "";
-        }
-
-        private async Task<string> GetArticleText(string url)
-        {
-            var config = Configuration.Default.WithDefaultLoader();
-            var context = BrowsingContext.New(config);
-            var document = await context.OpenAsync(url);
-            var paragraphs = document.QuerySelectorAll("div.text > p");
-
-            var stringBuilder = new StringBuilder();
-            foreach (var par in paragraphs)
-            {
-                stringBuilder.Append(par.TextContent + Environment.NewLine + Environment.NewLine);
-            }
-
-            return stringBuilder.ToString();
-
-            var stringResult = Markdown.ToHtml(stringBuilder.ToString());
 
             return null;
         }
 
-        private long GetGuid(string internalID)
+        private bool IsLastArticle(Article article)
         {
-            var index = internalID.IndexOf("id=") + 3;
-            var guid = internalID.Substring(index);
+            if (lastArticle == null)
+            {
+                return false;
+            }
+
+            if (article.Guid == lastArticle.Guid)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private async Task<List<Article>> ScraperGetArticles()
+        {
+            var articles = new List<Article>();
+
+            var feed = await httpHelper.Get(Url);
+
+            if (string.IsNullOrEmpty(feed))
+            {
+                throw new NullReferenceException($"Could not get feed from url {Url}");
+            }
+
+            var parser = new RssParser();
+            var rss = parser.Parse(feed);
+            var newestArticlesSchemas = rss.OrderByDescending(x => x.PublishDate).Take(10);
+
+            foreach (var schema in newestArticlesSchemas)
+            {
+                articles.Add(new Article
+                {
+                    Guid = GetGuidFromUrl(schema.InternalID),
+                    Title = schema.Title,
+                    Image = schema.ImageUrl,
+                    Text = await GetArticleText(schema.InternalID),
+                    Summary = schema.Summary,
+                    Keywords = GetKeywords(schema.Title),
+                    DatePosted = DateTime.Now,
+                });
+            }
+
+            return articles;
+        }
+
+        private string GetKeywords(string title)
+        {
+            // TODO: Implement properly
+            return "placeholder,keywords";
+        }
+
+        private async Task<string> GetArticleText(string url)
+        {
+            var document = await httpHelper.GetAsDocument(url);
+            var paragraphs = document
+                .QuerySelectorAll("div.text > p")
+                .Where(x => x.ChildElementCount == 0);
+
+            var paragraphStringBuilder = new StringBuilder();
+            foreach (var par in paragraphs)
+            {
+                paragraphStringBuilder.Append(par.TextContent + Environment.NewLine + Environment.NewLine);
+            }
+
+            return paragraphStringBuilder.ToString();
+        }
+
+        private long GetGuidFromUrl(string url)
+        {
+            var index = url.IndexOf("id=") + 3;
+            var guid = url.Substring(index);
 
             return Convert.ToInt64(guid);
         }

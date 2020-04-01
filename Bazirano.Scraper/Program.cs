@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Threading;
+using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace Bazirano.Scraper
@@ -16,18 +12,29 @@ namespace Bazirano.Scraper
 
         private static async Task Main(string[] args)
         {
-            var scraper = new IndexHrScraper();
+            var repo = new InMemoryPostedArticlesRepository();
+            var httpHelper = new HttpHelper();
+            var scraper = new IndexHrScraper(repo, httpHelper);
 
             while (true)
             {
-                await Loop(scraper);
-                await Task.Delay(10000);
+                try
+                {
+                    await Loop(scraper);
+                    await Task.Delay(10000);
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine($"[Error] {DateTime.Now}");
+                    Console.WriteLine($"An exception occured: {e.Message}");
+                    Console.WriteLine(e.StackTrace);
+                }
             }
         }
 
         private static async Task Loop(IndexHrScraper scraper)
         {
-            var article = await scraper.GetArticle();
+            var article = await scraper.GetArticleAsync();
 
             if (article != null)
             {
@@ -36,13 +43,17 @@ namespace Bazirano.Scraper
                 Console.WriteLine($"Guid: {article.Guid}");
 
                 var json = JsonConvert.SerializeObject(article);
-
-                using (var client = new HttpClient())
-                {
-                    // POST the article (to be implemented)
-                    //await client.PostAsync(postUrl)
-                }
+                await PostArticle(json);
             }
-        }   
+        }
+
+        private static async Task PostArticle(string json)
+        {
+            using (var client = new HttpClient())
+            {
+                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+                await client.PostAsync(postUrl, stringContent);
+            }
+        }
     }
 }
