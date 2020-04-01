@@ -28,10 +28,10 @@ namespace Bazirano.Tests.Scraper
             var repo = new InMemoryPostedArticlesRepository();
             for (int i = 0; i < numberOfArticles; i++)
             {
-                repo.PostedArticles.Add(GetTestArticle());
+                repo.PostedArticles.Add(GetTestArticle(1));
             }
 
-            repo.AddArticle(new Article { KeywordsList = new string[] { "test" } });
+            repo.AddArticle(GetTestArticle());
 
             Assert.True(repo.PostedArticles.Count == 50);
         }
@@ -40,7 +40,7 @@ namespace Bazirano.Tests.Scraper
         void AddArticle_MoreThan50Articles_RemovesOldestArticle()
         {
             var repo = new InMemoryPostedArticlesRepository();
-            var oldestArticle = GetTestArticle();
+            var oldestArticle = GetTestArticle(1);
             repo.PostedArticles.Add(oldestArticle);
             var secondOldestArticle = GetTestArticle();
             repo.PostedArticles.Add(secondOldestArticle);
@@ -49,8 +49,8 @@ namespace Bazirano.Tests.Scraper
                 repo.PostedArticles.Add(GetTestArticle());
             }
 
-            repo.AddArticle(GetTestArticle());
-            repo.AddArticle(GetTestArticle());
+            repo.AddArticle(GetTestArticle(2));
+            repo.AddArticle(GetTestArticle(3));
 
             Assert.DoesNotContain(oldestArticle, repo.PostedArticles);
             Assert.DoesNotContain(secondOldestArticle, repo.PostedArticles);
@@ -60,29 +60,40 @@ namespace Bazirano.Tests.Scraper
         [InlineData(true, "test1", "test2", "test3", "test4", "test5")]
         [InlineData(false, "test1", "test2", "test3", "test4", "test5", "test6")]
         [InlineData(false, "test1", "test2", "test3", "test4", "test5", "test6", "test7")]
-        void AddArticle_RepoContainsArticleWithMoreThan5MatchingWords_DoesNotAddArticle(bool expected, params string[] keywords)
+        void AddArticle_RepoContainsArticleWithMoreThan5MatchingWords_DoesNotAddArticle(bool articleGetsAdded, params string[] keywords)
         {
             var repo = new InMemoryPostedArticlesRepository();
-            repo.PostedArticles.Add(new Article
-            {
-                KeywordsList = keywords
-            });
-            var article = new Article
-            {
-                KeywordsList = new string[] { "test1", "test2", "test3", "test4", "test5", "test6", "test7" }
-            };
+            repo.PostedArticles.Add(new Article { KeywordsList = keywords, Guid = 1 });
+            var article = GetTestArticle(2, "test1", "test2", "test3", "test4", "test5", "test6", "test7");
 
             repo.AddArticle(article);
 
-            Assert.Equal(expected, repo.PostedArticles.Contains(article));
+            Assert.Equal(articleGetsAdded, repo.PostedArticles.Contains(article));
         }
 
-        private Article GetTestArticle()
+        [Theory]
+        [InlineData(0, true)]
+        [InlineData(1, false)]
+        [InlineData(2, true)]
+        void AddArticle_ContainsGuid_DoesNotAddArticle(int guid, bool articleGetsAdded)
         {
-            return new Article
+            var repo = new InMemoryPostedArticlesRepository();
+            repo.PostedArticles.Add(GetTestArticle(guid));
+            var article = GetTestArticle(1);
+
+            repo.AddArticle(article);
+
+            Assert.Equal(articleGetsAdded, repo.PostedArticles.Contains(article));
+        }
+
+        private Article GetTestArticle(int guid = 0, params string[] keywords)
+        {
+            if (keywords.Length == 0)
             {
-                KeywordsList = new string[] { "test" }
-            };
+                keywords = new string[] { "test" };
+            }
+
+            return new Article { Guid = guid, KeywordsList = keywords };
         }
     }
 }

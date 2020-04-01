@@ -26,6 +26,11 @@ namespace Bazirano.Scraper
         {
             foreach (var posted in PostedArticles)
             {
+                if (posted.Guid == article.Guid)
+                {
+                    return true;
+                }
+
                 var keywordMatches = posted.KeywordsList.Intersect(article.KeywordsList).Count();
 
                 if (keywordMatches > 5)
