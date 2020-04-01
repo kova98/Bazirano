@@ -28,10 +28,10 @@ namespace Bazirano.Tests.Scraper
             var repo = new InMemoryPostedArticlesRepository();
             for (int i = 0; i < numberOfArticles; i++)
             {
-                repo.PostedArticles.Add(new Article());
+                repo.PostedArticles.Add(GetTestArticle());
             }
 
-            repo.AddArticle(new Article());
+            repo.AddArticle(new Article { KeywordsList = new string[] { "test" } });
 
             Assert.True(repo.PostedArticles.Count == 50);
         }
@@ -40,17 +40,17 @@ namespace Bazirano.Tests.Scraper
         void AddArticle_MoreThan50Articles_RemovesOldestArticle()
         {
             var repo = new InMemoryPostedArticlesRepository();
-            var oldestArticle = new Article();
+            var oldestArticle = GetTestArticle();
             repo.PostedArticles.Add(oldestArticle);
-            var secondOldestArticle = new Article();
+            var secondOldestArticle = GetTestArticle();
             repo.PostedArticles.Add(secondOldestArticle);
             for (int i = 0; i < 49; i++)
             {
-                repo.PostedArticles.Add(new Article());
+                repo.PostedArticles.Add(GetTestArticle());
             }
 
-            repo.AddArticle(new Article());
-            repo.AddArticle(new Article());
+            repo.AddArticle(GetTestArticle());
+            repo.AddArticle(GetTestArticle());
 
             Assert.DoesNotContain(oldestArticle, repo.PostedArticles);
             Assert.DoesNotContain(secondOldestArticle, repo.PostedArticles);
@@ -60,7 +60,7 @@ namespace Bazirano.Tests.Scraper
         [InlineData(true, "test1", "test2", "test3", "test4", "test5")]
         [InlineData(false, "test1", "test2", "test3", "test4", "test5", "test6")]
         [InlineData(false, "test1", "test2", "test3", "test4", "test5", "test6", "test7")]
-        void ArticleHasNotBeenPosted_RepoContainsArticleWithMoreThan5MatchingWords_ReturnsFalse(bool expected, params string[] keywords)
+        void AddArticle_RepoContainsArticleWithMoreThan5MatchingWords_DoesNotAddArticle(bool expected, params string[] keywords)
         {
             var repo = new InMemoryPostedArticlesRepository();
             repo.PostedArticles.Add(new Article
@@ -72,9 +72,17 @@ namespace Bazirano.Tests.Scraper
                 KeywordsList = new string[] { "test1", "test2", "test3", "test4", "test5", "test6", "test7" }
             };
 
-            var result = repo.ArticleHasNotBeenPosted(article);
+            repo.AddArticle(article);
 
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, repo.PostedArticles.Contains(article));
+        }
+
+        private Article GetTestArticle()
+        {
+            return new Article
+            {
+                KeywordsList = new string[] { "test" }
+            };
         }
     }
 }

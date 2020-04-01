@@ -8,18 +8,21 @@ namespace Bazirano.Scraper
     {
         private const int MaxPostedArticles = 50;
         
-        public List<Article> PostedArticles { get; set; } = new List<Article>();
+        public List<Article> PostedArticles { get; private set; } = new List<Article>();
 
         public void AddArticle(Article article)
         {
-            PostedArticles.Add(article);
-            if (PostedArticles.Count > MaxPostedArticles)
+            if (ArticleExists(article) == false)
             {
-                PostedArticles.RemoveAt(0);
+                PostedArticles.Add(article);
+                if (PostedArticles.Count > MaxPostedArticles)
+                {
+                    PostedArticles.RemoveAt(0);
+                }
             }
         }
 
-        public bool ArticleHasNotBeenPosted(Article article)
+        private bool ArticleExists(Article article)
         {
             foreach (var posted in PostedArticles)
             {
@@ -27,11 +30,11 @@ namespace Bazirano.Scraper
 
                 if (keywordMatches > 5)
                 {
-                    return false;
+                    return true;
                 }
             }
 
-            return true;
+            return false;
         }
     }
 }

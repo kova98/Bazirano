@@ -8,7 +8,7 @@ using Bazirano.Scraper.Interfaces;
 
 namespace Bazirano.Scraper
 {
-    public class IndexHrScraper
+    public class IndexHrScraper : IScraper
     {
         private const string Url = "https://www.index.hr/rss/najcitanije";
 
@@ -24,19 +24,16 @@ namespace Bazirano.Scraper
 
         public async Task<Article> GetArticleAsync()
         {
-            var articles = await ScraperGetArticles();
+            var articles = await ScrapeArticles();
 
             foreach (var article in articles)
             {
                 if (IsLastArticle(article) == false)
                 {
-                    if (repo.ArticleHasNotBeenPosted(article) || repo.PostedArticles.Count == 0)
-                    {
-                        lastArticle = article;
-                        repo.AddArticle(article);
+                    lastArticle = article;
+                    repo.AddArticle(article);
 
-                        return article;
-                    }
+                    return article;
                 }
             }
 
@@ -58,7 +55,7 @@ namespace Bazirano.Scraper
             return false;
         }
 
-        private async Task<List<Article>> ScraperGetArticles()
+        private async Task<List<Article>> ScrapeArticles()
         {
             var articles = new List<Article>();
 

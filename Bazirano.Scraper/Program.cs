@@ -1,27 +1,33 @@
 using System;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Bazirano.Scraper
 {
     public class Program
     {
-        private const string postUrl = "https://localhost:44326/api/postNews";
+        private const int WorkCycleFrequencyInSeconds = 10;
 
-        private static async Task Main(string[] args)
+        private static ArticlePoster articlePoster;
+
+        static Program()
         {
             var repo = new InMemoryPostedArticlesRepository();
             var httpHelper = new HttpHelper();
-            var scraper = new IndexHrScraper(repo, httpHelper);
 
+            articlePoster = new ArticlePoster
+            (
+                new IndexHrScraper(repo, httpHelper)
+            );
+        }
+
+        private static async Task Main(string[] args)
+        {
             while (true)
             {
                 try
                 {
-                    await Loop(scraper);
-                    await Task.Delay(10000);
+                    await DoWork();
+                    await Task.Delay(WorkCycleFrequencyInSeconds * 1000);
                 }
                 catch(Exception e)
                 {
@@ -32,28 +38,10 @@ namespace Bazirano.Scraper
             }
         }
 
-        private static async Task Loop(IndexHrScraper scraper)
+        private static async Task DoWork()
         {
-            var article = await scraper.GetArticleAsync();
-
-            if (article != null)
-            {
-                Console.WriteLine($"Posting article...");
-                Console.WriteLine($"Title: {article.Title}");
-                Console.WriteLine($"Guid: {article.Guid}");
-
-                var json = JsonConvert.SerializeObject(article);
-                await PostArticle(json);
-            }
-        }
-
-        private static async Task PostArticle(string json)
-        {
-            using (var client = new HttpClient())
-            {
-                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
-                await client.PostAsync(postUrl, stringContent);
-            }
+            await articlePoster.GetArticles();
+            await articlePoster.PostArticle();
         }
     }
 }
