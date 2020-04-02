@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Parsers.Rss;
 using System.Text;
 using System.Collections.Generic;
 using Bazirano.Scraper.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace Bazirano.Scraper
 {
@@ -43,16 +44,19 @@ namespace Bazirano.Scraper
 
             foreach (var schema in newestArticlesSchemas)
             {
-                articles.Add(new Article
+                if (schema.Categories.Contains("Vijesti"))
                 {
-                    Guid = GetGuidFromUrl(schema.InternalID),
-                    Title = schema.Title,
-                    Image = schema.ImageUrl,
-                    Text = await GetArticleText(schema.InternalID),
-                    Summary = schema.Summary,
-                    Keywords = GetKeywords(schema.Title),
-                    DatePosted = DateTime.Now,
-                });
+                    articles.Add(new Article
+                    {
+                        Guid = GetGuidFromUrl(schema.InternalID),
+                        Title = schema.Title,
+                        Image = schema.ImageUrl,
+                        Text = await GetArticleText(schema.InternalID),
+                        Summary = schema.Summary,
+                        Keywords = GetKeywords(schema.Title),
+                        DatePosted = DateTime.Now,
+                    });
+                }
             }
 
             return articles;
@@ -60,8 +64,16 @@ namespace Bazirano.Scraper
 
         private string GetKeywords(string title)
         {
-            // TODO: Implement properly
-            return "placeholder,keywords";
+            var stringBuilder = new StringBuilder();
+            foreach (var c in title.Where(c => char.IsLetter(c) || c == ' '))
+            {
+                stringBuilder.Append(c);
+            }
+
+            var words = stringBuilder.ToString().ToUpper().Split(' ');
+            var validWords = words.Where(w => IsWordValid(w));
+
+            return string.Join(',', validWords);
         }
 
         private async Task<string> GetArticleText(string url)
