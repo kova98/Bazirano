@@ -12,8 +12,6 @@ namespace Bazirano.Scraper
     /// </summary>
     public class Article
     {
-        public long Id { get; set; }
-
         public long Guid { get; set; }
 
         public string Title { get; set; }
