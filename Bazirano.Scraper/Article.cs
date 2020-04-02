@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bazirano.Scraper.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -41,5 +42,7 @@ namespace Bazirano.Scraper
 
         [NotMapped]
         public ICollection<string> KeywordsList { get; set; }
+
+        public NewsSources Source { get; set; }
     }
 }

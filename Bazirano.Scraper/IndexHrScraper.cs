@@ -6,6 +6,7 @@ using System.Text;
 using System.Collections.Generic;
 using Bazirano.Scraper.Interfaces;
 using System.Text.RegularExpressions;
+using Bazirano.Scraper.Enums;
 
 namespace Bazirano.Scraper
 {
@@ -48,6 +49,7 @@ namespace Bazirano.Scraper
                 {
                     articles.Add(new Article
                     {
+                        Source = NewsSources.IndexHr,
                         Guid = GetGuidFromUrl(schema.InternalID),
                         Title = schema.Title,
                         Image = schema.ImageUrl,
