@@ -1,3 +1,4 @@
+using Bazirano.Scraper.Helpers;
 using System;
 using System.Threading.Tasks;
 

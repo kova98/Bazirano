@@ -5,7 +5,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Bazirano.Scraper
+namespace Bazirano.Scraper.Helpers
 {
     class HttpHelper : IHttpHelper
     {

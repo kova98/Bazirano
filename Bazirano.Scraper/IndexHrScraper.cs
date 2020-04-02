@@ -5,8 +5,8 @@ using Microsoft.Toolkit.Parsers.Rss;
 using System.Text;
 using System.Collections.Generic;
 using Bazirano.Scraper.Interfaces;
-using System.Text.RegularExpressions;
 using Bazirano.Scraper.Enums;
+using Bazirano.Scraper.Helpers;
 
 namespace Bazirano.Scraper
 {
@@ -15,10 +15,13 @@ namespace Bazirano.Scraper
         private const string Url = "https://www.index.hr/rss/najcitanije";
 
         IHttpHelper httpHelper;
+        KeywordHelper keywordHelper;
 
         public IndexHrScraper(IHttpHelper httpHelper)
         {
             this.httpHelper = httpHelper;
+
+            keywordHelper = new KeywordHelper();
         }
 
         public async Task<List<Article>> GetArticlesAsync()
@@ -55,27 +58,13 @@ namespace Bazirano.Scraper
                         Image = schema.ImageUrl,
                         Text = await GetArticleText(schema.InternalID),
                         Summary = schema.Summary,
-                        Keywords = GetKeywords(schema.Title),
+                        Keywords = keywordHelper.GetKeywordsFromTitle(schema.Title),
                         DatePosted = DateTime.Now,
                     });
                 }
             }
 
             return articles;
-        }
-
-        private string GetKeywords(string title)
-        {
-            var stringBuilder = new StringBuilder();
-            foreach (var c in title.Where(c => char.IsLetter(c) || c == ' '))
-            {
-                stringBuilder.Append(c);
-            }
-
-            var words = stringBuilder.ToString().ToUpper().Split(' ');
-            var validWords = words.Where(w => IsWordValid(w));
-
-            return string.Join(',', validWords);
         }
 
         private async Task<string> GetArticleText(string url)
@@ -100,18 +89,6 @@ namespace Bazirano.Scraper
             var guid = url.Substring(index);
 
             return Convert.ToInt64(guid);
-        }
-
-        private bool IsWordValid(string word)
-        {
-            if (word.Length < 4 ||
-                word == "FOTO" ||
-                word == "VIDEO")
-            {
-                return false;
-            }
-
-            return true;
         }
     }
 }
