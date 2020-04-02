@@ -52,7 +52,7 @@ namespace Bazirano.Scraper
                 {
                     articles.Add(new Article
                     {
-                        Source = NewsSources.IndexHr,
+                        Source = NewsSource.IndexHr,
                         Guid = GetGuidFromUrl(schema.InternalID),
                         Title = schema.Title,
                         Image = schema.ImageUrl,

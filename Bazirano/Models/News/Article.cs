@@ -79,6 +79,6 @@ namespace Bazirano.Models.News
         [NotMapped]
         public ICollection<string> KeywordsList { get; set; }
 
-        public NewsSources Source { get; set; }
+        public NewsSource Source { get; set; }
     }
 }

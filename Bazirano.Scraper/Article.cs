@@ -31,6 +31,6 @@ namespace Bazirano.Scraper
         [NotMapped]
         public ICollection<string> KeywordsList { get; set; }
 
-        public NewsSources Source { get; set; }
+        public NewsSource Source { get; set; }
     }
 }

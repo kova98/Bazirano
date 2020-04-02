@@ -1,4 +1,5 @@
-﻿using Bazirano.Models.DataAccess;
+﻿using Bazirano.Library.Enums;
+using Bazirano.Models.DataAccess;
 using Bazirano.Models.News;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -46,6 +47,11 @@ namespace Bazirano.Infrastructure
         public async Task<List<Article>> GetLatestArticlesAsync(int count)
         {
             return await repository.Articles.OrderByDescending(x => x.DatePosted).Take(count).ToListAsync();
+        }
+
+        public string GetNewsSourceDisplayName(NewsSource source)
+        {
+
         }
     }
 }

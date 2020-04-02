@@ -1,6 +1,6 @@
 ﻿namespace Bazirano.Library.Enums
 {
-    public enum NewsSources
+    public enum NewsSource
     {
         Unknown,
         IndexHr
