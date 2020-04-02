@@ -22,7 +22,7 @@ namespace Bazirano.Scraper
             }
         }
 
-        private bool ArticleExists(Article article)
+        public bool ArticleExists(Article article)
         {
             foreach (var posted in PostedArticles)
             {

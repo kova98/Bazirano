@@ -11,12 +11,14 @@ namespace Bazirano.Scraper
     class ArticlePoster
     {
         private const string PostUrl = "https://localhost:44326/api/postNews";
+        private readonly IPostedArticlesRepository postedArticlesRepo;
 
         private Queue<Article> ArticleQueue { get; set; } = new Queue<Article>();
         private List<IScraper> Scrapers { get; set; } = new List<IScraper>();
 
-        public ArticlePoster(params IScraper[] scrapers)
+        public ArticlePoster(IPostedArticlesRepository postedArticlesRepo, params IScraper[] scrapers)
         {
+            this.postedArticlesRepo = postedArticlesRepo;
             Scrapers.AddRange(scrapers);
         }
 
@@ -45,9 +47,16 @@ namespace Bazirano.Scraper
         {
             foreach (var scraper in Scrapers)
             {
-                var article = await scraper.GetArticleAsync();
+                var articles = await scraper.GetArticlesAsync();
 
-                ArticleQueue.Enqueue(article);
+                foreach (var article in articles)
+                {
+                    if (postedArticlesRepo.ArticleExists(article) == false)
+                    {
+                        postedArticlesRepo.AddArticle(article);
+                        ArticleQueue.Enqueue(article);
+                    }
+                }
             }
         }
     }

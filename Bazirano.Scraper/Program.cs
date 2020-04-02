@@ -5,7 +5,7 @@ namespace Bazirano.Scraper
 {
     public class Program
     {
-        private const int WorkCycleFrequencyInSeconds = 10;
+        private const int WorkCycleFrequencyInSeconds = 3;
 
         private static ArticlePoster articlePoster;
 
@@ -16,7 +16,8 @@ namespace Bazirano.Scraper
 
             articlePoster = new ArticlePoster
             (
-                new IndexHrScraper(repo, httpHelper)
+                repo,
+                new IndexHrScraper(httpHelper)
             );
 
             while (true)
@@ -37,8 +38,8 @@ namespace Bazirano.Scraper
 
         private static async Task DoWork()
         {
-            await articlePoster.GetArticles();
             await articlePoster.PostArticle();
+            await articlePoster.GetArticles();
         }
     }
 }

@@ -5,5 +5,7 @@ namespace Bazirano.Scraper.Interfaces
     public interface IPostedArticlesRepository
     {
         void AddArticle(Article article);
+
+        bool ArticleExists(Article article);
     }
 }

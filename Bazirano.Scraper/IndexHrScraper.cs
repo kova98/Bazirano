@@ -12,47 +12,18 @@ namespace Bazirano.Scraper
     {
         private const string Url = "https://www.index.hr/rss/najcitanije";
 
-        IPostedArticlesRepository repo;
         IHttpHelper httpHelper;
-        private Article lastArticle;
 
-        public IndexHrScraper(IPostedArticlesRepository repo, IHttpHelper httpHelper)
+        public IndexHrScraper(IHttpHelper httpHelper)
         {
-            this.repo = repo;
             this.httpHelper = httpHelper;
         }
 
-        public async Task<Article> GetArticleAsync()
+        public async Task<List<Article>> GetArticlesAsync()
         {
             var articles = await ScrapeArticles();
 
-            foreach (var article in articles)
-            {
-                if (IsLastArticle(article) == false)
-                {
-                    lastArticle = article;
-                    repo.AddArticle(article);
-
-                    return article;
-                }
-            }
-
-            return null;
-        }
-
-        private bool IsLastArticle(Article article)
-        {
-            if (lastArticle == null)
-            {
-                return false;
-            }
-
-            if (article.Guid == lastArticle.Guid)
-            {
-                return true;
-            }
-
-            return false;
+            return articles;
         }
 
         private async Task<List<Article>> ScrapeArticles()
