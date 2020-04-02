@@ -5,8 +5,8 @@ using Microsoft.Toolkit.Parsers.Rss;
 using System.Text;
 using System.Collections.Generic;
 using Bazirano.Scraper.Interfaces;
-using Bazirano.Scraper.Enums;
 using Bazirano.Scraper.Helpers;
+using Bazirano.Library.Enums;
 
 namespace Bazirano.Scraper
 {
@@ -59,7 +59,6 @@ namespace Bazirano.Scraper
                         Text = await GetArticleText(schema.InternalID),
                         Summary = schema.Summary,
                         Keywords = keywordHelper.GetKeywordsFromTitle(schema.Title),
-                        DatePosted = DateTime.Now,
                     });
                 }
             }

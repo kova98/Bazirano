@@ -1,4 +1,4 @@
-﻿namespace Bazirano.Scraper.Enums
+﻿namespace Bazirano.Library.Enums
 {
     public enum NewsSources
     {

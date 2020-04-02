@@ -1,4 +1,4 @@
-﻿using Bazirano.Scraper.Enums;
+﻿using Bazirano.Library.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,26 +14,16 @@ namespace Bazirano.Scraper
     {
         public long Id { get; set; }
 
-        [Range(1, long.MaxValue)]
         public long Guid { get; set; }
 
-        public long ViewCount { get; set; }
-
-        [Required]
         public string Title { get; set; }
 
-        [Required]
         public string Text { get; set; }
 
-        [Required]
         public string Image { get; set; }
 
-        [Required]
         public string Summary { get; set; }
 
-        public DateTime DatePosted { get; set; }
-
-        [Required]
         public string Keywords
         {
             get { return KeywordsList == null ? "" : string.Join(",", KeywordsList); }
