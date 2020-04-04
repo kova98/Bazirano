@@ -1,4 +1,5 @@
 ﻿using Bazirano.Scraper.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,16 +11,18 @@ namespace Bazirano.Scraper
 {
     class ArticlePoster
     {
-        private const string PostUrl = "https://localhost:44326/api/postNews";
+        private readonly string PostUrl;
         private readonly IPostedArticlesRepository postedArticlesRepo;
 
         private Queue<Article> ArticleQueue { get; set; } = new Queue<Article>();
         private List<IScraper> Scrapers { get; set; } = new List<IScraper>();
 
-        public ArticlePoster(IPostedArticlesRepository postedArticlesRepo, params IScraper[] scrapers)
+        public ArticlePoster(IConfigurationRoot config, IPostedArticlesRepository postedArticlesRepo, params IScraper[] scrapers)
         {
             this.postedArticlesRepo = postedArticlesRepo;
             Scrapers.AddRange(scrapers);
+
+            PostUrl = config["ScraperUrls:IndexHr"];
         }
 
         public async Task PostArticle()

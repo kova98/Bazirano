@@ -1,4 +1,5 @@
 using Bazirano.Scraper.Helpers;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
 
@@ -14,9 +15,13 @@ namespace Bazirano.Scraper
         {
             var repo = new InMemoryPostedArticlesRepository();
             var httpHelper = new HttpHelper();
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
 
             articlePoster = new ArticlePoster
             (
+                config,
                 repo,
                 new IndexHrScraper(httpHelper)
             );
