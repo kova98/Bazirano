@@ -11,7 +11,7 @@ namespace Bazirano.Infrastructure
     {
         public string GetSampleColumnText()
         {
-            return File.ReadAllText("sample-article.html");
+            return File.ReadAllText("sample-article.md");
         }
 
         public async Task UploadImage(BoardPost post, IFormFile file)

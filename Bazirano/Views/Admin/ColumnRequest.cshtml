@@ -1,4 +1,8 @@
-﻿@model ColumnRequest
+﻿@{ 
+    Layout = "_AdminLayout";
+}
+
+@model ColumnRequest
 
 <div class="row">
     <div class="col-md-4 col-12">
@@ -69,12 +73,14 @@
                 </div>
 
                 <hr class="bg-secondary" />
-                <div class="text-body" id="text">@Html.Raw(Model.ColumnText)</div>
+                <div class="text-body" id="text">@Model.ColumnText</div>
             </div>
         </div>
     </div>
 
     <script type="text/javascript">
+        var converter = new showdown.Converter();
+
         $(document).ready(function () {
             refresh();
 
@@ -85,7 +91,7 @@
 
         function refresh() {
             $("#title").text($("#title-input").val());
-            $("#text").html($("#text-input").val());
+            $("#text").html(converter.makeHtml($("#text-input").val()));
             $("#image").attr("src", $("#image-input").val());
         }
     </script>

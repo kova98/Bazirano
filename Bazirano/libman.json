@@ -14,7 +14,10 @@
     },
     {
       "library": "jquery@3.4.1",
-      "destination": "wwwroot/lib/jquery/"
+      "destination": "wwwroot/lib/jquery/",
+      "files": [
+        "jquery.min.js" 
+      ]
     },
     {
       "library": "font-awesome@5.12.1",
@@ -24,6 +27,13 @@
         "webfonts/fa-solid-900.woff2",
         "webfonts/fa-regular-400.woff2",
         "webfonts/fa-brands-400.woff2"
+      ]
+    },
+    {
+      "library": "showdown@1.9.1",
+      "destination": "wwwroot/lib/showdown/",
+      "files": [
+        "showdown.js"
       ]
     }
   ]

@@ -1,4 +1,5 @@
 ﻿using Bazirano.Infrastructure;
+using Bazirano.Library.Enums;
 using Bazirano.Models.DataAccess;
 using Bazirano.Models.News;
 using Moq;
@@ -13,10 +14,9 @@ namespace Bazirano.Tests.Helpers
     public class NewsHelperTests
     {
         [Fact]
-        void Can_Get_NewsPageViewModel()
+        void GetNewsPageViewModel_ReturnsCorrectModel()
         {
-            // Arrange
-            Mock<IArticleRepository> mock = new Mock<IArticleRepository>();
+            var mock = new Mock<IArticleRepository>();
             mock.Setup(x => x.Articles).Returns((new Article[]
             {
                 new Article{ Id = 0, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1},
@@ -29,20 +29,28 @@ namespace Bazirano.Tests.Helpers
                 new Article{ Id = 7, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1},
                 new Article{ Id = 8, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1},
                 new Article{ Id = 9, DatePosted = DateTime.Now.AddHours(-1), ViewCount = 1}
-            })
-            .AsQueryable());
+            }).AsQueryable());
+            var newsHelper = new NewsHelper(mock.Object);
 
-            NewsHelper newsHelper = new NewsHelper(mock.Object);
+            var actual = newsHelper.GetNewsPageViewModel();
 
-            // Act
-            NewsPageViewModel actual = newsHelper.GetNewsPageViewModel();
-
-            // Assert
             Assert.Equal(6, actual.MainPost.Id);
             Assert.Equal(2, actual.SecondaryPost.Id);
             Assert.Equal(3, actual.MainPostRelatedPosts.First().Id);
             Assert.Equal(1, actual.PostList.First().Id);
             Assert.Equal(3, actual.LatestPosts.First().Id);
+        }
+
+        [Theory]
+        [InlineData(NewsSource.Unknown, "Nepoznato")]
+        [InlineData(NewsSource.IndexHr, "Index")]
+        void GetNewsSourceDisplayName_ValidEnum_ReturnsCorrectDisplayName(NewsSource newsSource, string displayName)
+        {
+            var newsHelper = new NewsHelper(null);
+
+            var actual = newsHelper.GetNewsSourceDisplayName(newsSource);
+
+            Assert.Equal(displayName, actual);
         }
     }
 }
