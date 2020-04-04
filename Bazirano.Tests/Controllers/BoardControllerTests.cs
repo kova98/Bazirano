@@ -20,7 +20,7 @@ namespace Bazirano.Tests.Controllers
     {
         BoardController GetMockBoardController(BoardThread[] boardThreads)
         {
-            var mock = new Mock<IBoardThreadsRepository>();
+            var mock = new Mock<IBoardThreadRepository>();
             mock.Setup(x => x.BoardThreads).Returns(boardThreads.AsQueryable);
 
             var googleRecaptchaHelperMock = new Mock<IGoogleRecaptchaHelper>();
@@ -88,7 +88,7 @@ namespace Bazirano.Tests.Controllers
         [Fact]
         public async void CreateThread_InvalidModel_DisplaysSubmitView()
         {
-            var boardThreadsRepoMock = new Mock<IBoardThreadsRepository>();
+            var boardThreadsRepoMock = new Mock<IBoardThreadRepository>();
             var boardController = new BoardController(boardThreadsRepoMock.Object, new RecaptchaMock(), null);
             var boardPost = new BoardPost();
 
@@ -108,7 +108,7 @@ namespace Bazirano.Tests.Controllers
             var oldestThread = new BoardThread { Posts = new List<BoardPost> { new BoardPost { DatePosted = DateTime.Now.AddHours(-1) } } };
             var boardThreads = GetBoardThreadsListContaining(threadCount, boardThreadToAdd, oldestThread );
 
-            var boardThreadsRepoMock = new Mock<IBoardThreadsRepository>();
+            var boardThreadsRepoMock = new Mock<IBoardThreadRepository>();
             boardThreadsRepoMock.Setup(x => x.BoardThreads).Returns(boardThreads.AsQueryable());
 
             var boardController = new BoardController(boardThreadsRepoMock.Object, new RecaptchaMock(), null);

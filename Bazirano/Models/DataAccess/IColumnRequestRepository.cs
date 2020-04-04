@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bazirano.Models.DataAccess
 {
-    public interface IColumnRequestsRepository
+    public interface IColumnRequestRepository
     {
         IQueryable<ColumnRequest> ColumnRequests { get; }
 

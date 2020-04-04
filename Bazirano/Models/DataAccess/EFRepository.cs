@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Bazirano.Models.DataAccess
 {
 
-    public class EFRepository : IBoardThreadsRepository, IBoardPostsRepository, IArticleRepository, IColumnRepository, IColumnRequestsRepository
+    public class EFRepository : IBoardThreadRepository, IBoardPostRepository, IArticleRepository, IColumnRepository, IColumnRequestRepository
     {
         private ApplicationDbContext context;
         private IWriter writer;

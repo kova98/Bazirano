@@ -96,7 +96,7 @@ namespace Bazirano.Tests.Controllers
         void SaveColumnRequest_CallsEditColumnRequest(int id, int times)
         {
             var columnRequest = new ColumnRequest { Id = id};
-            var mock = new Mock<IColumnRequestsRepository>();
+            var mock = new Mock<IColumnRequestRepository>();
             mock.Setup(x => x.ColumnRequests).Returns(new ColumnRequest[] { new ColumnRequest { Id = 1 } }.AsQueryable);
             var controller = GetMockAuthorInterfaceController(columnRequestsRepo: mock.Object);
 
@@ -111,7 +111,7 @@ namespace Bazirano.Tests.Controllers
         void SaveColumnRequest_CallsAddColumnRequest(int id, int times)
         {
             var columnRequest = new ColumnRequest { Id = id };
-            var mock = new Mock<IColumnRequestsRepository>();
+            var mock = new Mock<IColumnRequestRepository>();
             mock.Setup(x => x.ColumnRequests).Returns(new ColumnRequest[] { new ColumnRequest { Id = 1 } }.AsQueryable);
             var controller = GetMockAuthorInterfaceController(columnRequestsRepo: mock.Object);
 
@@ -147,7 +147,7 @@ namespace Bazirano.Tests.Controllers
         void SaveColumnRequest_CommandAndRequestExists_SetsStatus(string command, ColumnRequestStatus status)
         {
             var columnRequest = new ColumnRequest { Id = 1, Status = ColumnRequestStatus.Draft };
-            var mock = new Mock<IColumnRequestsRepository>();
+            var mock = new Mock<IColumnRequestRepository>();
             mock.Setup(x => x.ColumnRequests).Returns(new ColumnRequest[] { new ColumnRequest { Id = 1 } }.AsQueryable);
             var controller = GetMockAuthorInterfaceController(columnRequestsRepo: mock.Object);
 
@@ -164,7 +164,7 @@ namespace Bazirano.Tests.Controllers
         void SaveColumnRequest_RequestDoesNotExistAndStatusNotDraft_ThrowsInvalidOperationException(ColumnRequestStatus status)
         {
             var columnRequest = new ColumnRequest { Status = status };
-            var mock = new Mock<IColumnRequestsRepository>();
+            var mock = new Mock<IColumnRequestRepository>();
             var controller = GetMockAuthorInterfaceController(columnRequestsRepo: mock.Object);
 
             Assert.Throws<InvalidOperationException>(() => controller.SaveColumnRequest(columnRequest, ""));
@@ -174,7 +174,7 @@ namespace Bazirano.Tests.Controllers
         void SaveColumnRequest_RequestDoesNotExistAndStatusDraft_CallsAddColumnRequest()
         {
             var columnRequest = new ColumnRequest { Status = ColumnRequestStatus.Draft };
-            var mock = new Mock<IColumnRequestsRepository>();
+            var mock = new Mock<IColumnRequestRepository>();
             var controller = GetMockAuthorInterfaceController(columnRequestsRepo: mock.Object);
 
             controller.SaveColumnRequest(columnRequest, "");
@@ -191,7 +191,7 @@ namespace Bazirano.Tests.Controllers
         void SaveColumnRequest_Status_CallsEditColumnRequest(ColumnRequestStatus status, int times)
         {
             var columnRequest = new ColumnRequest { Id = 1, Status = status };
-            var mock = new Mock<IColumnRequestsRepository>();
+            var mock = new Mock<IColumnRequestRepository>();
             mock.Setup(x => x.ColumnRequests).Returns(new ColumnRequest[] { new ColumnRequest { Id = 1 } }.AsQueryable);
             var controller = GetMockAuthorInterfaceController(columnRequestsRepo: mock.Object);
 
@@ -261,7 +261,7 @@ namespace Bazirano.Tests.Controllers
         [InlineData(1,1)]
         public void RemoveColumnRequest_AuthorId_CallsRemoveColumnRequest(int id, int times)
         {
-            var columnRequestsRepoMock = new Mock<IColumnRequestsRepository>();
+            var columnRequestsRepoMock = new Mock<IColumnRequestRepository>();
             columnRequestsRepoMock
                 .Setup(x => x.ColumnRequests)
                 .Returns(new ColumnRequest[] { new ColumnRequest { Id = 1, Author = new Author { Name = "TestUser" } } }.AsQueryable);
@@ -275,7 +275,7 @@ namespace Bazirano.Tests.Controllers
         [Fact]
         public void RemoveColumnRequest_AuthorId_RedirectsToColumnRequestsOverview()
         {
-            var columnRequestsRepoMock = new Mock<IColumnRequestsRepository>();
+            var columnRequestsRepoMock = new Mock<IColumnRequestRepository>();
             columnRequestsRepoMock
                 .Setup(x => x.ColumnRequests)
                 .Returns(new ColumnRequest[] { new ColumnRequest { Id = 1, Author = new Author { Name = "TestUser" } } }.AsQueryable);
@@ -357,10 +357,10 @@ namespace Bazirano.Tests.Controllers
 
         private AuthorInterfaceController GetMockAuthorInterfaceController(
             IColumnRepository columnRepo = null,
-            IColumnRequestsRepository columnRequestsRepo = null)
+            IColumnRequestRepository columnRequestsRepo = null)
         {
             columnRepo = columnRepo ?? Mock.Of<IColumnRepository>();
-            columnRequestsRepo = columnRequestsRepo ?? Mock.Of<IColumnRequestsRepository>();
+            columnRequestsRepo = columnRequestsRepo ?? Mock.Of<IColumnRequestRepository>();
 
             var userManager = MockHelper.GetMockUserManager();
 

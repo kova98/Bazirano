@@ -13,7 +13,7 @@ namespace Bazirano.Controllers
 {
     public class BoardController : Controller
     {
-        private IBoardThreadsRepository repository;
+        private IBoardThreadRepository repository;
         private IGoogleRecaptchaHelper googleRecaptchaHelper;
         private IWriter writer;
 
@@ -21,7 +21,7 @@ namespace Bazirano.Controllers
         private int maxThreadCount = 40;
         private int maxImagesInThread = 50;
 
-        public BoardController(IBoardThreadsRepository repo, IGoogleRecaptchaHelper grHelper, IWriter writer)
+        public BoardController(IBoardThreadRepository repo, IGoogleRecaptchaHelper grHelper, IWriter writer)
         {
             repository = repo;
             googleRecaptchaHelper = grHelper;

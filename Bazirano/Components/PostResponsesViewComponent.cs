@@ -7,9 +7,9 @@ namespace Bazirano.Components
 {
     public class PostResponsesViewComponent : ViewComponent
     {
-        private IBoardThreadsRepository repository;
+        private IBoardThreadRepository repository;
 
-        public PostResponsesViewComponent(IBoardThreadsRepository repo)
+        public PostResponsesViewComponent(IBoardThreadRepository repo)
         {
             repository = repo;
         }

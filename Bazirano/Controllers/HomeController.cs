@@ -14,11 +14,11 @@ namespace Bazirano.Controllers
 {
     public class HomeController : Controller
     {
-        private IBoardThreadsRepository boardRepo;
+        private IBoardThreadRepository boardRepo;
         private IArticleRepository newsRepo;
         private NewsHelper newsHelper;
 
-        public HomeController(IBoardThreadsRepository boardRepo, IArticleRepository newsRepo)
+        public HomeController(IBoardThreadRepository boardRepo, IArticleRepository newsRepo)
         {
             this.boardRepo = boardRepo;
             this.newsRepo = newsRepo;

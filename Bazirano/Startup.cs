@@ -41,15 +41,15 @@ namespace Bazirano
                 .AddEntityFrameworkStores<AppIdentityDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddTransient<IBoardThreadsRepository, EFRepository>();
-            services.AddTransient<IBoardPostsRepository, EFRepository>();
+            services.AddTransient<IBoardThreadRepository, EFRepository>();
+            services.AddTransient<IBoardPostRepository, EFRepository>();
             services.AddTransient<IArticleRepository, EFRepository>();
             services.AddTransient<IColumnRepository, EFRepository>();
-            services.AddTransient<IColumnRequestsRepository, EFRepository>();
+            services.AddTransient<IColumnRequestRepository, EFRepository>();
             services.AddTransient<IGoogleRecaptchaHelper, GoogleRecaptchaHelper>();
             services.AddTransient<IWriter, WriterHelper>();
 
-            services.AddMvc();
+            services.AddControllersWithViews();
 
             var loggingSection = Configuration.GetSection("Logging");
             services.AddLogging(loggingBuilder =>
@@ -74,8 +74,9 @@ namespace Bazirano
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}");
+                endpoints.MapDefaultControllerRoute();
             });
+
             app.UseStaticFiles();
             app.UseStatusCodePages();
 

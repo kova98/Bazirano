@@ -14,13 +14,13 @@ namespace Bazirano.Controllers
     [Authorize(Roles = "Authors")]
     public class AuthorInterfaceController : Controller
     {
-        private IColumnRequestsRepository columnRequestsRepository;
+        private IColumnRequestRepository columnRequestsRepository;
         private IColumnRepository columnRepository;
         private IWriter writerHelper;
         private UserManager<IdentityUser> userManager;
 
         public AuthorInterfaceController(
-            IColumnRequestsRepository columnRequestsRepository,
+            IColumnRequestRepository columnRequestsRepository,
             IColumnRepository columnRepository,
             IWriter writerHelper,
             UserManager<IdentityUser> userManager)

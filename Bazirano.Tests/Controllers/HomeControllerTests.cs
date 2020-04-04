@@ -20,7 +20,7 @@ namespace Bazirano.Tests.Controllers
         [Fact]  
         void Index_DisplaysViewWithCorrectModel()
         {
-            var boardThreadsRepoMock = new Mock<IBoardThreadsRepository>();
+            var boardThreadsRepoMock = new Mock<IBoardThreadRepository>();
             var articlesRepoMock = new Mock<IArticleRepository>();
             var homeController = new HomeController(boardThreadsRepoMock.Object, articlesRepoMock.Object);
 

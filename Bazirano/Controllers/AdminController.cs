@@ -19,17 +19,17 @@ namespace Bazirano.Controllers
     {
         private NewsHelper newsHelper;
         private IArticleRepository newsRepo;
-        private IBoardThreadsRepository boardRepo;
+        private IBoardThreadRepository boardRepo;
         private IColumnRepository columnRepo;
-        private IColumnRequestsRepository columnRequestsRepo;
+        private IColumnRequestRepository columnRequestsRepo;
         private UserManager<IdentityUser> userManager;
         private RoleManager<IdentityRole> roleManager;
 
         public AdminController(
             IArticleRepository newsRepo,
-            IBoardThreadsRepository boardRepo,
+            IBoardThreadRepository boardRepo,
             IColumnRepository columnRepo,
-            IColumnRequestsRepository columnRequestsRepo,
+            IColumnRequestRepository columnRequestsRepo,
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager)
         {

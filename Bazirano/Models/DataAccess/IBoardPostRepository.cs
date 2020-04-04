@@ -6,7 +6,7 @@ namespace Bazirano.Models.DataAccess
     /// <summary>
     /// The interface defining <see cref="BoardPost"/> database access
     /// </summary>
-    public interface IBoardPostsRepository
+    public interface IBoardPostRepository
     {
         /// <summary>
         /// The <see cref="IQueryable"/> collection of all the <see cref="BoardThread"/>s in the database.

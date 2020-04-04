@@ -129,7 +129,7 @@ namespace Bazirano.Tests.Controllers
         [InlineData(0, 0)]
         void DeleteBoardThread_CallsRemoveThread(long id, int times)
         {
-            var mock = new Mock<IBoardThreadsRepository>();
+            var mock = new Mock<IBoardThreadRepository>();
             mock.Setup(x => x.BoardThreads).Returns(new BoardThread[] { new BoardThread { Id = 1 } }.AsQueryable);
             var adminController = GetMockAdminController(boardThreadsRepo: mock);
 
@@ -153,7 +153,7 @@ namespace Bazirano.Tests.Controllers
         [ClassData(typeof(BoardThreadTestData))]
         void Board_ReturnsCorrectModel(BoardThread[] boardThreads)
         {
-            var mock = new Mock<IBoardThreadsRepository>();
+            var mock = new Mock<IBoardThreadRepository>();
             mock.Setup(x => x.BoardThreads).Returns(boardThreads.AsQueryable());
             var adminController = new AdminController(null, mock.Object, null, null, null, null);
 
@@ -335,7 +335,7 @@ namespace Bazirano.Tests.Controllers
         [Fact]
         void ColumnRequest_ReturnsCorrectModel()
         {
-            var mock = new Mock<IColumnRequestsRepository>();
+            var mock = new Mock<IColumnRequestRepository>();
             mock.Setup(x => x.ColumnRequests).Returns(new ColumnRequest[] 
             { 
                 new ColumnRequest { Id = 0 },
@@ -358,7 +358,7 @@ namespace Bazirano.Tests.Controllers
         void UpdateColumnRequest_ValidCommand_CallsEditColumnRequest(string command)
         {
             var request = new ColumnRequest();
-            var mock = new Mock<IColumnRequestsRepository>();
+            var mock = new Mock<IColumnRequestRepository>();
             var controller = GetMockAdminController(columnRequestsRepo: mock);
 
             var result = controller.UpdateColumnRequest(request, command);
@@ -370,7 +370,7 @@ namespace Bazirano.Tests.Controllers
         void UpdateColumnRequest_InvalidCommand_ThrowsException()
         {
             var request = new ColumnRequest();
-            var mock = new Mock<IColumnRequestsRepository>();
+            var mock = new Mock<IColumnRequestRepository>();
             var controller = GetMockAdminController(columnRequestsRepo: mock);
 
             Assert.Throws<ArgumentException>(() => controller.UpdateColumnRequest(request, "test"));
@@ -383,7 +383,7 @@ namespace Bazirano.Tests.Controllers
         void UpdateColumnRequest_ValidCommand_SetsStatus(string command, ColumnRequestStatus status)
         {
             var request = new ColumnRequest();
-            var mock = new Mock<IColumnRequestsRepository>();
+            var mock = new Mock<IColumnRequestRepository>();
             var controller = GetMockAdminController(columnRequestsRepo: mock);
 
             controller.UpdateColumnRequest(request, command);
@@ -395,7 +395,7 @@ namespace Bazirano.Tests.Controllers
         void UpdateColumnRequest_PublishCommand_SetsDateApproved()
         {
             var request = new ColumnRequest();
-            var mock = new Mock<IColumnRequestsRepository>();
+            var mock = new Mock<IColumnRequestRepository>();
             var controller = GetMockAdminController(columnRequestsRepo: mock);
 
             controller.UpdateColumnRequest(request, "publish");
@@ -425,16 +425,16 @@ namespace Bazirano.Tests.Controllers
 
         private AdminController GetMockAdminController(
             Mock<IArticleRepository> newsRepo = null,
-            Mock<IBoardThreadsRepository> boardThreadsRepo = null,
+            Mock<IBoardThreadRepository> boardThreadsRepo = null,
             Mock<IColumnRepository> columnRepo = null,
-            Mock<IColumnRequestsRepository> columnRequestsRepo = null)
+            Mock<IColumnRequestRepository> columnRequestsRepo = null)
         {
             var controller = new AdminController
             (
                 newsRepo != null ? newsRepo.Object : Mock.Of<IArticleRepository>(),
-                boardThreadsRepo != null ? boardThreadsRepo.Object : Mock.Of<IBoardThreadsRepository>(),
+                boardThreadsRepo != null ? boardThreadsRepo.Object : Mock.Of<IBoardThreadRepository>(),
                 columnRepo != null ? columnRepo.Object : Mock.Of<IColumnRepository>(),
-                columnRequestsRepo != null ? columnRequestsRepo.Object : Mock.Of<IColumnRequestsRepository>(),
+                columnRequestsRepo != null ? columnRequestsRepo.Object : Mock.Of<IColumnRequestRepository>(),
                 MockHelper.GetMockUserManager(),
                 MockHelper.GetMockRoleManager()
             );
@@ -459,9 +459,9 @@ namespace Bazirano.Tests.Controllers
             return new AdminController
             (
                 new Mock<IArticleRepository>().Object,
-                new Mock<IBoardThreadsRepository>().Object,
+                new Mock<IBoardThreadRepository>().Object,
                 new Mock<IColumnRepository>().Object,
-                new Mock<IColumnRequestsRepository>().Object,
+                new Mock<IColumnRequestRepository>().Object,
                 MockHelper.GetMockUserManager(),
                 MockHelper.GetMockRoleManager()
             );
