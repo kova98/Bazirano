@@ -8,13 +8,11 @@
 <div class="row">
     <div class="col-12 col-md-6">
         <div class="card">
-            <div class="text-center d-flex align-items-end">
-                <img class="img-fluid position-relative rounded" src="@Model.MainPost.Image">
-                <a class="text-white position-absolute p-3"
-                   asp-action="Article" asp-controller="News" asp-route-id="@Model.MainPost.Id">
-                    <h3 class="text-left" style="text-shadow: black 0.1em 0.1em 0.2em;">
-                        @Model.MainPost.Title
-                    </h3>
+            <img class="card-img" src="@Model.MainPost.Image" alt="Naslovna slika">
+            <div class="card-img-overlay d-flex flex-column justify-content-end">
+                <a asp-action="Article" asp-controller="News" asp-route-id="@Model.MainPost.Id"
+                   class="text-white align-text-bottom" style="text-shadow: black 0.1em 0.1em 0.2em;">
+                    <h3 class="card-title">@Model.MainPost.Title</h3>
                 </a>
             </div>
         </div>
@@ -42,16 +40,21 @@
 
     <div class="col-12 col-md-6">
         <div class="card mb-2">
-            @{ var firstColumn = Model.ColumnPosts.First(); }
-            <img class="card-img-top" src="@firstColumn.Image" />
-            <div class="card-body pb-2">
-                <span class="text-muted">@firstColumn.DatePosted.ToEuTimeFormat()</span>
-                <span class="text-muted float-right">@firstColumn.Author.Name</span>
-                <h3>
-                    @firstColumn.Title
-                </h3>
+            @{
+                var firstColumn = Model.ColumnPosts.First();
+                Model.ColumnPosts.RemoveAt(0);
+            }
+            <div class="card">
+                <img class="card-img" src="@firstColumn.Image" alt="Naslovna slika">
+                <div class="card-img-overlay d-flex flex-column justify-content-end">
+                    <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@firstColumn.Id"
+                       class="text-white align-text-bottom" style="text-shadow: black 0.1em 0.1em 0.2em;">
+                        <h3 class="card-title">@firstColumn.Title</h3>
+                    </a>
+                </div>
             </div>
         </div>
+
         @foreach (var column in Model.ColumnPosts)
         {
             <div class="card mb-2">
@@ -76,18 +79,16 @@
 
     <div class="col-12 border-bottom border-light mb-4"></div>
 
-    <div class="col-12">
-        <h1 class="display-4">Ploča</h1>
-    </div>
-
-    <div class="card-columns col-12">
-
-        @foreach (var thread in Model.Threads)
-        {
+    @foreach (var thread in Model.Threads)
+    {
+        <div class="col-12 col-md-4 col-lg-3">
             <partial name="BoardThreadPost" model="@thread" />
-        }
-    </div>
+        </div>
+    }
+
 </div>
+
+
 <div class="p-2"></div>
 
 
