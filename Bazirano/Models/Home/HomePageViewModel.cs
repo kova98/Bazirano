@@ -1,6 +1,7 @@
 ﻿using Bazirano.Models.News;
 using Bazirano.Models.Board;
 using System.Collections.Generic;
+using Bazirano.Models.Column;
 
 namespace Bazirano.Models.Home
 {
@@ -23,5 +24,7 @@ namespace Bazirano.Models.Home
         /// The list of board threads to display.
         /// </summary>
         public List<BoardThread> Threads { get; set; }
+
+        public List<ColumnPost> ColumnPosts { get; set; }
     }
 }

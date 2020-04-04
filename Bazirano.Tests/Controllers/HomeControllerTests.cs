@@ -22,7 +22,8 @@ namespace Bazirano.Tests.Controllers
         {
             var boardThreadsRepoMock = new Mock<IBoardThreadRepository>();
             var articlesRepoMock = new Mock<IArticleRepository>();
-            var homeController = new HomeController(boardThreadsRepoMock.Object, articlesRepoMock.Object);
+            var columnRepoMock = new Mock<IColumnRepository>();
+            var homeController = new HomeController(boardThreadsRepoMock.Object, articlesRepoMock.Object, columnRepoMock.Object);
 
             var result = (ViewResult)homeController.Index();
 

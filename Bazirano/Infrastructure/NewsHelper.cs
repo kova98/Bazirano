@@ -36,7 +36,7 @@ namespace Bazirano.Infrastructure
             {
                 MainPost = popularPosts[0],
                 SecondaryPost = popularPosts[1],
-                MainPostRelatedPosts = recentPosts.Take(MainPostRelatedPostsCount).ToList(), //TODO: Implement related posts properly
+                MainPostRelatedPosts = new List<Article>(), //recentPosts.Take(MainPostRelatedPostsCount).ToList(), //TODO: Implement related posts properly
                 PostList = popularPosts.GetRange(2, PostListCount).ToList(),
                 LatestPosts = recentPosts.Take(LatestPostsCount).ToList()
             };
