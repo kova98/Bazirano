@@ -1,5 +1,6 @@
 ﻿@{ 
     ViewBag.Title = Model.Article.Title;
+    var newsHelper = new NewsHelper(null);
 }
 
 @model ArticleViewModel
@@ -10,7 +11,10 @@
         <div>
             <div>
                 <h1 class="card-title">@Model.Article.Title</h1>
-                <p class="text-muted">@Model.Article.DatePosted.ToString("dd.MM.yyyy. HH:mm")</p>
+                <p class="text-muted">
+                    @Model.Article.DatePosted.ToString("dd.MM.yyyy. HH:mm")
+                    <span class="float-right">Izvor: @newsHelper.GetNewsSourceDisplayName(Model.Article.Source)</span>
+                </p>
             </div>
             <img class="card-img-bottom" src="@Model.Article.Image" />
             <div class="card-body text-body">

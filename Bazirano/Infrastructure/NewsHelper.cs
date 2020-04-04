@@ -50,8 +50,13 @@ namespace Bazirano.Infrastructure
         }
 
         public string GetNewsSourceDisplayName(NewsSource source)
-        {
+            => source switch
+            {
+                NewsSource.Unknown => "Nepoznato",
+                NewsSource.IndexHr => "Index",
 
-        }
+                _ => throw new ArgumentException(message: "invalid enum value", paramName: "source")
+                
+            };
     }
 }
