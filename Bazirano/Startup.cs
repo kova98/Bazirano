@@ -49,7 +49,7 @@ namespace Bazirano
             services.AddTransient<IGoogleRecaptchaHelper, GoogleRecaptchaHelper>();
             services.AddTransient<IWriter, WriterHelper>();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
             var loggingSection = Configuration.GetSection("Logging");
             services.AddLogging(loggingBuilder =>
