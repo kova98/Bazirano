@@ -76,7 +76,7 @@ namespace Bazirano.Controllers
                 AddNewColumnRequest(columnRequest, command);
             }
 
-            return RedirectToAction(nameof(ColumnRequestsOverview), nameof(AuthorInterfaceController));
+            return RedirectToAction(nameof(ColumnRequestsOverview), "AuthorInterface");
         }
 
         private void AddNewColumnRequest(ColumnRequest columnRequest, string command)
@@ -192,7 +192,7 @@ namespace Bazirano.Controllers
                 Alert.Add(this, AlertType.Error, "Greška: Skica ne postoji!");
             }
 
-            return RedirectToAction(nameof(ColumnRequestsOverview), nameof(AuthorInterfaceController));
+            return RedirectToAction(nameof(ColumnRequestsOverview), "AuthorInterface");
         }
 
         public IActionResult EditProfile(Author author)

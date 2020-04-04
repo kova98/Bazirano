@@ -74,7 +74,8 @@ namespace Bazirano.Tests.Controllers
 
             var result = (RedirectToActionResult)adminController.DeleteArticle(1);
 
-            Assert.Equal(nameof(adminController.News), result.ActionName);
+            Assert.Equal("News", result.ActionName);
+            Assert.Equal("Admin", result.ControllerName);
         }
 
         [Fact]
@@ -108,7 +109,8 @@ namespace Bazirano.Tests.Controllers
 
             var result = (RedirectToActionResult)adminController.SaveArticle(new Article());
 
-            Assert.Equal(nameof(adminController.News), result.ActionName);
+            Assert.Equal("News", result.ActionName);
+            Assert.Equal("Admin", result.ControllerName);
         }
 
         [Fact]
@@ -118,7 +120,8 @@ namespace Bazirano.Tests.Controllers
 
             var result = (RedirectToActionResult)adminController.DeleteBoardThread(1);
 
-            Assert.Equal(nameof(adminController.Board), result.ActionName);
+            Assert.Equal("Board", result.ActionName);
+            Assert.Equal("Admin", result.ControllerName);
         }
 
         [Theory]
@@ -130,7 +133,7 @@ namespace Bazirano.Tests.Controllers
             mock.Setup(x => x.BoardThreads).Returns(new BoardThread[] { new BoardThread { Id = 1 } }.AsQueryable);
             var adminController = GetMockAdminController(boardThreadsRepo: mock);
 
-            var result = (RedirectToActionResult)adminController.DeleteBoardThread(1);
+            adminController.DeleteBoardThread(1);
 
             mock.Verify(x => x.RemoveThread(id), Times.Exactly(times));
         }

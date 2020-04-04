@@ -38,7 +38,7 @@ namespace Bazirano.Tests.Controllers
 
             var result = (ViewResult)controller.Index();
 
-            Assert.Equal(nameof(controller.Index), result.ViewName);
+            Assert.Equal("Index", result.ViewName);
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace Bazirano.Tests.Controllers
 
             var result = controller.ColumnRequestsOverview();
 
-            Assert.Equal(nameof(controller.ColumnRequestsOverview), result.ViewName);
+            Assert.Equal("ColumnRequestsOverview", result.ViewName);
         }
 
         [Fact]
@@ -86,8 +86,8 @@ namespace Bazirano.Tests.Controllers
 
             var result = controller.SaveColumnRequest(new ColumnRequest(), "");
 
-            Assert.Equal(nameof(AuthorInterfaceController), result.ControllerName);
-            Assert.Equal(nameof(controller.ColumnRequestsOverview), result.ActionName);
+            Assert.Equal("AuthorInterface", result.ControllerName);
+            Assert.Equal("ColumnRequestsOverview", result.ActionName);
         }
 
         [Theory]
@@ -240,7 +240,7 @@ namespace Bazirano.Tests.Controllers
 
             var result = (ViewResult)controller.NewColumnRequest();
 
-            Assert.Equal(nameof(controller.EditColumnRequest), result.ViewName);
+            Assert.Equal("EditColumnRequest", result.ViewName);
         }
 
         [Fact]
@@ -283,8 +283,8 @@ namespace Bazirano.Tests.Controllers
 
             var result = controller.RemoveColumnRequest(1);
 
-            Assert.Equal(nameof(AuthorInterfaceController), result.ControllerName);
-            Assert.Equal(nameof(controller.ColumnRequestsOverview), result.ActionName);
+            Assert.Equal("AuthorInterface", result.ControllerName);
+            Assert.Equal("ColumnRequestsOverview", result.ActionName);
         }
 
         [Fact]
@@ -315,7 +315,7 @@ namespace Bazirano.Tests.Controllers
             TestHelper.SimulateValidation(controller, author);
             var result = (ViewResult)controller.EditProfile(author);
 
-            Assert.Equal(nameof(controller.Index), result.ViewName);
+            Assert.Equal("Index", result.ViewName);
         }
 
         [Fact]

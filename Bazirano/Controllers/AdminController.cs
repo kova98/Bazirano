@@ -59,7 +59,7 @@ namespace Bazirano.Controllers
         {   
             newsRepo.RemoveArticle(id);
 
-            return RedirectToAction(nameof(News));
+            return RedirectToAction(nameof(News), "Admin");
         }
 
         public IActionResult EditArticle(long id)
@@ -73,7 +73,7 @@ namespace Bazirano.Controllers
         {
             newsRepo.EditArticle(article);
 
-            return RedirectToAction(nameof(News));
+            return RedirectToAction(nameof(News), "Admin");
         }
 
         public IActionResult DeleteBoardThread(long id)
@@ -85,7 +85,7 @@ namespace Bazirano.Controllers
                 boardRepo.RemoveThread(id);
             }
 
-            return RedirectToAction(nameof(Board));
+            return RedirectToAction(nameof(Board), "Admin");
 
         }
 
