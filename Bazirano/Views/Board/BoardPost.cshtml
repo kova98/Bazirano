@@ -14,20 +14,28 @@
                 </button>
                 <span class="float-right pt-2 pr-2 text-success">@time</span>
             </div>
-            <div class="row no-gutters">
-                @if (containsImage) {
-                <div class="col-md-4 text-center text-md-left">
-                    <a href="~/images/@Model.Post.Image">
-                        <img src="~/images/@Model.Post.Image" class="img-fluid" style="max-height:300px;border-bottom-left-radius:3px" />
-                    </a>
-                </div>
+            <div class="">
+                @if (containsImage)
+                {
+                <a onclick="toggleImage('@Model.Post.Id')" id="img-@Model.Post.Id" style="display:none">
+                    <img src="~/images/@Model.Post.Image" class="img-fluid" />
+                </a>
+                <a onclick="toggleImage('@Model.Post.Id')" id="thumb-@Model.Post.Id">
+                    <img src="~/images/@Model.Post.Image" class="img-fluid float-left mr-3"
+                         style="max-height:120px;border-bottom-left-radius:3px;" />
+                </a>
                 }
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <post-text text="@Model.Post.Text"></post-text>
-                    </div>
+                <div class="card-body ml-2">
+                    <post-text text="@Model.Post.Text"></post-text>
                 </div>
             </div>
             @await Component.InvokeAsync("PostResponses", Model)
         </div>
     </div>
+
+<script>
+    function toggleImage(id) {
+        $('#img-' + id).toggle();
+        $('#thumb-' + id).toggle();
+    }
+</script>
