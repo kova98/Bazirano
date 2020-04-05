@@ -6,7 +6,7 @@
     bool containsImage = !string.IsNullOrEmpty(post.Image);
 }
 
-    <div class="card text-center">
+    <div class="card text-center mb-2" style="min-width: 15rem;">
         <div class="card-header">
             <a asp-action="Thread" asp-route-id="@Model.Id" asp-controller="Board">
                 #@post.Id | @time
