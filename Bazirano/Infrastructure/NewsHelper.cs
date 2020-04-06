@@ -54,6 +54,7 @@ namespace Bazirano.Infrastructure
             {
                 NewsSource.Unknown => "Nepoznato",
                 NewsSource.IndexHr => "Index",
+                NewsSource.KonzervaHr => "Konzerva",
 
                 _ => throw new ArgumentException(message: "invalid enum value", paramName: "source")
                 
