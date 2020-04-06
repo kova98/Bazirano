@@ -25,27 +25,30 @@ namespace Bazirano.Scraper
             this.logger = logger;
             this.scrapers = scrapers;
 
-            PostUrl = config["ScraperUrls:IndexHr"];
+            PostUrl = config["ScraperUrls:PostUrl"];
         }
 
         public async Task PostArticle()
         {
             if (ArticleQueue.Count == 0)
             {
-                logger.LogInformation("No articles in queue to post, skipping...");
+                logger.LogInformation("No articles in queue, fetching...");
+                await GetArticles();
 
                 return;
             }
 
             var article = ArticleQueue.Dequeue();
 
-            logger.LogInformation($"Posting article... Source: {article.Source} - Title: {article.Title} - Guid: {article.Guid}");
-
             var json = JsonConvert.SerializeObject(article);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
             using var client = new HttpClient();
             await client.PostAsync(PostUrl, stringContent);
+
+            logger.LogInformation(
+                $"Posted: {article.Source} - {article.Title} - " +
+                $"Remaining in queue: {ArticleQueue.Count}");
         }
 
         public async Task GetArticles()
@@ -56,10 +59,18 @@ namespace Bazirano.Scraper
 
                 foreach (var article in articles)
                 {
-                    if (postedArticlesRepo.ArticleExists(article) == false)
+                    var similiarArticle = postedArticlesRepo.FindSimiliarArticle(article);
+                    if (similiarArticle == null)
                     {
                         postedArticlesRepo.AddArticle(article);
                         ArticleQueue.Enqueue(article);
+                        //logger.LogInformation($"Enqueued: {article.Source} - {article.Title}");
+                    }
+                    else
+                    {
+                        logger.LogInformation(
+                            $"Article '{article.Title}' from {article.Source} already posted or enqueued as " +
+                            $"{article.Title} from {article.Source}. Skipping...");
                     }
                 }
             }

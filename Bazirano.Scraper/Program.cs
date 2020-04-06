@@ -11,8 +11,6 @@ namespace Bazirano.Scraper
 {
     public class Program
     {
-        private const int WorkCycleFrequencyInSeconds = 3;
-
         private static ArticlePoster articlePoster;
 
         private static async Task Main(string[] args)
@@ -23,19 +21,15 @@ namespace Bazirano.Scraper
 
             articlePoster = serviceProvider.GetService<ArticlePoster>();
 
+            var config = serviceProvider.GetService<IConfigurationRoot>();
+
             while (true)
             {
-                try
-                {
-                    await DoWork();
-                    await Task.Delay(WorkCycleFrequencyInSeconds * 1000);
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine($"[Error] {DateTime.Now}");
-                    Console.WriteLine($"An exception occured: {e.Message}");
-                    Console.WriteLine(e.StackTrace);
-                }
+                int.TryParse(config["WorkCycleFrequencyInSeconds"], out int delayInSeconds);
+                var delayInMiliseconds = delayInSeconds * 1000;
+
+                await DoWork();
+                await Task.Delay(delayInMiliseconds);
             }
         }
 
@@ -53,13 +47,11 @@ namespace Bazirano.Scraper
                 new ConfigurationBuilder()
                     .AddJsonFile("appsettings.json", true, true)
                     .Build());
-
         }
 
         private static async Task DoWork()
         {
             await articlePoster.PostArticle();
-            await articlePoster.GetArticles();
         }
     }
 }

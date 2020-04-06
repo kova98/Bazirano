@@ -12,7 +12,7 @@ namespace Bazirano.Scraper
 
         public void AddArticle(Article article)
         {
-            if (ArticleExists(article) == false)
+            if (ArticleDoesNotExist(article))
             {
                 PostedArticles.Add(article);
                 if (PostedArticles.Count > MaxPostedArticles)
@@ -22,24 +22,29 @@ namespace Bazirano.Scraper
             }
         }
 
-        public bool ArticleExists(Article article)
+        private bool ArticleDoesNotExist(Article article)
+        {
+            return FindSimiliarArticle(article) == null;
+        }
+
+        public Article FindSimiliarArticle(Article article)
         {
             foreach (var posted in PostedArticles)
             {
                 if (posted.Guid == article.Guid)
                 {
-                    return true;
+                    return posted;
                 }
 
                 var keywordMatches = posted.KeywordsList.Intersect(article.KeywordsList).Count();
 
                 if (keywordMatches > 5)
                 {
-                    return true;
+                    return posted;
                 }
             }
 
-            return false;
+            return null;
         }
     }
 }

@@ -6,6 +6,6 @@ namespace Bazirano.Scraper.Interfaces
     {
         void AddArticle(Article article);
 
-        bool ArticleExists(Article article);
+        Article FindSimiliarArticle(Article article);
     }
 }
