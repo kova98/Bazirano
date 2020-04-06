@@ -4,6 +4,7 @@ using System.Text;
 using Xunit;
 using Moq;
 using Bazirano.Scraper;
+using Bazirano.Library.Enums;
 
 namespace Bazirano.Tests.Scraper
 {
@@ -72,14 +73,15 @@ namespace Bazirano.Tests.Scraper
         }
 
         [Theory]
-        [InlineData(0, true)]
-        [InlineData(1, false)]
-        [InlineData(2, true)]
-        void AddArticle_ContainsGuid_DoesNotAddArticle(int guid, bool articleGetsAdded)
+        [InlineData(1, NewsSource.Unknown, false)] // Same guid, same source
+        [InlineData(1, NewsSource.IndexHr, true)]  // Same guid, different source
+        [InlineData(2, NewsSource.Unknown, true)]  // Same source, different guid
+        [InlineData(2, NewsSource.IndexHr, true)]  // Different source, different guid
+        void AddArticle_ContainsGuidAndSource_DoesNotAddArticle(int guid, NewsSource source, bool articleGetsAdded)
         {
             var repo = new InMemoryPostedArticlesRepository();
             repo.PostedArticles.Add(GetTestArticle(guid));
-            var article = GetTestArticle(1);
+            var article = GetTestArticle(1, source);
 
             repo.AddArticle(article);
 
@@ -94,6 +96,13 @@ namespace Bazirano.Tests.Scraper
             }
 
             return new Article { Guid = guid, KeywordsList = keywords };
+        }
+
+        private Article GetTestArticle(int guid, NewsSource source)
+        {
+            var keywords = new string[] { "test" };
+
+            return new Article { Guid = guid, KeywordsList = keywords, Source = source };
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Bazirano.Scraper
         {
             foreach (var posted in PostedArticles)
             {
-                if (posted.Guid == article.Guid)
+                if (posted.Guid == article.Guid && posted.Source == article.Source)
                 {
                     return posted;
                 }
