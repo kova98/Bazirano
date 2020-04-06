@@ -1,5 +1,6 @@
 ﻿using Bazirano.Scraper.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,14 +14,16 @@ namespace Bazirano.Scraper
     {
         private readonly string PostUrl;
         private readonly IPostedArticlesRepository postedArticlesRepo;
+        private readonly ILogger<ArticlePoster> logger;
+        private readonly IEnumerable<IScraper> scrapers;
 
         private Queue<Article> ArticleQueue { get; set; } = new Queue<Article>();
-        private List<IScraper> Scrapers { get; set; } = new List<IScraper>();
 
-        public ArticlePoster(IConfigurationRoot config, IPostedArticlesRepository postedArticlesRepo, params IScraper[] scrapers)
+        public ArticlePoster(ILogger<ArticlePoster> logger, IConfigurationRoot config, IPostedArticlesRepository postedArticlesRepo, IEnumerable<IScraper> scrapers)
         {
             this.postedArticlesRepo = postedArticlesRepo;
-            Scrapers.AddRange(scrapers);
+            this.logger = logger;
+            this.scrapers = scrapers;
 
             PostUrl = config["ScraperUrls:IndexHr"];
         }
@@ -29,15 +32,14 @@ namespace Bazirano.Scraper
         {
             if (ArticleQueue.Count == 0)
             {
-                Console.WriteLine($"No articles in queue to post, skipping...");
+                logger.LogInformation("No articles in queue to post, skipping...");
+
                 return;
             }
 
             var article = ArticleQueue.Dequeue();
 
-            Console.WriteLine($"Posting article...");
-            Console.WriteLine($"Title: {article.Title}");
-            Console.WriteLine($"Guid: {article.Guid}");
+            logger.LogInformation($"Posting article... Source: {article.Source} - Title: {article.Title} - Guid: {article.Guid}");
 
             var json = JsonConvert.SerializeObject(article);
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
@@ -48,7 +50,7 @@ namespace Bazirano.Scraper
 
         public async Task GetArticles()
         {
-            foreach (var scraper in Scrapers)
+            foreach (var scraper in scrapers)
             {
                 var articles = await scraper.GetArticlesAsync();
 

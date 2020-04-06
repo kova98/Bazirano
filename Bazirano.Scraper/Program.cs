@@ -1,6 +1,10 @@
 using Bazirano.Scraper.Helpers;
+using Bazirano.Scraper.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Bazirano.Scraper
@@ -13,18 +17,11 @@ namespace Bazirano.Scraper
 
         private static async Task Main(string[] args)
         {
-            var repo = new InMemoryPostedArticlesRepository();
-            var httpHelper = new HttpHelper();
-            var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", true, true)
-                .Build();
+            var serviceCollection = new ServiceCollection();
+            ConfigureServices(serviceCollection);
+            var serviceProvider = serviceCollection.BuildServiceProvider();
 
-            articlePoster = new ArticlePoster
-            (
-                config,
-                repo,
-                new IndexHrScraper(httpHelper)
-            );
+            articlePoster = serviceProvider.GetService<ArticlePoster>();
 
             while (true)
             {
@@ -40,6 +37,23 @@ namespace Bazirano.Scraper
                     Console.WriteLine(e.StackTrace);
                 }
             }
+        }
+
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddLogging(configure => configure.AddConsole());
+
+            services.AddTransient<ArticlePoster>();
+            services.AddTransient<IPostedArticlesRepository, InMemoryPostedArticlesRepository>();
+            services.AddTransient<IHttpHelper, HttpHelper>();
+
+            services.AddTransient<IScraper, IndexHrScraper>();
+
+            services.AddSingleton(
+                new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json", true, true)
+                    .Build());
+
         }
 
         private static async Task DoWork()
