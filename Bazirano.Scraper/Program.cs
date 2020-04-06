@@ -42,6 +42,7 @@ namespace Bazirano.Scraper
             services.AddTransient<IHttpHelper, HttpHelper>();
 
             services.AddTransient<IScraper, IndexHrScraper>();
+            services.AddTransient<IScraper, KonzervaHrScraper>();
 
             services.AddSingleton(
                 new ConfigurationBuilder()

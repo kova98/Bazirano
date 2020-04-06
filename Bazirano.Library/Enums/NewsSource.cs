@@ -3,6 +3,7 @@
     public enum NewsSource
     {
         Unknown,
-        IndexHr
+        IndexHr,
+        KonzervaHr
     }
 }
