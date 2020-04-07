@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Bazirano.Aggregator.Models;
+using System.Collections.Generic;
 
 namespace Bazirano.Aggregator.Interfaces
 {

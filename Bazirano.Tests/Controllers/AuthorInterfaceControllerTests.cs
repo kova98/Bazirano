@@ -249,7 +249,7 @@ namespace Bazirano.Tests.Controllers
             var mock = new Mock<IColumnRepository>();
             mock.Setup(x => x.Authors).Returns(new Author[] { new Author { Name = "TestUser" } }.AsQueryable);
             var controller = GetMockAuthorInterfaceController(columnRepo: mock.Object);
-
+            
             var result = (ViewResult)controller.NewColumnRequest();
             var model = (ColumnRequest)result.Model;
 

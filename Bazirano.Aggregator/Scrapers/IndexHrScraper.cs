@@ -7,22 +7,21 @@ using System.Collections.Generic;
 using Bazirano.Aggregator.Interfaces;
 using Bazirano.Aggregator.Helpers;
 using Bazirano.Library.Enums;
-using AngleSharp.Html.Dom;
-using AngleSharp.Dom;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using Bazirano.Aggregator.Models;
 
-namespace Bazirano.Aggregator
+namespace Bazirano.Aggregator.Scrapers
 {
-    public class KonzervaHrScraper : IScraper
+    public class IndexHrScraper : IScraper
     {
-        private const string FeedUrl = "http://konzerva.hr/category/vijesti/feed/";
+        private const string FeedUrl = "https://www.index.hr/rss/najcitanije";
 
         private readonly IHttpHelper httpHelper;
-        private readonly ILogger<KonzervaHrScraper> logger;
+        private readonly ILogger<IndexHrScraper> logger;
         private readonly KeywordHelper keywordHelper;
 
-        public KonzervaHrScraper(IHttpHelper httpHelper, ILogger<KonzervaHrScraper> logger)
+        public IndexHrScraper(IHttpHelper httpHelper, ILogger<IndexHrScraper> logger)
         {
             this.httpHelper = httpHelper;
             this.logger = logger;
@@ -60,38 +59,30 @@ namespace Bazirano.Aggregator
 
             foreach (var schema in newestArticlesSchemas)
             {
-                var document = await httpHelper.GetAsDocument(schema.InternalID);
-
-                articles.Add(new Article
+                if (schema.Categories.Contains("Vijesti"))
                 {
-                    Source = NewsSource.KonzervaHr,
-                    Guid = GetGuidFromUrl(schema.InternalID),
-                    Title = schema.Title,
-                    Image = GetArticleImage(document),
-                    Text = GetArticleText(document),
-                    Summary = schema.Summary,
-                    Keywords = keywordHelper.GetKeywordsFromTitle(schema.Title),
-                });
+                    articles.Add(new Article
+                    {
+                        Source = NewsSource.IndexHr,
+                        Guid = GetGuidFromUrl(schema.InternalID),
+                        Title = schema.Title,
+                        Image = schema.ImageUrl,
+                        Text = await GetArticleText(schema.InternalID),
+                        Summary = schema.Summary,
+                        Keywords = keywordHelper.GetKeywordsFromTitle(schema.Title),
+                    });
+                }
             }
 
             return articles;
         }
 
-        private string GetArticleImage(IDocument document)
+        private async Task<string> GetArticleText(string url)
         {
-            var img = document.QuerySelector(".td-modal-image");
-            var imgUrl = img.GetAttribute("src");
-
-            return imgUrl;
-        }
-
-        private string GetArticleText(IDocument document)
-        {
+            var document = await httpHelper.GetAsDocument(url);
             var paragraphs = document
-                .QuerySelectorAll("p")
-                .Where(x =>
-                    x.ClassList.Count() == 0 &&
-                    x.Children.Any(x => x is IHtmlScriptElement) == false);
+                .QuerySelectorAll("div.text > p")
+                .Where(x => x.ChildElementCount == 0);
 
             var paragraphStringBuilder = new StringBuilder();
             foreach (var par in paragraphs)
@@ -104,7 +95,7 @@ namespace Bazirano.Aggregator
 
         private long GetGuidFromUrl(string url)
         {
-            var index = url.IndexOf("?p=") + 3;
+            var index = url.IndexOf("id=") + 3;
             var guid = url.Substring(index);
 
             return Convert.ToInt64(guid);

@@ -1,5 +1,6 @@
 using Bazirano.Aggregator.Helpers;
 using Bazirano.Aggregator.Interfaces;
+using Bazirano.Aggregator.Scrapers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

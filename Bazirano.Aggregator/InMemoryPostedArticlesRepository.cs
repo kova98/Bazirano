@@ -1,4 +1,5 @@
 ﻿using Bazirano.Aggregator.Interfaces;
+using Bazirano.Aggregator.Models;
 using System.Collections.Generic;
 using System.Linq;
 

@@ -5,6 +5,7 @@ using Xunit;
 using Moq;
 using Bazirano.Aggregator;
 using Bazirano.Library.Enums;
+using Bazirano.Aggregator.Models;
 
 namespace Bazirano.Tests.Scraper
 {

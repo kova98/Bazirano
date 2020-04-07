@@ -1,4 +1,5 @@
 ﻿using Bazirano.Aggregator.Interfaces;
+using Bazirano.Aggregator.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
