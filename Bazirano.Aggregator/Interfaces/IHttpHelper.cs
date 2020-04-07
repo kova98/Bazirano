@@ -1,7 +1,7 @@
 ﻿using AngleSharp.Dom;
 using System.Threading.Tasks;
 
-namespace Bazirano.Scraper.Interfaces
+namespace Bazirano.Aggregator.Interfaces
 {
     public interface IHttpHelper
     {

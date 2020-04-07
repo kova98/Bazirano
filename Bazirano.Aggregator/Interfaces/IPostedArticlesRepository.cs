@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Bazirano.Scraper.Interfaces
+namespace Bazirano.Aggregator.Interfaces
 {
     public interface IPostedArticlesRepository
     {

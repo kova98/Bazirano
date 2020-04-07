@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 using Moq;
-using Bazirano.Scraper.Helpers;
+using Bazirano.Aggregator.Helpers;
 
 namespace Bazirano.Tests.Scraper
 {

@@ -20,9 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Bazirano.Scraper\Bazirano.Scraper.csproj" />
+    <ProjectReference Include="..\Bazirano.Library\Bazirano.Library.csproj" />
   </ItemGroup>
-  
 </Project>
 
 

@@ -1,11 +1,11 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
-using Bazirano.Scraper.Interfaces;
+using Bazirano.Aggregator.Interfaces;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Bazirano.Scraper.Helpers
+namespace Bazirano.Aggregator.Helpers
 {
     class HttpHelper : IHttpHelper
     {

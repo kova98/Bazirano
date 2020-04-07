@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Text;
 
-namespace Bazirano.Scraper.Helpers
+namespace Bazirano.Aggregator.Helpers
 {
     public class KeywordHelper
     {

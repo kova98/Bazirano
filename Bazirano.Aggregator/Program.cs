@@ -1,5 +1,5 @@
-using Bazirano.Scraper.Helpers;
-using Bazirano.Scraper.Interfaces;
+using Bazirano.Aggregator.Helpers;
+using Bazirano.Aggregator.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Bazirano.Scraper
+namespace Bazirano.Aggregator
 {
     public class Program
     {

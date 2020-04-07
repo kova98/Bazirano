@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 using Microsoft.Toolkit.Parsers.Rss;
 using System.Text;
 using System.Collections.Generic;
-using Bazirano.Scraper.Interfaces;
-using Bazirano.Scraper.Helpers;
+using Bazirano.Aggregator.Interfaces;
+using Bazirano.Aggregator.Helpers;
 using Bazirano.Library.Enums;
 using AngleSharp.Html.Dom;
 using AngleSharp.Dom;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 
-namespace Bazirano.Scraper
+namespace Bazirano.Aggregator
 {
     public class KonzervaHrScraper : IScraper
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 using Moq;
-using Bazirano.Scraper;
+using Bazirano.Aggregator;
 using Bazirano.Library.Enums;
 
 namespace Bazirano.Tests.Scraper

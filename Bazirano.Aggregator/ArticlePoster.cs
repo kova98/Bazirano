@@ -1,4 +1,4 @@
-﻿using Bazirano.Scraper.Interfaces;
+﻿using Bazirano.Aggregator.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bazirano.Scraper
+namespace Bazirano.Aggregator
 {
     class ArticlePoster
     {

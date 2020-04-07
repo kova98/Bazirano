@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace Bazirano.Scraper
+namespace Bazirano.Aggregator
 {
     /// <summary>
     /// The news post model.

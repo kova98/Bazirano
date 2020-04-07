@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Bazirano.Scraper.Interfaces
+namespace Bazirano.Aggregator.Interfaces
 {
     public interface IScraper
     {

@@ -1,8 +1,8 @@
-﻿using Bazirano.Scraper.Interfaces;
+﻿using Bazirano.Aggregator.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Bazirano.Scraper
+namespace Bazirano.Aggregator
 {
     public sealed class InMemoryPostedArticlesRepository : IPostedArticlesRepository
     {
