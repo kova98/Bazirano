@@ -48,16 +48,5 @@ namespace Bazirano.Infrastructure
         {
             return await repository.Articles.OrderByDescending(x => x.DatePosted).Take(count).ToListAsync();
         }
-
-        public string GetNewsSourceDisplayName(NewsSource source)
-            => source switch
-            {
-                NewsSource.Unknown => "Nepoznato",
-                NewsSource.IndexHr => "Index",
-                NewsSource.KonzervaHr => "Konzerva",
-
-                _ => throw new ArgumentException(message: "invalid enum value", paramName: "source")
-                
-            };
     }
 }

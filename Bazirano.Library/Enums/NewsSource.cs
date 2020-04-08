@@ -4,6 +4,7 @@
     {
         Unknown,
         IndexHr,
-        KonzervaHr
+        KonzervaHr,
+        PriznajemHr
     }
 }
