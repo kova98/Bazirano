@@ -7,7 +7,9 @@ namespace Bazirano.Aggregator.Interfaces
     {
         Task<string> Get(string url);
 
-        Task<IDocument> GetAsDocument(string url);
+        Task<IDocument> GetDocumentFromUrl(string url);
+
+        Task<IDocument> GetDocumentFromHtml(string html);
 
         void Post(string url, string body);
 

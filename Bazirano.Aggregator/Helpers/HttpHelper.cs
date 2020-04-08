@@ -18,11 +18,19 @@ namespace Bazirano.Aggregator.Helpers
             }
         }
 
-        public async Task<IDocument> GetAsDocument(string url)
+        public async Task<IDocument> GetDocumentFromHtml(string html)
         {
             var config = Configuration.Default.WithDefaultLoader();
             var context = BrowsingContext.New(config);
 
+            return await context.OpenAsync(res => res.Content(html));
+        }
+
+        public async Task<IDocument> GetDocumentFromUrl(string url)
+        {
+            var config = Configuration.Default.WithDefaultLoader();
+            var context = BrowsingContext.New(config);
+            
             return await context.OpenAsync(url);
         }
 

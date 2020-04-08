@@ -18,26 +18,18 @@ namespace Bazirano.Aggregator.Scrapers
         private const string FeedUrl = "https://www.index.hr/rss/najcitanije";
 
         private readonly IHttpHelper httpHelper;
-        private readonly ILogger<IndexHrScraper> logger;
         private readonly KeywordHelper keywordHelper;
 
-        public IndexHrScraper(IHttpHelper httpHelper, ILogger<IndexHrScraper> logger)
+        public IndexHrScraper(IHttpHelper httpHelper)
         {
             this.httpHelper = httpHelper;
-            this.logger = logger;
 
             keywordHelper = new KeywordHelper();
         }
 
         public async Task<List<Article>> GetArticlesAsync()
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
             var articles = await ScrapeArticles();
-
-            stopwatch.Stop();
-            logger.LogInformation($"Fetched: {articles.Count} from {FeedUrl} in {stopwatch.Elapsed}");
 
             return articles;
         }
@@ -79,7 +71,7 @@ namespace Bazirano.Aggregator.Scrapers
 
         private async Task<string> GetArticleText(string url)
         {
-            var document = await httpHelper.GetAsDocument(url);
+            var document = await httpHelper.GetDocumentFromUrl(url);
             var paragraphs = document
                 .QuerySelectorAll("div.text > p")
                 .Where(x => x.ChildElementCount == 0);

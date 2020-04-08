@@ -3,8 +3,8 @@ using Bazirano.Aggregator.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,7 +56,13 @@ namespace Bazirano.Aggregator
         {
             foreach (var scraper in scrapers)
             {
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+
                 var articles = await scraper.GetArticlesAsync();
+
+                stopwatch.Stop();
+                logger.LogInformation($"Fetched {articles.Count} from {articles[0].Source} in {stopwatch.Elapsed.TotalSeconds} seconds");
 
                 foreach (var article in articles)
                 {
@@ -65,7 +71,6 @@ namespace Bazirano.Aggregator
                     {
                         postedArticlesRepo.AddArticle(article);
                         ArticleQueue.Enqueue(article);
-                        //logger.LogInformation($"Enqueued: {article.Source} - {article.Title}");
                     }
                     else
                     {

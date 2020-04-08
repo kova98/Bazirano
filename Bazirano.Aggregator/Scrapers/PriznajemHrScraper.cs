@@ -15,14 +15,14 @@ using Bazirano.Aggregator.Models;
 
 namespace Bazirano.Aggregator.Scrapers
 {
-    public class KonzervaHrScraper : IScraper
+    public class PriznajemHrScraper : IScraper
     {
-        private const string FeedUrl = "http://konzerva.hr/category/vijesti/feed/";
+        private const string FeedUrl = "https://priznajem.hr/category/novosti/feed/";
 
         private readonly IHttpHelper httpHelper;
         private readonly KeywordHelper keywordHelper;
 
-        public KonzervaHrScraper(IHttpHelper httpHelper)
+        public PriznajemHrScraper(IHttpHelper httpHelper)
         {
             this.httpHelper = httpHelper;
 
@@ -44,7 +44,7 @@ namespace Bazirano.Aggregator.Scrapers
 
             if (string.IsNullOrEmpty(feed))
             {
-                throw new NullReferenceException($"Could not get feed from url {FeedUrl}");
+                throw new Exception($"Could not get feed from url {FeedUrl}");
             }
 
             var parser = new RssParser();
@@ -57,12 +57,12 @@ namespace Bazirano.Aggregator.Scrapers
 
                 articles.Add(new Article
                 {
-                    Source = NewsSource.KonzervaHr,
+                    Source = NewsSource.PriznajemHr,
                     Guid = GetGuidFromUrl(schema.InternalID),
                     Title = schema.Title,
                     Image = GetArticleImage(document),
-                    Text = GetArticleText(document),
-                    Summary = schema.Summary,
+                    Text = await GetArticleText(schema.Content),
+                    Summary = await GetFirstParagraph(schema.Content),
                     Keywords = keywordHelper.GetKeywordsFromTitle(schema.Title),
                 });
             }
@@ -72,27 +72,47 @@ namespace Bazirano.Aggregator.Scrapers
 
         private string GetArticleImage(IDocument document)
         {
-            var img = document.QuerySelector(".td-modal-image");
+            var img = document.QuerySelector(".td-fix-index img.entry-thumb");
             var imgUrl = img.GetAttribute("src");
 
             return imgUrl;
         }
 
-        private string GetArticleText(IDocument document)
+        private async Task<string> GetFirstParagraph(string html)
         {
-            var paragraphs = document
-                .QuerySelectorAll("p")
-                .Where(x =>
-                    x.ClassList.Count() == 0 &&
-                    x.Children.Any(x => x is IHtmlScriptElement) == false);
+            var document = await httpHelper.GetDocumentFromHtml(html);
 
-            var paragraphStringBuilder = new StringBuilder();
-            foreach (var par in paragraphs)
+            var element = document.QuerySelector("p");
+
+            return element.TextContent;
+        }
+
+        private async Task<string> GetArticleText(string html)
+        {
+            var document = await httpHelper.GetDocumentFromHtml(html);
+
+            var elements = document.QuerySelectorAll("p");
+
+            var stringBuilder = new StringBuilder();
+            foreach (var element in elements)
             {
-                paragraphStringBuilder.Append(par.TextContent + Environment.NewLine + Environment.NewLine);
+                if (element.IsLastChild())
+                {
+                    break;
+                }
+                else if (element is IHtmlTitleElement)
+                {
+                    stringBuilder.Append($"#{element.TextContent}");
+                }
+                else if (element is IHtmlParagraphElement)
+                {
+                    stringBuilder.Append(element.TextContent);
+                }
+
+                stringBuilder.Append(Environment.NewLine + Environment.NewLine);
             }
 
-            return paragraphStringBuilder.ToString();
+            return stringBuilder.ToString();
         }
 
         private long GetGuidFromUrl(string url)

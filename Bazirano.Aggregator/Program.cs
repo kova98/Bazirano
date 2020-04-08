@@ -49,8 +49,9 @@ namespace Bazirano.Aggregator
             services.AddTransient<IPostedArticlesRepository, InMemoryPostedArticlesRepository>();
             services.AddTransient<IHttpHelper, HttpHelper>();
 
-            services.AddTransient<IScraper, IndexHrScraper>();
-            services.AddTransient<IScraper, KonzervaHrScraper>();
+            //services.AddTransient<IScraper, IndexHrScraper>();
+            //services.AddTransient<IScraper, KonzervaHrScraper>();
+            services.AddTransient<IScraper, PriznajemHrScraper>();
 
             services.AddSingleton(
                 new ConfigurationBuilder()
