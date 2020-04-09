@@ -40,17 +40,5 @@ namespace Bazirano.Tests.Helpers
             Assert.Equal(1, actual.PostList.First().Id);
             Assert.Equal(3, actual.LatestPosts.First().Id);
         }
-
-        [Theory]
-        [InlineData(NewsSource.Unknown, "Nepoznato")]
-        [InlineData(NewsSource.IndexHr, "Index")]
-        void GetNewsSourceDisplayName_ValidEnum_ReturnsCorrectDisplayName(NewsSource newsSource, string displayName)
-        {
-            var newsHelper = new NewsHelper(null);
-
-            var actual = newsHelper.GetNewsSourceDisplayName(newsSource);
-
-            Assert.Equal(displayName, actual);
-        }
     }
 }
