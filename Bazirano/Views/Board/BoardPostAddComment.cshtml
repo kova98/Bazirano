@@ -9,8 +9,8 @@
         <form method="post" enctype="multipart/form-data"
               asp-action="Respond" asp-controller="Board" asp-route-ThreadId="@Model.ThreadId">
             <div class="form-group">
-                <textarea class="form-control" asp-for="BoardPost.Text" id="textbox"></textarea>
                 <span asp-validation-for="BoardPost.Text" class="text-danger"></span>
+                <textarea class="form-control" asp-for="BoardPost.Text" id="textbox"></textarea>
             </div>
             <div class="form-group">
                 <input type="file" class="form-control-file" id="file_input"

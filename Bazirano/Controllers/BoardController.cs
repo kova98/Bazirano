@@ -76,9 +76,13 @@ namespace Bazirano.Controllers
                 vm.BoardPost.Text = vm.BoardPost.Text.Trim();
                 repository.AddPostToThread(vm.BoardPost, vm.ThreadId);
                 ModelState.Clear();
+                TempData["ScrollToComment"] = true;
+                return RedirectToAction("Thread", "Board", new { thread.Id });
             }
-
-            return Thread(thread.Id);
+            else
+            {
+                return Thread(thread.Id);
+            }
         }
 
         [HttpPost]
