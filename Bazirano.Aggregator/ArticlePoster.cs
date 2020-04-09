@@ -74,9 +74,10 @@ namespace Bazirano.Aggregator
                     }
                     else
                     {
+                        if (article.Source != similiarArticle.Source)
                         logger.LogInformation(
                             $"Article '{article.Title}' from {article.Source} already posted or enqueued as " +
-                            $"{article.Title} from {article.Source}. Skipping...");
+                            $"{similiarArticle.Title} from {similiarArticle.Source}. Skipping...");
                     }
                 }
             }
