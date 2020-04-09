@@ -13,6 +13,7 @@ using Bazirano.Tests.TestData;
 using Bazirano.Tests.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Bazirano.Tests.Controllers
 {
@@ -28,9 +29,10 @@ namespace Bazirano.Tests.Controllers
             
             var writerMock = new Mock<IWriter>();
 
-            var boardController = new BoardController(mock.Object, googleRecaptchaHelperMock.Object, writerMock.Object);
-
-            //boardController.Request.Form["g-recaptcha-response"] = "";
+            var boardController = new BoardController(mock.Object, googleRecaptchaHelperMock.Object, writerMock.Object)
+            {
+                TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>())
+            };
 
             return boardController;
         }
@@ -71,6 +73,18 @@ namespace Bazirano.Tests.Controllers
             Assert.Equal(1, model.Id); ;
         }
 
+        [Fact]
+        public async Task Respond_ThreadId_RedirectsToThread()
+        {
+            var boardController = GetMockBoardController(new BoardThread[] { new BoardThread { Id = 1, ImageCount = 0 } });
+            var respondViewModel = new BoardRespondViewModel { ThreadId = 1, BoardPost = new BoardPost { Text = "", Image = "" } };
+
+            var result = (RedirectToActionResult)await boardController.Respond(respondViewModel, null); 
+
+            Assert.Equal("Thread", result.ActionName);
+            Assert.Equal("Board", result.ControllerName);
+        }
+
         [Theory]
         [ClassData(typeof(BoardThreadTestData))]
         public async Task Respond_ThreadId_DisplaysThreadViewWithCorrectModel(BoardThread[] boardThreads)
@@ -78,11 +92,11 @@ namespace Bazirano.Tests.Controllers
             var boardController = GetMockBoardController(boardThreads);
             var respondViewModel = new BoardRespondViewModel { ThreadId = 1, BoardPost = new BoardPost { Text = "", Image = "" } };
 
-            var result = (ViewResult)await boardController.Respond(respondViewModel, null); 
-            var model = (BoardThread)result.Model;
+            var result = (RedirectToActionResult)await boardController.Respond(respondViewModel, null);
 
-            Assert.Equal(nameof(boardController.Thread), result.ViewName);
-            Assert.Equal(1, model.Id); 
+            Assert.True(result.RouteValues.ContainsKey("Id"));
+            result.RouteValues.TryGetValue("Id", out object id);
+            Assert.Equal(1L, id);
         }
 
         [Fact]
