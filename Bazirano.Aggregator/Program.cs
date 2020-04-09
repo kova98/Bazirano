@@ -36,8 +36,15 @@ namespace Bazirano.Aggregator
 
                 var delayInMiliseconds = delayInSeconds * 1000;
 
-                await DoWork();
-                await Task.Delay(delayInMiliseconds);
+                try
+                {
+                    await DoWork();
+                    await Task.Delay(delayInMiliseconds);
+                }
+                catch(Exception e)
+                {
+                    logger.LogError(e, "An error occured in the main loop");
+                }
             }
         }
 
