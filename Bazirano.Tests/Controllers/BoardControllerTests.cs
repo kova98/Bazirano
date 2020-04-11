@@ -102,8 +102,7 @@ namespace Bazirano.Tests.Controllers
         [Fact]
         public async void CreateThread_InvalidModel_DisplaysSubmitView()
         {
-            var boardThreadsRepoMock = new Mock<IBoardThreadRepository>();
-            var boardController = new BoardController(boardThreadsRepoMock.Object, new RecaptchaMock(), null);
+            var boardController = new BoardController(Mock.Of<IBoardThreadRepository>(), new RecaptchaMock(), null);
             var boardPost = new BoardPost();
 
             TestHelper.SimulateValidation(boardController, boardPost);
@@ -115,23 +114,30 @@ namespace Bazirano.Tests.Controllers
         [Theory]
         [InlineData(40, 0)]
         [InlineData(41, 1)]
-        public async void CreateThread_ValidModel_DisplaysThreadViewAndCallsRemoveLastThread(int threadCount, int timesRemoveThreadCalled)
+        public async void CreateThread_MoreThan40Threads_CallsRemoveThread(int threadCount, int timesRemoveThreadCalled)
         {
-            var boardPost = new BoardPost { Id = 1, Text = "test test test" };
-            var boardThreadToAdd = new BoardThread { Posts = new List<BoardPost> { boardPost } };
-            var oldestThread = new BoardThread { Posts = new List<BoardPost> { new BoardPost { DatePosted = DateTime.Now.AddHours(-1) } } };
-            var boardThreads = GetBoardThreadsListContaining(threadCount, boardThreadToAdd, oldestThread );
-
+            var oldestThread = new BoardThread { Id = 1, Posts = new List<BoardPost> { new BoardPost { DatePosted = DateTime.Now.AddHours(-1) } } };
+            var boardThreads = GetBoardThreadsListContaining(threadCount, oldestThread );
             var boardThreadsRepoMock = new Mock<IBoardThreadRepository>();
             boardThreadsRepoMock.Setup(x => x.BoardThreads).Returns(boardThreads.AsQueryable());
-
             var boardController = new BoardController(boardThreadsRepoMock.Object, new RecaptchaMock(), null);
 
-            TestHelper.SimulateValidation(boardController, boardPost);
-            var result = (ViewResult)await boardController.CreateThread(boardPost, null);
+            await boardController.CreateThread(new BoardPost { Text = "test" }, null);
 
-            Assert.Equal(nameof(boardController.Thread), result.ViewName);
             boardThreadsRepoMock.Verify(x => x.RemoveThread(oldestThread.Id), Times.Exactly(timesRemoveThreadCalled));
+        }
+
+        [Fact]
+        public async void CreateThread_ValidModel_RedirectsToThread()
+        {
+            var boardPost = new BoardPost { Id = 1, Text = "test test test" };
+            var boardController = new BoardController(Mock.Of<IBoardThreadRepository>(), new RecaptchaMock(), null);
+
+            TestHelper.SimulateValidation(boardController, boardPost);
+            var result = (RedirectToActionResult)await boardController.CreateThread(boardPost, null);
+
+            Assert.Equal("Thread", result.ActionName);
+            Assert.Equal("Board", result.ControllerName);
         }
 
         private List<BoardThread> GetBoardThreadsListContaining(int threadCount, params BoardThread[] threads)

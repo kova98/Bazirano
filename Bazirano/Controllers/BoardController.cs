@@ -92,7 +92,7 @@ namespace Bazirano.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(nameof(Submit));
+                return Submit();
             }
 
             post.Text = post.Text.Trim();
@@ -114,9 +114,9 @@ namespace Bazirano.Controllers
             repository.AddThread(thread);
             RemoveLastThread();
 
-            long threadId = repository.BoardThreads.First(t => t.Posts.Contains(post)).Id;
+            //long threadId = repository.BoardThreads.First(t => t.Posts.Contains(post)).Id;
 
-            return Thread(threadId);
+            return RedirectToAction("Thread", "Board", new { thread.Id });
         }
 
         private bool MaxImagesCountReached(BoardThread thread)
@@ -148,8 +148,8 @@ namespace Bazirano.Controllers
 
         private void RemoveLastThread()
         {
-            int threadCount = repository.BoardThreads.Count();
-            BoardThread lastThread = repository.BoardThreads.ToList().SortByBumpOrder().Last();
+            var threadCount = repository.BoardThreads.Count();
+            var lastThread = repository.BoardThreads.ToList().SortByBumpOrder().LastOrDefault();
 
             if (threadCount > maxThreadCount)
             {
