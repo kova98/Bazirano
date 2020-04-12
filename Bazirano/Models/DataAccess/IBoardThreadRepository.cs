@@ -26,6 +26,12 @@ namespace Bazirano.Models.DataAccess
         void RemoveThread(long id);
 
         /// <summary>
+        /// Updates the <see cref="BoardThread"/> data in the database.
+        /// </summary>
+        /// <param name="thread"></param>
+        void UpdateThread(BoardThread thread);
+
+        /// <summary>
         /// Adds a new <see cref="BoardPost"/> to a <see cref="BoardThread"/>.
         /// </summary>
         /// <param name="boardPost">The post to add.</param>

@@ -8,31 +8,36 @@
 
         @foreach (var t in Model)
         {
-            var firstPost = t.Posts.OrderByDescending(p => p.DatePosted).First();
+            var firstPost = t.Posts.OrderBy(p => p.DatePosted).First();
             <div class="col-12 col-lg-6">
-                <div class="card">
+                <div class="card" onclick="$('#threadMenu-@t.Id').toggle('fast')">
                     <div class="card-header text-muted">
                         <span>@firstPost.DatePosted</span>
-                        <span class="float-right"> @firstPost.Id</span>
+                        <div class="float-right">
+                            <span class="fa fa-flag @(t.SafeForWork ? "text-success" : "text-danger")"></span>
+                            @firstPost.Id
+                        </div>
                     </div>
-                    <div class="card-body pb-1">
-                        <div class="row">
-                            <div class="col-3">
-                                <img class="card-img" src="~/images/@firstPost.Image" />
-                            </div>
-                            <div class="col-8">
-                                <h5>@firstPost.Text</h5>
-                            </div>
-                            <div class="col-1">
-                                <div class="container float-right ">
-                                    <div class="row float-right">
-                                        <a class="col-6 btn btn-toolbar" style="color:orangered"
-                                           asp-action="DeleteBoardThread" asp-route-id="@t.Id">
-                                            <h3 class="fa fa-trash float-right"></h3>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="card-body">
+                        <h5>@firstPost.Text</h5>
+                    </div>
+                    <div class="card-footer" id="threadMenu-@t.Id" style="display:none">
+                        <a class="btn btn-danger" asp-action="DeleteBoardThread" asp-route-id="@t.Id">
+                            <span class="fa fa-trash"></span> Izbriši
+                        </a>
+                        <div class="float-right">
+                            @if (t.SafeForWork)
+                            {
+                                <a class="btn btn-danger" asp-action="ToggleBoardThreadSafeForWork" asp-route-id="@t.Id">
+                                    <span class="fa fa-flag"></span> Nesigurno za posao
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-success" asp-action="ToggleBoardThreadSafeForWork" asp-route-id="@t.Id">
+                                    <span class="fa fa-flag"></span> Sigurno za posao
+                                </a>
+                            }
                         </div>
                     </div>
                 </div>

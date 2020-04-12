@@ -143,17 +143,30 @@ namespace Bazirano.Models.DataAccess
 
         public void RemoveThread(long id)
         {
-            var thread = context.BoardThreads.FirstOrDefault(x => x.Id == id);
-            var posts = context.BoardPosts.Where(x => thread.Posts.Contains(x));
+            var thread = context.BoardThreads
+                .Include(x=>x.Posts)
+                .FirstOrDefault(x => x.Id == id);
 
-            foreach (var post in posts)
+            foreach (var post in thread.Posts)
             {
                 writer.DeleteImage(post.Image);
             }
 
-            context.BoardPosts.RemoveRange(posts);
+            context.BoardPosts.RemoveRange(thread.Posts);
 
             context.BoardThreads.Remove(thread);
+
+            context.SaveChanges();
+        }
+
+        public void UpdateThread(BoardThread thread)
+        {
+            var oldThread = context.BoardThreads.First(x => x.Id == thread.Id);
+
+            oldThread.SafeForWork = thread.SafeForWork;
+            oldThread.ImageCount = thread.ImageCount;
+            oldThread.PostCount = thread.PostCount;
+            oldThread.IsLocked = thread.IsLocked;
 
             context.SaveChanges();
         }

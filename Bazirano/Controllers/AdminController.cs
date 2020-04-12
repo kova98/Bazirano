@@ -89,6 +89,17 @@ namespace Bazirano.Controllers
 
         }
 
+        public IActionResult ToggleBoardThreadSafeForWork(long id)
+        {
+            var thread = boardRepo.BoardThreads.First(x => x.Id == id);
+
+            thread.SafeForWork = !thread.SafeForWork;
+
+            boardRepo.UpdateThread(thread);
+
+            return RedirectToAction(nameof(Board), "Admin");
+        }
+
         public IActionResult Board()
         {
             var boardThreads = boardRepo.BoardThreads.ToList().SortByBumpOrder();
