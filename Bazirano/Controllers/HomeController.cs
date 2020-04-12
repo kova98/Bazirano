@@ -30,7 +30,10 @@ namespace Bazirano.Controllers
         public IActionResult Index()
         {
             var newsPageViewModel = newsHelper.GetNewsPageViewModel();
-            var boardThreads = boardRepo.BoardThreads.ToList().SortByBumpOrder();
+            var boardThreads = boardRepo.BoardThreads
+                .Where(t=>t.SafeForWork == true)
+                .ToList()
+                .SortByBumpOrder();
             var columnPosts = columnRepo.ColumnPosts
                 .OrderByDescending(p => p.DatePosted)
                 .Take(5)

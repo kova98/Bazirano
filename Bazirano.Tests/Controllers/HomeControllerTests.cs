@@ -18,17 +18,30 @@ namespace Bazirano.Tests.Controllers
     public class HomeControllerTests
     {
         [Fact]  
-        void Index_DisplaysViewWithCorrectModel()
+        void Index_DisplaysView()
         {
-            var boardThreadsRepoMock = new Mock<IBoardThreadRepository>();
-            var articlesRepoMock = new Mock<IArticleRepository>();
-            var columnRepoMock = new Mock<IColumnRepository>();
-            var homeController = new HomeController(boardThreadsRepoMock.Object, articlesRepoMock.Object, columnRepoMock.Object);
+            var homeController = new HomeController(Mock.Of<IBoardThreadRepository>(), Mock.Of<IArticleRepository>(), Mock.Of<IColumnRepository>());
 
             var result = (ViewResult)homeController.Index();
 
-            Assert.Equal(nameof(homeController.Index), result.ViewName);
-            Assert.IsType<HomePageViewModel>(result.ViewData.Model);
+            Assert.Equal("Index", result.ViewName);
+        }
+
+        [Fact]
+        public void Index_DisplaysSafeForWorkThreads()
+        {
+            var boardThreadsRepo = Mock.Of<IBoardThreadRepository>(x => x.BoardThreads == new BoardThread[]
+            {
+                new BoardThread { SafeForWork = true, Posts = new BoardPost[] { new BoardPost() } },
+                new BoardThread { SafeForWork = false, Posts = new BoardPost[] { new BoardPost() } }
+            }.AsQueryable());
+
+            var controller = new HomeController(boardThreadsRepo, Mock.Of<IArticleRepository>(), Mock.Of<IColumnRepository>());
+
+            var result = (ViewResult)controller.Index();
+            var model = (HomePageViewModel)result.Model;
+
+            Assert.Empty(model.Threads.Where(t => t.SafeForWork == false));
         }
     }
 }
