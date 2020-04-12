@@ -12,6 +12,8 @@ namespace Bazirano.Models.Board
         /// </summary>
         public long Id { get; set; }
 
+        public bool SafeForWork { get; set; }
+
         /// <summary>
         /// The value indicating whether the thread is locked or not. Defaulted to false.
         /// </summary>
