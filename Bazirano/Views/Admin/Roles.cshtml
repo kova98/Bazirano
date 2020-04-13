@@ -25,23 +25,23 @@
     </form>
 </div>
 
-<div class="p-2"></div>
+<div class="p-1"></div>
 
-@foreach (var role in Model)
-{
-    <div class="card">
-        <div class="card-body" onclick="$('#@role.Id').toggle('fast')">
-            <h3>
-                @role.Name
-            </h3>
+<div class="list-group">
+    @foreach (var role in Model)
+    {
+        <div class="list-group-item">
+            <div onclick="$('#@role.Id').toggle('fast')">
+                <h3>@role.Name</h3>
+            </div>
+            <div  id="@role.Id" style="display:none">
+                <a class="btn btn-danger float-right" asp-action="DeleteRole" asp-route-roleId="@role.Id">
+                    Ukloni
+                </a>
+            </div>
         </div>
-        <div class="card-footer" id="@role.Id" style="display:none">
-            <a class="btn btn-danger float-right" asp-action="DeleteRole" asp-route-roleId="@role.Id">
-                Ukloni
-            </a>
-        </div>
-    </div>
 
-    <div class="p-1"></div>
-}
+        <div class="p-1"></div>
+    }
+</div>
 

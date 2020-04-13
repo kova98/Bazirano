@@ -41,10 +41,11 @@
             <div class="p-2"></div>
         </div>
 
-        @foreach (var pa in Model.UserRolesPairs)
-        {
-            <div class="card">
-                <div class="card-body" onclick="$('#@pa.Item1.Id').toggle('fast')">
+        <div class="list-group">
+            @foreach (var pa in Model.UserRolesPairs)
+            {
+            <div class="list-group-item">
+                <div onclick="$('#@pa.Item1.Id').toggle('fast')">
                     <h3>
                         @pa.Item1.UserName
                         @foreach (var role in pa.Item2)
@@ -55,8 +56,7 @@
                     <span class="text-muted">@pa.Item1.Id</span>
                     <span class="text-muted">@pa.Item1.Email</span>
                 </div>
-
-                <div class="card-footer" id="@pa.Item1.Id" style="display:none">
+                <div id="@pa.Item1.Id" style="display:none" class="mt-2">
 
                     <div class="dropdown float-left mr-2">
                         <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -92,9 +92,9 @@
                     </a>
                 </div>
             </div>
-
-            <div class="p-1"></div>
-        }
+                <div class="p-1"></div>
+            }
+        </div>
     </div>
 
     <div class="col-12 col-lg-6">
