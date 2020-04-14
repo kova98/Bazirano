@@ -4,38 +4,33 @@
 }
 
 <div class="row">
-    <h3 class="col-12">Vijesti</h3>
-
-    @foreach (var p in Model)
-    {
-        <div class="col-12 col-lg-6">
-            <div class="card m-1">
-                <div class="card-body p-1">
-                    <div class="row no-gutters">
-                        <div class="col-2 text-muted text-center">
-                            <span>@p.DatePosted.ToShortTimeString()</span>
-                        </div>
-                        <div class="col-7">@p.Title</div>
-                        <div class="col-3">
-                            <div class="container">
-                                <div class="row float-right p-2">
-                                    <a class="col-6 btn btn-toolbar" style="color:forestgreen"
-                                       asp-action="EditArticle" asp-route-id="@p.Id">
-                                        <h3 class="fa fa-pencil"></h3>
-                                    </a>
-                                    <a class="col-6 btn btn-toolbar" style="color:orangered"
-                                       asp-action="DeleteArticle" asp-route-id="@p.Id">
-                                        <h3 class="fa fa-trash"></h3>
-                                    </a>
-                                </div>
-                            </div>
-
-                        </div>
+    <div class="col-6">
+        <h3>Vijesti</h3>
+        <div class="list-group">
+            @foreach (var p in Model)
+            {
+                <div class="list-group-item">
+                    <div onclick="$('#@p.Id').toggle('fast')">
+                        <span class="text-muted">@p.DatePosted.ToShortTimeString()</span>
+                        <span class="text-white">@p.Title</span>
+                    </div>
+                    <div id="@p.Id" class="pt-2" style="display:none">
+                        <a class="btn btn-success" asp-action="EditArticle" asp-route-id="@p.Id">
+                            <span class="fa fa-pencil-alt"></span> Uredi
+                        </a>
+                        <a class="btn btn-danger" asp-action="DeleteArticle" asp-route-id="@p.Id">
+                            <span class="fa fa-trash"></span> Izbriši
+                        </a>
                     </div>
                 </div>
-            </div>
-        </div>
-    }
 
+            }
+        </div>
+    </div>
 </div>
+
+
+
+
+
 
