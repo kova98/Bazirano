@@ -38,18 +38,22 @@ jobs:
     name: deploy
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+      
+    - name: Checkout project
+      uses: actions/checkout@master
       with:
         fetch-depth: 2
         
-    - uses: actions/download-artifact@v1
+    - name: Download artifact
+      uses: actions/download-artifact@v1
       with:
         name: web-publish
         path: artifacts/web/ 
     
-    - run: ls artifacts/web/ 
+    - name: List output files
+      run: ls artifacts/web/ 
     
-    - name: FTP-Deploy-Action
+    - name: Deploy via SFTP
       uses: SamKirkland/FTP-Deploy-Action@3.0.0
       with:
         local-dir: artifacts/web/
