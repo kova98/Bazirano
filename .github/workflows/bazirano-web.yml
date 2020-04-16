@@ -52,7 +52,7 @@ jobs:
     - name: FTP-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@3.0.0
       with:
-        local-dir: /artifacts/web/
+        local-dir: artifacts/web/
         ftp-server: sftp://165.22.48.172:22/root/Bazirano
         ftp-username: root
         ftp-password: ${{ secrets.FTP_PASSWORD }}
