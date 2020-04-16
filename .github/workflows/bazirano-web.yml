@@ -27,7 +27,7 @@ jobs:
       run: dotnet test Bazirano.Tests/Bazirano.Tests.csproj --no-restore --verbosity normal
       
     - name: Publish
-      run: dotnet publish Bazirano/Bazirano.csproj -c Release -o ./artifacts/web
+      run: dotnet publish Bazirano/Bazirano.csproj -c Release -o artifacts/web
       
     - name: Create Artifact
       uses: actions/upload-artifact@v1
@@ -47,7 +47,7 @@ jobs:
     - name: FTP-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@3.0.0
       with:
-        local-dir: artifacts/web/
+        local-dir: /artifacts/web/
         ftp-server: sftp://165.22.48.172:22/root/Bazirano
         ftp-username: root
         ftp-password: ${{ secrets.FTP_PASSWORD }}
