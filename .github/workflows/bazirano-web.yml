@@ -33,7 +33,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: web-publish
-        path: ./artifacts/web
+        path: artifacts/web
       
   deploy:
     needs: [build]
@@ -43,7 +43,7 @@ jobs:
     - uses: actions/checkout@master
       with:
         fetch-depth: 2
-
+    
     - name: FTP-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@3.0.0
       with:
