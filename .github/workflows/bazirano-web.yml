@@ -25,6 +25,7 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
       
   deploy:
+    needs: [build]
     name: deploy
     runs-on: ubuntu-latest
     steps:
@@ -38,4 +39,4 @@ jobs:
         ftp-server: sftp://165.22.48.172:22/root/Bazirano
         ftp-username: root
         ftp-password: ${{ secrets.FTP_PASSWORD }}
-        git-ftp-args: --dry-run --insecure
+        git-ftp-args: --insecure
