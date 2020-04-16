@@ -3,9 +3,7 @@ name: Bazirano Web
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
+    
 jobs:
   build:
 
@@ -49,10 +47,12 @@ jobs:
         name: web-publish
         path: artifacts/web/ 
     
+    - run: ls artifacts/web/ 
+    
     - name: FTP-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@3.0.0
       with:
-        local-dir: artifacts/web/
+        local-dir: /artifacts/web/
         ftp-server: sftp://165.22.48.172:22/root/Bazirano
         ftp-username: root
         ftp-password: ${{ secrets.FTP_PASSWORD }}
