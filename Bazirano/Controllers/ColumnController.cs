@@ -142,7 +142,7 @@ namespace Bazirano.Controllers
 
             ViewBag.CommentPosted = true;
 
-            return Redirect(viewModel.ReturnUrl);
+            return Redirect(viewModel.ReturnUrl ??= "/");
         }
     }
 }

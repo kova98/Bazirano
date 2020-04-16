@@ -16,7 +16,6 @@
             </div>
             <div class="form-group">
                 <input class="form-control" hidden asp-for="CommentId" />
-                <input asp-for="ReturnUrl" hidden value="@ViewContext.HttpContext.Request.PathAndQuery()" />
             </div>
             <div class="form-group">
                 <div class="g-recaptcha" data-sitekey="@config["GoogleReCaptcha:key"]"></div>
@@ -24,6 +23,8 @@
             <div class="form-group">
                 <button class="btn btn-success" type="submit">Komentiraj</button>
             </div>
+
+            <input asp-for="ReturnUrl" hidden value="@ViewContext.HttpContext.Request.PathAndQuery()" />
         </form>
     </div>
 </div>
