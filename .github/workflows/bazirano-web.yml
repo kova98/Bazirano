@@ -21,19 +21,19 @@ jobs:
       run: dotnet restore
       
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build Bazirano/Bazirano.csproj --configuration Release --no-restore
       
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test Bazirano.Tests/Bazirano.Tests.csproj --no-restore --verbosity normal
       
     - name: Publish
-      run: dotnet publish -c Release -o ./artifacts
+      run: dotnet publish Bazirano/Bazirano.csproj -c Release -o ./artifacts/web
       
     - name: Create Artifact
       uses: actions/upload-artifact@v1
       with:
-        name: publish
-        path: ./artifacts
+        name: web-publish
+        path: ./artifacts/web
       
   deploy:
     needs: [build]
