@@ -35,7 +35,7 @@ jobs:
     - name: FTP-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@3.0.0
       with:
-        ftp-server: sftp://165.22.48.172/Bazirano
+        ftp-server: sftp://165.22.48.172:22/Bazirano
         ftp-username: root
         ftp-password: ${{ secrets.FTP_PASSWORD }}
-        git-ftp-args: --dry-run
+        git-ftp-args: --dry-run --insecure
