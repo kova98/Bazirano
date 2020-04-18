@@ -35,7 +35,7 @@ jobs:
       
   deploy:
     needs: [build]
-    name: deploy
+    name: Deploy the web app
     runs-on: ubuntu-latest
     steps:
       
@@ -61,3 +61,21 @@ jobs:
         ftp-username: root
         ftp-password: ${{ secrets.FTP_PASSWORD }}
         git-ftp-args: --insecure
+
+  restart:
+    needs: [deploy]
+    name: Restart the web app
+    runs-on: ubuntu-latest
+    steps:
+      
+    - name: multiple command  
+      uses: appleboy/ssh-action@master
+      with:
+        host: 165.22.48.172
+        username: root
+        password: ${{ secrets.FTP_PASSWORD }}
+        port: 22
+        script: |
+          cd ~/Bazirano
+          screen -dmS web dotnet Bazirano.dll
+          
