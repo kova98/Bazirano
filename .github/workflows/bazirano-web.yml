@@ -77,5 +77,6 @@ jobs:
         port: 22
         script: |
           cd ~/Bazirano
+          cp config/appsettings.json appsettings.json
           screen -dmS web dotnet Bazirano.dll
           
