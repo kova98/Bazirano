@@ -11,7 +11,8 @@ namespace Bazirano.Aggregator.Interfaces
 
         Task<IDocument> GetDocumentFromHtml(string html);
 
-        void Post(string url, string body);
+        Task<string> GetFirstParagraph(string html);
 
+        Task<string> GetArticleText(string html);
     }
 }

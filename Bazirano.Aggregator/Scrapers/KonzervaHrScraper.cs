@@ -21,7 +21,7 @@ namespace Bazirano.Aggregator.Scrapers
 
         private readonly IHttpHelper httpHelper;
         private readonly KeywordHelper keywordHelper;
-
+         
         public KonzervaHrScraper(IHttpHelper httpHelper)
         {
             this.httpHelper = httpHelper;
@@ -54,6 +54,9 @@ namespace Bazirano.Aggregator.Scrapers
             foreach (var schema in newestArticlesSchemas)
             {
                 var document = await httpHelper.GetDocumentFromUrl(schema.InternalID);
+                var articleText = GetArticleText(document);
+                var summary = await httpHelper.GetFirstParagraph(schema.Content);
+                var keywords = keywordHelper.GetKeywordsFromTitle(schema.Title);
 
                 articles.Add(new Article
                 {
@@ -61,9 +64,9 @@ namespace Bazirano.Aggregator.Scrapers
                     Guid = GetGuidFromUrl(schema.InternalID),
                     Title = schema.Title,
                     Image = GetArticleImage(document),
-                    Text = GetArticleText(document),
-                    Summary = schema.Summary,
-                    Keywords = keywordHelper.GetKeywordsFromTitle(schema.Title),
+                    Text = articleText,
+                    Summary = summary,
+                    Keywords = keywords,
                 });
             }
 

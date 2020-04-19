@@ -61,8 +61,8 @@ namespace Bazirano.Aggregator.Scrapers
                     Guid = GetGuidFromUrl(schema.InternalID),
                     Title = schema.Title,
                     Image = GetArticleImage(document),
-                    Text = await GetArticleText(schema.Content),
-                    Summary = await GetFirstParagraph(schema.Content),
+                    Text = await httpHelper.GetArticleText(schema.Content),
+                    Summary = await httpHelper.GetFirstParagraph(schema.Content),
                     Keywords = keywordHelper.GetKeywordsFromTitle(schema.Title),
                 });
             }
@@ -76,43 +76,6 @@ namespace Bazirano.Aggregator.Scrapers
             var imgUrl = img.GetAttribute("src");
 
             return imgUrl;
-        }
-
-        private async Task<string> GetFirstParagraph(string html)
-        {
-            var document = await httpHelper.GetDocumentFromHtml(html);
-
-            var element = document.QuerySelector("p");
-
-            return element.TextContent;
-        }
-
-        private async Task<string> GetArticleText(string html)
-        {
-            var document = await httpHelper.GetDocumentFromHtml(html);
-
-            var elements = document.QuerySelectorAll("p");
-
-            var stringBuilder = new StringBuilder();
-            foreach (var element in elements)
-            {
-                if (element.IsLastChild())
-                {
-                    break;
-                }
-                else if (element is IHtmlTitleElement)
-                {
-                    stringBuilder.Append($"#{element.TextContent}");
-                }
-                else if (element is IHtmlParagraphElement)
-                {
-                    stringBuilder.Append(element.TextContent);
-                }
-
-                stringBuilder.Append(Environment.NewLine + Environment.NewLine);
-            }
-
-            return stringBuilder.ToString();
         }
 
         private long GetGuidFromUrl(string url)

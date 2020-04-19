@@ -1,8 +1,10 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
+using AngleSharp.Html.Dom;
 using Bazirano.Aggregator.Interfaces;
 using System;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Bazirano.Aggregator.Helpers
@@ -16,6 +18,34 @@ namespace Bazirano.Aggregator.Helpers
                 var response = await client.GetStringAsync(url);
                 return response;
             }
+        }
+
+        public async Task<string> GetArticleText(string html)
+        {
+            var document = await GetDocumentFromHtml(html);
+
+            var elements = document.QuerySelectorAll("p");
+
+            var stringBuilder = new StringBuilder();
+            foreach (var element in elements)
+            {
+                if (element.IsLastChild())
+                {
+                    break;
+                }
+                else if (element is IHtmlTitleElement)
+                {
+                    stringBuilder.Append($"#{element.TextContent}");
+                }
+                else if (element is IHtmlParagraphElement)
+                {
+                    stringBuilder.Append(element.TextContent);
+                }
+
+                stringBuilder.Append(Environment.NewLine + Environment.NewLine);
+            }
+
+            return stringBuilder.ToString();
         }
 
         public async Task<IDocument> GetDocumentFromHtml(string html)
@@ -34,9 +64,13 @@ namespace Bazirano.Aggregator.Helpers
             return await context.OpenAsync(url);
         }
 
-        public void Post(string url, string body)
+        public async Task<string> GetFirstParagraph(string html)
         {
-            throw new NotImplementedException();
+            var document = await GetDocumentFromHtml(html);
+
+            var element = document.QuerySelector("p");
+
+            return element.TextContent;
         }
     }
 }
