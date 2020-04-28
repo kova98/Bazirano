@@ -3,11 +3,11 @@
 @if (Model.Count() > 0)
 {
     <div class="card-footer p-0">
-        <span class="fa fa-reply fa-flip-both ml-2 text-success"></span>
+        <span class="fa fa-reply fa-rotate-180 ml-2 text-primary"></span>
         @foreach (var id in Model)
         {
             <a href="#@id" onclick="scrollToAnchor(@id)" 
-               class="btn btn-link btn-light m-1 badge badge-pill">
+               class="btn btn-link btn-dark m-1 badge badge-pill">
                 #@id
             </a>
         }
