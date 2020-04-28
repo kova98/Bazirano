@@ -5,43 +5,45 @@
 
 @model AuthorPageViewModel
 
-<div class="col-12 jumbotron bg-transparent row m-0">
-    <div class="col-12 col-lg-4 offset-0 offset-lg-1">
-        <img src="@Model.Author.Image" class=" rounded img-fluid" />
-    </div>
-
-    <div class="p-3"></div>
-
-    <div class="col-12 col-lg-6 text-center text-md-left">
-        <h1 class="text-primary">@Model.Author.Name</h1>
-        <h3 class="text-secondary">@Model.Author.ShortBio</h3>
-        <hr class="my-4 bg-light" />
-        <p class="text-dark">@Model.Author.Bio</p>
-    </div>
-</div>
-<div class="card-deck">
-    @foreach (var post in Model.Columns)
-    {
-        <div class="card bg-light mb-3" style="min-width: 20rem">
-            <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
-                <img class="card-img-top" src="@post.Image" />
-            </a>
-
-            <div class="card-body">
-                <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
-
-                    <h3 class="card-text">@post.Title</h3>
-                    <h3 class="text-muted"></h3>
-                </a>
-            </div>
-
-            <div class="card-footer text-muted">
-                @post.DatePosted.ToString("dd.MM.yyyy. HH:mm")
-                <h5 class="float-right @(post.Comments.Count > 0 ? "text-primary" : "text-secondary")">
-                    <span class="fa fa-comment"></span>
-                    @(post.Comments?.Count ?? 0)
-                </h5>
-            </div>
+    <div class="jumbotron bg-transparent row m-0">
+        <div class="col-12 col-md-8 col-lg-4 offset-md-2 offset-lg-1 mb-4">
+            <img src="@Model.Author.Image" class=" rounded img-fluid" />
         </div>
-    }
-</div>
+
+        <div class="col-12 col-lg-6 text-center text-lg-left">
+            <h1 class="text-primary">@Model.Author.Name</h1>
+            <h3 class="text-secondary">@Model.Author.ShortBio</h3>
+            <hr class="my-4 bg-light" />
+            <p class="text-dark">@Model.Author.Bio</p>
+        </div>
+
+        <hr class="col-12 border-light py-3" />
+
+        @foreach (var post in Model.Columns)
+        {
+            <div class=" col-12 col-md-6 col-lg-4">
+                <div class="card bg-light">
+                    <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
+                        <img class="card-img-top" src="@post.Image" />
+                    </a>
+
+                    <div class="card-body">
+                        <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
+                            <h3 class="card-text">@post.Title</h3>
+                            <h3 class="text-muted"></h3>
+                        </a>
+                    </div>
+
+                    <div class="card-footer text-muted">
+                        @post.DatePosted.ToString("dd.MM.yyyy. HH:mm")
+                        <h5 class="float-right @(post.Comments.Count > 0 ? "text-primary" : "text-secondary")">
+                            <span class="fa fa-comment"></span>
+                            @(post.Comments?.Count ?? 0)
+                        </h5>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+    </div>
