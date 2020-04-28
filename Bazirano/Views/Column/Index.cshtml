@@ -8,7 +8,7 @@
 
 <div class="p-3"></div>
 <div class="row">
-    <div class="col-12 col-md-8">
+    <div class="col-12 col-md-8 mb-4">
         <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@Model.FirstColumn.Id">
             <img class="img-fluid pb-3" src="@Model.FirstColumn.Image" />
             <h3>@Model.FirstColumn.Title</h3>
@@ -28,13 +28,13 @@
             Pročitaj više
         </a>
     </div>
-    <div class="col-12 col-md-4">
-        <div class="container">
+    <div class="col-12 col-md-4 mb-4">
+        <div class="container-fluid">
             <div class="row">
-                <h4 class="text-primary p-1 mb-3 text-center border-bottom border-light col-12">Kolumnisti</h4>
+                <h4 class="text-primary p-1 mb-3 text-left border-bottom border-light col-12">Kolumnisti</h4>
                 @foreach (var author in Model.Authors.Take(6))
                 {
-                    <a asp-action="Author" asp-controller="Column" asp-route-id="@author.Id" class="col-3 p-1">
+                    <a asp-action="Author" asp-controller="Column" asp-route-id="@author.Id" class="col-2 col-md-3 p-1">
                         <img class="img-fluid" src="@author.Image" />
                     </a>
 
@@ -52,22 +52,17 @@
         </div>
     </div>
 
-    <div class="col-12">
-
-        <hr class="border-secondary my-4" />
-
-        <div class="card-deck">
-            @foreach (var post in Model.Columns)
-            {
-                <div class="card bg-transparent" style="min-width: 15rem; max-width:16rem;">
-                    <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
-                        <img class="img-fluid" src="@post.Image" alt="Column title image">
-                        <h5 class="card-title py-3">@post.Title</h5>
-                    </a>
-                </div>
-            }
+    @foreach (var post in Model.Columns)
+    {
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card bg-transparent">
+                <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
+                    <img class="img-fluid" src="@post.Image" alt="Column title image">
+                    <h5 class="card-title py-3">@post.Title</h5>
+                </a>
+            </div>
         </div>
-    </div>
+    }
 
 </div>
 <div class="p-2"></div>
