@@ -1,8 +1,14 @@
 ﻿@{
     Layout = "_BasicLayout";
+    ViewBag.Title = "Greška";
 }
 
+@model ErrorViewModel
+
 <div class="col-12 col-md-6 offset-md-3 my-5 text-center">
-    <h1>Došlo je do pogreške</h1>
-    <a asp-action="Index" asp-controller="Home" class="btn btn-success m-3">Povratak na naslovnicu</a>
+    <div class="display-1 text-secondary">Greška</div>
+    <h1>@Model.Message</h1>
+    <a asp-action="@Model.RedirectActionName" asp-controller="@Model.RedirectControllerName" class="btn btn-primary m-3">
+        @Model.ButtonText
+    </a>
 </div>
