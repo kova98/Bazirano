@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = $"Model.Author.Name";
+    ViewBag.Title = $"{Model.Author.Name}";
 }
 
 @model AuthorPageViewModel
@@ -13,33 +13,35 @@
     <div class="p-3"></div>
 
     <div class="col-12 col-lg-6 text-center text-md-left">
-        <h1>@Model.Author.Name</h1>
-        <h3 class="text-muted">@Model.Author.ShortBio</h3>
-        <hr class="my-4 bg-secondary" />
+        <h1 class="text-primary">@Model.Author.Name</h1>
+        <h3 class="text-secondary">@Model.Author.ShortBio</h3>
+        <hr class="my-4 bg-light" />
         <p class="text-dark">@Model.Author.Bio</p>
     </div>
 </div>
-<div class="row p-2">
-    @foreach(var post in Model.Columns)
+<div class="card-deck">
+    @foreach (var post in Model.Columns)
     {
-        <div class="p-2 col-12 col-md-6 col-lg-4">
-            <div class="card">
+        <div class="card bg-light mb-3" style="min-width: 20rem">
+            <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
+                <img class="card-img-top" src="@post.Image" />
+            </a>
+
+            <div class="card-body">
                 <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
-                    <img class="card-img-top" src="@post.Image" />
-                </a>
-                <div class="card-body">
-                    <a class="text-white" asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
-                        <h3 class="card-text">@post.Title</h3>
-                    </a>
+
+                    <h3 class="card-text">@post.Title</h3>
                     <h3 class="text-muted"></h3>
-                </div>
-                <div class="card-footer text-muted">
-                    @post.DatePosted.ToString("dd.MM.yyyy. HH:mm")    
-                    <span class="badge badge-light float-right p-1">@(post.Comments?.Count ?? 0) komentar/a</span>
-                </div>
+                </a>
+            </div>
+
+            <div class="card-footer text-muted">
+                @post.DatePosted.ToString("dd.MM.yyyy. HH:mm")
+                <h5 class="float-right @(post.Comments.Count > 0 ? "text-primary" : "text-secondary")">
+                    <span class="fa fa-comment"></span>
+                    @(post.Comments?.Count ?? 0)
+                </h5>
             </div>
         </div>
-
     }
-
 </div>

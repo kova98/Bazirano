@@ -1,12 +1,12 @@
 ﻿@model Article
 
-    <div class="row rounded m-0 bg-light">
-        <a class="col-4 p-0 " 
+    <div class="row">
+        <a class="col-4" 
            asp-action="Article" asp-route-id="@Model.Id" asp-controller="News">   
-            <img class="rounded-left img-fluid" src="@Model.Image" style="max-height:100px" />
+            <img class="img-fluid" src="@Model.Image"/>
         </a>
-        <div class="col-8 card-text">
-            <a class="text-white" 
+        <div class="col-8">
+            <a class="text-primary" 
                asp-action="Article" asp-route-id="@Model.Id" asp-controller="News">
                 <div>@Model.Title</div>
             </a>

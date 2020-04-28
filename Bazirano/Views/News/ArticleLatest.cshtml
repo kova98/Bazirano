@@ -3,15 +3,17 @@
 
 @{TimeDisplay time = TimeHelper.GetTimeDisplayFromTimeElapsed(@DateTime.Now - Model.DatePosted); }
 
-<div class="row border-light border-bottom" style="padding-bottom:20px">
-    <div class="col-1 col-md-2">
-        <h4 class="p-0 m-0 text-success text-center">@time.Number</h4>
-        <span class="text-success text-center">@time.Text</span>
+    <div class="container-fluid">
+        <div class="row border-light border-bottom pb-3">
+            <div class="col-2 col-md-12 text-primary text-center text-md-left">
+                <span class="text-center">@time.Number @time.Text</span>
+            </div>
+            <div class="col-10 col-md-12">
+                <a class="text-secondary" asp-action="Article" asp-route-id="@Model.Id">
+                    @Model.Title
+                </a>
+            </div>
+        </div>
+
     </div>
-    <div class="col-11 col-md-10">
-        <a class="text-white" asp-action="Article" asp-route-id="@Model.Id">
-            @Model.Title
-        </a>
-    </div>
-</div>
 

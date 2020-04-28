@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    <title>@ViewBag.Title</title>
+
+    <link rel="stylesheet" asp-href-include="/style/main.css" />
+    <link rel="stylesheet" asp-href-include="/lib/font-awesome/css/all.min.css" />
+    <link rel="icon" type="image/png" asp-href-include="/images/b.png" />
+
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/scripts/main.js"></script>
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <!-- Begin page content -->
+    <main role="main" class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-transparent border-bottom border-light border-top p-0">
+            <a class="navbar-brand bg-secondary p-2 text-white" asp-action="Index" asp-controller="Home">
+                <h4 class="font-weight-bold p-2 m-0">BAZIRANO</h4>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav float-left pl-1 pl-md-0">
+                    <li class="nav-item">
+                        <a class="nav-link" id="newsNav" asp-action="Index" asp-controller="News">
+                            VIJESTI
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="boardNav" asp-action="Catalog" asp-controller="Board">
+                            PLOČA
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="columnNav" asp-action="Index" asp-controller="Column">KOLUMNE</a>
+                    </li>
+                </ul>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <ul class="navbar-nav ml-auto float-right">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-success dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                @User.Identity.Name
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                @if (User.IsInRole("Authors"))
+                                {
+                                    <a class="dropdown-item" asp-action="Index" asp-controller="AuthorInterface">
+                                        Autorsko sučelje
+                                    </a>
+                                }
+                                @if (User.IsInRole("Admins"))
+                                {
+                                    <a class="dropdown-item" asp-action="Index" asp-controller="Admin">
+                                        Admin sučelje
+                                    </a>
+                                }
+
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" asp-action="Logout" asp-controller="Account">Odjava</a>
+                            </div>
+                        </li>
+                    </ul>
+                }
+            </div>
+        </nav>
+        @RenderBody()
+    </main>
+
+    <footer class="footer">
+        <div class="container border-top border-light">
+            <a class="text-white-50 m-2 btn-link" asp-controller="Info" asp-action="About">O nama</a>
+            <a class="text-white-50 m-2 btn-link" asp-controller="Info" asp-action="Contact">Kontakt</a>
+            <a class="text-white-50 m-2 fa fa-instagram" href="https://www.instagram.com/bazirano/"></a>
+            <a class="text-white-50 m-2 fa fa-facebook" href="https://www.facebook.com/bazirano"></a>
+
+            <div class="text-white-50 float-right">© 2020 Bazirano</div>
+        </div>
+    </footer>
+</body>
+</html>
+
+
+

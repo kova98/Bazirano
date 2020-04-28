@@ -1,11 +1,24 @@
 ﻿@{
-    Layout = "_BoardLayout";
-    ViewBag.Title = Model?.Posts?.OrderBy(p=>p.DatePosted).FirstOrDefault()?.Text;    
+    Layout = "_Layout";
+    ViewBag.Title = Model?.Posts?.OrderBy(p => p.DatePosted).FirstOrDefault()?.Text;
 }
 
 @model BoardThread
 
 <div class="row">
+
+    <div class="col-12 py-3">
+        <button class="btn btn-primary" onclick="jumpToAnchor('bot')">
+            Odgovori
+        </button>
+
+        <a class="btn btn-outline-secondary"
+           asp-action="Catalog" asp-controller="Board">
+            Katalog
+        </a>
+        <button class="btn btn-outline-secondary" onclick="jumpToAnchor('bot')">Na dno</button>
+    </div>
+
 
     @foreach (var post in Model.Posts)
     {
@@ -15,24 +28,27 @@
     }
 
     <div id="comment" class="col-12">
+        <hr class="border-light" />
         <partial name="BoardPostAddComment"
                  model="new BoardRespondViewModel { BoardPost = new BoardPost(), ThreadId = Model.Id}" />
     </div>
-
-
-
 </div>
 
-<a class="btn btn-secondary my-2"
-   asp-action="Catalog" asp-controller="Board">
-    Katalog
+<a id="bot" href="#">
+    <div class="btn btn-outline-secondary my-2">Na vrh</div>
 </a>
-<a href="#">
-    <div class="btn btn-primary my-2">Na vrh</div>
-</a>
+
+
 @if (TempData.ContainsKey("ScrollToComment"))
 {
     <script>scrollToAnchor("comment");</script>
 }
+
+<script>
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
 
 

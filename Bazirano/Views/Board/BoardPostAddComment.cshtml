@@ -1,27 +1,32 @@
 ﻿@model BoardRespondViewModel
 @inject Microsoft.Extensions.Configuration.IConfiguration config;
 
-<div class="card">
-    <div class="card-header text-dark">
-        <h4>Odgovori</h4>
-    </div>
-    <div class="card-body">
-        <form method="post" enctype="multipart/form-data"
-              asp-action="Respond" asp-controller="Board" asp-route-ThreadId="@Model.ThreadId">
-            <div class="form-group">
-                <span asp-validation-for="BoardPost.Text" class="text-danger"></span>
-                <textarea class="form-control" asp-for="BoardPost.Text" id="textbox"></textarea>
-            </div>
-            <div class="form-group">
-                <input type="file" class="form-control-file" id="file_input"
-                       asp-for="BoardPost.Image" name="file">
-            </div>
+    <div class="col-12 col-md-6 px-0">
+        <div class="card my-2 rounded-bottom bg-light" id="respondBox">
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" lang="hr"
+                      asp-action="Respond" asp-controller="Board" asp-route-ThreadId="@Model.ThreadId">
 
-            <div class="form-group">
-                <div class="g-recaptcha" data-sitekey="@config["GoogleReCaptcha:key"]"></div>
-            </div>
+                    <div class="form-group">
+                        <span asp-validation-for="BoardPost.Text" class="text-danger"></span>
+                        <textarea class="form-control bg-dark text-white border-dark" asp-for="BoardPost.Text" placeholder="Odgovori..."></textarea>
+                    </div>
 
-            <button class="btn btn-success" type="submit">Objavi</button>
-        </form>
+                    <div class="form-group">
+                        <div class="text-danger">@ViewBag.FileError</div>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="file_input" asp-for="BoardPost.Image" name="file">
+                            <label class="custom-file-label bg-dark text-center text-primary border-light" for="file_input">Dodaj sliku</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="g-recaptcha" data-sitekey="@config["GoogleReCaptcha:key"]" data-theme="dark"></div>
+                    </div>
+
+                    <button class="btn btn-block btn-success" type="submit">Odgovori</button>
+                </form>
+            </div>
+        </div>
     </div>
-</div>
+

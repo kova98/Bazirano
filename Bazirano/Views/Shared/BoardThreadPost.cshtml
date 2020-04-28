@@ -6,26 +6,23 @@
     bool containsImage = !string.IsNullOrEmpty(post.Image);
 }
 
-    <div class="card text-center mb-2" style="min-width: 15rem;">
-        <div class="card-header">
-            <a asp-action="Thread" asp-route-id="@Model.Id" asp-controller="Board">
+    <div class="card text-center mb-2 bg-light" style="min-width: 15rem;">
+        <a asp-action="Thread" asp-route-id="@Model.Id" asp-controller="Board">
+            <div class="card-header">
                 #@post.Id | @time
-            </a>
-        </div>
-        @if (containsImage)
-        {
-            <div class="card-img text-center">
-                <a asp-action="Thread" asp-route-id="@Model.Id" asp-controller="Board">
-                    <img src="~/images/@post.Image" class="img-fluid" style="max-height:200px" />
-                </a>
             </div>
-        }
+            @if (containsImage)
+            {
+                <div class="card-img text-center">
+                    <img src="~/images/@post.Image" class="img-fluid" style="max-height:200px" />
+                </div>
+            }
+        </a>
 
         <div class="card-body text-sm-center m-0 p-0">
-            <div class="text-center">
+            <div class="text-center text-secondary">
                 <br />
-                <span class="text-info">Odg: @Model.PostCount</span>
-                <span class="text-info"> | Sli: @Model.ImageCount</span> <br />
+                <span>Odg: @Model.PostCount | Sli: @Model.ImageCount</span>
             </div>
             <div class="text-center m-2 p-1">
                 <div>
@@ -33,6 +30,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
 

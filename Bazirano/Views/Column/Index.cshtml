@@ -8,72 +8,61 @@
 
 <div class="p-3"></div>
 <div class="row">
-    <div class="col-12 col-md-7 col-lg-6"> 
-        <div class="card">
-            <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@Model.FirstColumn.Id">
-                <img class="img-fluid card-img-top" src="@Model.FirstColumn.Image" />
+    <div class="col-12 col-md-8">
+        <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@Model.FirstColumn.Id">
+            <img class="img-fluid pb-3" src="@Model.FirstColumn.Image" />
+            <h3>@Model.FirstColumn.Title</h3>
+            <div class="p-1"></div>
+            <span class="float-right text-muted">@Model.FirstColumn.DatePosted.ToString("dd.MM.yyyy.")</span>
+        </a>
+        <div class="text-secondary">
+            Piše:
+            <a class="text-secondary" asp-action="Author" asp-controller="Column" asp-route-id="@Model.FirstColumn.Author.Id">
+                @Model.FirstColumn.Author.Name
             </a>
-            <div class="card-body">
-                <a class="text-white" asp-action="ColumnPost" asp-controller="Column" asp-route-id="@Model.FirstColumn.Id">
-                    <h3>@Model.FirstColumn.Title</h3>
-                </a>
-                <div class="p-1"></div>
-                <span class="float-right text-muted">@Model.FirstColumn.DatePosted.ToString("dd.MM.yyyy.")</span>
-                <div class="text-muted">
-                    Piše:
-                    <a asp-action="Author" asp-controller="Column" asp-route-id="@Model.FirstColumn.Author.Id">
-                        @Model.FirstColumn.Author.Name
-                    </a>
-                </div>
-                <hr class="bg-secondary" />
-                <p>@Model.FirstColumn.FirstParagraph</p>
-            </div>
         </div>
+        <hr class="bg-light" />
+        <p>@Model.FirstColumn.FirstParagraph</p>
         <div class="p-2"></div>
-        @foreach (var post in Model.Columns)
-        {
-            <div class="row rounded m-0 bg-light">
-                <a class="col-4 p-0" asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
-                    <img class="rounded-left img-fluid" src="@post.Image" style="max-height:200px" />
-                </a>
-                <div class="col-8 card-text">
-                    <small class="text-muted">@post.DatePosted.ToString("dd.MM.yyyy.")</small>
-
-                    <a class="text-white card-body" asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
-                        <h4>@post.Title</h4>
-                    </a>
-                </div>
-            </div>
-            <div class="p-2"></div>
-        }
     </div>
-    <div class="col-12 col-md-5 col-lg-5">
-        <div class="card">
-            <div class="card-header">
-                <h2>Kolumnisti</h2>
-            </div>
-            <div class="card-body">
-                @foreach (var author in Model.Authors)
+    <div class="col-12 col-md-4">
+        <div class="container">
+            <div class="row">
+                <h4 class="text-primary p-1 mb-3 text-center border-bottom border-light col-12">Kolumnisti</h4>
+                @foreach (var author in Model.Authors.Take(2))
                 {
-                    <div class="row">
-                        <a asp-action="Author" asp-controller="Column" asp-route-id="@author.Id" class="col-3 p-1">
-                            <img class="img-fluid" src="@author.Image" />
+                    <a asp-action="Author" asp-controller="Column" asp-route-id="@author.Id" class="col-3 p-1">
+                        <img class="img-fluid" src="@author.Image" />
+                    </a>
+
+                    <div class="col-9">
+                        <a asp-action="Author" asp-controller="Column" asp-route-id="@author.Id" class="card-link">
+                            <h5>@author.Name</h5>
                         </a>
 
-                        <div class="col-9 p-3">
-                            <a asp-action="Author" asp-controller="Column" asp-route-id="@author.Id" class="card-link"
-                               >
-                                <h5>@author.Name</h5>
-                            </a>
-
-                            <p class="text-muted">@author.ShortBio</p>
-                        </div>
+                        <p class="text-muted">@author.ShortBio</p>
                     </div>
+                    <div class="col-12 p-1"></div>
                 }
+
             </div>
         </div>
-
     </div>
+
+    <div class="col-12">
+        <div class="card-deck">
+            @foreach (var post in Model.Columns)
+            {
+                <div class="card bg-transparent" style="min-width: 15rem">
+                    <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
+                        <img class="img-fluid" src="@post.Image" alt="Column title image">
+                        <h5 class="card-title py-3">@post.Title</h5>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
 </div>
 <div class="p-2"></div>
 

@@ -1,11 +1,11 @@
 ﻿@model Article
 
-<div class="card">
+<div>
     <a asp-action="Article" asp-route-id="@Model.Id">
-        <img class="card-img-top" src="@Model.Image" />
+        <img class="img-fluid pb-3" src="@Model.Image" />
     </a>
-    <a class="text-white" asp-action="Article" asp-route-id="@Model.Id">
-        <h4 class="p-2">@Model.Title</h4>
+    <a class="text-primary" asp-action="Article" asp-route-id="@Model.Id">
+        <h4>@Model.Title</h4>
     </a>
-    <small class="text-muted p-2">@Model.DatePosted.ToString("dd.MM.yyyy. HH:mm")</small>
+    <small class="text-muted">@Model.DatePosted.ToString("dd.MM.yyyy. HH:mm")</small>
 </div>

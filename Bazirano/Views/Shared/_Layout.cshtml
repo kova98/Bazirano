@@ -5,14 +5,11 @@
     <meta name="viewport" content="width=device-width" />
 
     <title>@ViewBag.Title</title>
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700|Roboto+Mono:400,700" rel="stylesheet">
 
-    <link rel="stylesheet" asp-href-include="/lib/bootswatch/darkly/bootstrap.min.css" />
+    <link rel="stylesheet" asp-href-include="/style/main.css" />
     <link rel="stylesheet" asp-href-include="/style/style.css" />
-    <link rel="stylesheet" asp-href-include="/lib/font-awesome/css/all.min.css" />
     <link rel="icon" type="image/png" asp-href-include="/images/b.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    <link rel="stylesheet" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" />
 
     <script src="~/lib/jquery/jquery.min.js"></script>
     <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
@@ -27,58 +24,60 @@
 </head>
 
 <body>
-
-    <!-- Begin page content -->
-    <main role="main" class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-transparent border-bottom border-light border-top p-0">
-            <a class="navbar-brand bg-secondary p-2 text-white" asp-action="Index" asp-controller="Home">
-                <h4 class="font-weight-bold p-2 m-0">BAZIRANO</h4>
+    <main role="main" class="container-lg">
+        <nav class="navbar navbar-expand-md bg-transparent font-weight-bold border-bottom border-primary p-0">
+            <a class="bg-primary m-0 p-2 text-dark navbar-brand" asp-action="Index" asp-controller="Home">
+                <h4 class="p-2 m-0 font-weight-bolder">BAZIRANO</h4>
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon">
+                    <span class="fa fa-bars text-primary h3"/>
+                </span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav float-left pl-1 pl-md-0">
+                <ul class="navbar-nav float-left pl-2">
                     <li class="nav-item">
-                        <a class="nav-link" id="newsNav" asp-action="Index" asp-controller="News">
-                            VIJESTI
+                        <a class="nav-link text-primary" id="newsNav" asp-action="Index" asp-controller="News">
+                            Vijesti
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="boardNav" asp-action="Catalog" asp-controller="Board">
-                            PLOČA
+                        <a class="nav-link text-primary" id="boardNav" asp-action="Catalog" asp-controller="Board">
+                            Ploča
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="columnNav" asp-action="Index" asp-controller="Column">KOLUMNE</a>
+                        <a class="nav-link text-primary" id="columnNav" asp-action="Index" asp-controller="Column">
+                            Kolumne
+                        </a>
                     </li>
                 </ul>
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <ul class="navbar-nav ml-auto float-right">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-success dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                @User.Identity.Name
+                <ul class="navbar-nav ml-auto float-right">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link text-primary dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            @User.Identity.Name
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right bg-primary">
+                            @if (User.IsInRole("Authors"))
+                                {
+                            <a class="dropdown-item" asp-action="Index" asp-controller="AuthorInterface">
+                                Autorsko sučelje
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                @if (User.IsInRole("Authors"))
-                                {
-                                    <a class="dropdown-item" asp-action="Index" asp-controller="AuthorInterface">
-                                        Autorsko sučelje
-                                    </a>
                                 }
-                                @if (User.IsInRole("Admins"))
+                            @if (User.IsInRole("Admins"))
                                 {
-                                    <a class="dropdown-item" asp-action="Index" asp-controller="Admin">
-                                        Admin sučelje
-                                    </a>
+                            <a class="dropdown-item" asp-action="Index" asp-controller="Admin">
+                                Admin sučelje
+                            </a>
                                 }
 
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" asp-action="Logout" asp-controller="Account">Odjava</a>
-                            </div>
-                        </li>
-                    </ul>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" asp-action="Logout" asp-controller="Account">Odjava</a>
+                        </div>
+                    </li>
+                </ul>
                 }
             </div>
         </nav>
@@ -86,13 +85,13 @@
     </main>
 
     <footer class="footer">
-        <div class="container border-top border-light">
-            <a class="text-white-50 m-2 btn-link" asp-controller="Info" asp-action="About">O nama</a>
-            <a class="text-white-50 m-2 btn-link" asp-controller="Info" asp-action="Contact">Kontakt</a>
-            <a class="text-white-50 m-2 fa fa-instagram" href="https://www.instagram.com/bazirano/"></a>
-            <a class="text-white-50 m-2 fa fa-facebook" href="https://www.facebook.com/bazirano"></a>
+        <div class="container border-top border-light p-2">
+            @*<a class="text-secondary m-2 btn-link" asp-controller="Info" asp-action="About">O nama</a>*@
+            <a class="text-secondary m-2 btn-link" asp-controller="Info" asp-action="Contact">Kontakt</a>
+            <a class="text-secondary m-2 fa fa-instagram" href="https://www.instagram.com/bazirano/"></a>
+            <a class="text-secondary m-2 fa fa-facebook" href="https://www.facebook.com/bazirano"></a>
 
-            <div class="text-white-50 float-right">© 2020 Bazirano</div>
+            <div class="text-secondary float-right p-1">© 2020 Bazirano</div>
         </div>
     </footer>
 </body>

@@ -1,0 +1,30 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500;900&display=swap');
+@import url('https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
+@import "style.css";
+
+$font-family-sans-serif: 'Roboto';
+
+$theme-colors: ( 
+    "primary" : #f1c40f, 
+    "secondary" : #757575, 
+    "danger" : #c0392b, 
+    "warning" : #e67e22, 
+    "info" : #3498db,
+    "dark" : #121212,
+    "light" : #212121,
+    "white" : #fafafa
+);
+
+$body-bg: #121212;
+$body-color: #fafafa;   
+
+$dropdown-bg: #f1c40f;
+$dropdown-divider-bg: #212121;
+
+
+@import "../lib/bootstrap/scss/bootstrap.scss";
+
+$custom-file-text: (
+  hr: "Pretraži"
+);
