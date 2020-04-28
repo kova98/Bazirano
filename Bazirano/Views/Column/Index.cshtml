@@ -54,12 +54,22 @@
 
     @foreach (var post in Model.Columns)
     {
-        <div class="col-6 col-md-4 col-lg-3">
-            <div class="card bg-transparent">
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+            <div class="card bg-light">
                 <a asp-action="ColumnPost" asp-controller="Column" asp-route-id="@post.Id">
-                    <img class="img-fluid" src="@post.Image" alt="Column title image">
-                    <h5 class="card-title py-3">@post.Title</h5>
+                    <img class="card-img-top" src="@post.Image" alt="Column title image">
+                    <div class="card-body">
+                        <h5 class="mb-0">@post.Title</h5>
+                    </div>
                 </a>
+
+                <div class="card-footer float-left text-secondary">
+                    @post.DatePosted.ToShortDateString().Replace('/', '.')
+                    <span class="float-right @(post.Comments.Count > 0 ? "text-primary" : "text-secondary")">
+                        <span class="fa fa-comment"></span>
+                        @(post.Comments?.Count ?? 0)
+                    </span>
+                </div>
             </div>
         </div>
     }
