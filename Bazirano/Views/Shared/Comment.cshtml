@@ -4,8 +4,8 @@
     string time = Model.DatePosted.ToString("dd.MM.yyyy. HH:mm");
 }
 
-<div class="card">
-    <div class="card-header text-success p-2"
+<div class="card bg-light">
+    <div class="card-header text-primary p-2"
          onclick="@(Model.IsRoot ? $"$('#responseBox-{Model.Id}').toggle('fast')" : "") ">
         <div class="float-left">@Model.Username</div>
         <div class="float-right text-muted">@time</div>

@@ -6,23 +6,41 @@
 @model ColumnPost
 
 <div class="p-3"></div>
-<div class="row p-4">
-    <div class="col-12 col-md-10 col-lg-8 offset-md-1 offset-lg-2 h4">
-        <h1 class="display-4 font-weight-bold text-left my-4">
+<div class="row">
+    <div class="col-12 col-md-10 col-lg-8 offset-md-1 offset-lg-2 h5">
+        <h1 class="display-4 font-weight-bold text-left mb-4">
             @Model.Title
         </h1>
-        <div class="mb-5"> 
+        <div class="mb-5">
             <img src="@Model.Author.Image" class="rounded-circle mr-3 float-left" style="max-width:5rem;" />
-            <a class="h3 text-primary" asp-action="Author" asp-controller="Column" asp-route-id="@Model.Author.Id">
+            <a class="h4 text-primary" asp-action="Author" asp-controller="Column" asp-route-id="@Model.Author.Id">
                 @Model.Author.Name
-            </a> 
+            </a>
             <p class="text-secondary">@Model.DatePosted.ToShortDateString().Replace('/', '.')</p>
         </div>
         <img src="@Model.Image" class="img-fluid mb-4" />
         <div class="mt-4 column-post text-white font-weight-light" style="initial-letter:3">
             <span>@Html.Raw(Model.Text)</span>
         </div>
+
+        <hr class="bg-light my-4" />
+
+        @if (Model.Comments.Count > 0)
+        {
+            @foreach (var comment in Model.Comments.OrderByDescending(p => p.DatePosted))
+            {
+                <partial name="Comment" model="comment" />
+
+                <div class="p-1"></div>
+            }
+        }
+
+        <div class="my-4" id="comment">
+            <partial name="ColumnAddComment"
+                     model="@new ColumnRespondViewModel { ColumnId = Model.Id, Comment = new Comment()}" />
+        </div>
     </div>
+    
 </div>
 
 @if (ViewBag.CommentPosted != null)
