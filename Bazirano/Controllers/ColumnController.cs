@@ -112,7 +112,7 @@ namespace Bazirano.Controllers
 
                 columnRepo.AddCommentToColumn(viewModel.Comment, viewModel.ColumnId);
 
-                ModelState.Clear();
+                return RedirectToAction("ColumnPost", "Column", new { id = viewModel.ColumnId } );
             }
 
             ViewBag.CommentPosted = true;
