@@ -13,28 +13,33 @@
     <partial name="Profile" model="Model.Author" />
 </div>
 <div class="col-lg-4 col-md-6 col-12">
-    <div class="card">
+    <div class="card bg-light">
         <div class="card-header">
-            <h3 class="my-0">Zahtjevi</h3>
+            <h3 class="my-0 text-primary">Zahtjevi</h3>
         </div>
         <div class="list-group">
-            <a asp-action="ColumnRequestsOverview" class="list-group-item d-flex justify-content-between align-items-center text-white">
+            <a asp-action="ColumnRequestsOverview" 
+               class="list-group-item d-flex justify-content-between align-items-center text-secondary bg-light">
                 Skice
                 <span class="badge badge-secondary badge-pill">@Model.DraftRequests.Count</span>
             </a>
-            <a asp-action="ColumnRequestsOverview" class="list-group-item d-flex justify-content-between align-items-center text-warning">
+            <a asp-action="ColumnRequestsOverview" 
+               class="list-group-item d-flex justify-content-between align-items-center text-warning bg-light">
                 Revidirano
                 <span class="badge badge-secondary badge-pill">@Model.RevisedRequests.Count</span>
             </a>
-            <a asp-action="ColumnRequestsOverview" class="list-group-item d-flex justify-content-between align-items-center text-warning">
+            <a asp-action="ColumnRequestsOverview" 
+               class="list-group-item d-flex justify-content-between align-items-center text-warning bg-light">
                 Čeka odobrenje
                 <span class="badge badge-secondary badge-pill">@Model.PendingRequests.Count</span>
             </a>
-            <a asp-action="ColumnRequestsOverview" class="list-group-item d-flex justify-content-between align-items-center text-danger">
+            <a asp-action="ColumnRequestsOverview" 
+               class="list-group-item d-flex justify-content-between align-items-center text-danger bg-light">
                 Odbijeno
                 <span class="badge badge-secondary badge-pill">@Model.RejectedRequests.Count</span>
             </a>
-            <a asp-action="ColumnRequestsOverview" class="list-group-item d-flex justify-content-between align-items-center text-success   ">
+            <a asp-action="ColumnRequestsOverview" 
+               class="list-group-item d-flex justify-content-between align-items-center text-success bg-light   ">
                 Odobreno
                 <span class="badge badge-secondary badge-pill">@Model.ApprovedRequests.Count</span>
             </a>
