@@ -1,0 +1,114 @@
+﻿@model AuthorInterfaceViewModel
+
+    <div class="card bg-light">
+        <div class="card-header">
+            <h3 class="my-0 text-primary">
+                Zahtjevi
+                <a class="float-right" asp-action="NewColumnRequest" asp-controller="AuthorInterface">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </h3>
+        </div>
+        <div class="card-body p-0">
+            <div class="list-group">
+
+                <!-- Draft -->
+
+                <button class="list-group-item d-flex justify-content-between align-items-center text-secondary bg-light"
+                        onclick="$('#draft-list').toggle('fast')">
+                    Skice
+                    <span class="badge badge-secondary badge-pill">@Model.DraftRequests.Count</span>
+                </button>
+
+                <div class="ml-2 border-left border-secondary" id="draft-list" style="display:none">
+                    @foreach (var req in Model.PendingRequests)
+                    {
+                        <a asp-action="EditColumnRequest" asp-route-id="@req.Id"
+                           class="list-group-item text-secondary bg-light">
+                            @req.ColumnTitle
+                        </a>
+                    }
+                </div>
+
+                <!-- Revised -->
+
+                <button class="list-group-item d-flex justify-content-between align-items-center text-warning bg-light"
+                        onclick="$('#revised-list').toggle('fast')">
+                    Revidirano
+                    <span class="badge badge-pill @(Model.RevisedRequests.Count > 0 ? "badge-warning" : "badge-secondary")">
+                        @Model.RevisedRequests.Count
+                    </span>
+                </button>
+
+                <div class="ml-2 border-left border-warning" id="revised-list" style="display:none">
+                    @foreach (var req in Model.RevisedRequests)
+                    {
+                        <a asp-action="EditColumnRequest" asp-route-id="@req.Id"
+                           class="list-group-item text-warning bg-light">
+                            @req.ColumnTitle
+                        </a>
+                    }
+                </div>
+
+                <!-- Pending -->
+
+                <button class="list-group-item d-flex justify-content-between align-items-center text-warning bg-light"
+                        onclick="$('#pending-list').toggle('fast')">
+                    Čeka odobrenje
+                    <span class="badge badge-pill @(Model.PendingRequests.Count > 0 ? "badge-warning" : "badge-secondary")">
+                        @Model.PendingRequests.Count
+                    </span>
+                </button>
+
+                <div class="ml-2 border-left border-secondary" id="pending-list" style="display:none">
+                    @foreach (var req in Model.PendingRequests)
+                    {
+                        <a asp-action="EditColumnRequest" asp-route-id="@req.Id"
+                           class="list-group-item text-warning bg-light">
+                            @req.ColumnTitle
+                        </a>
+                    }
+                </div>
+
+                <!-- Rejected -->
+
+                <button class="list-group-item d-flex justify-content-between align-items-center text-danger bg-light"
+                        onclick="$('#rejected-list').toggle('fast')">
+                    Odbijeno
+                    <span class="badge badge-pill @(Model.RejectedRequests.Count > 0 ? "badge-danger" : "badge-secondary")">
+                        @Model.RejectedRequests.Count
+                    </span>
+                </button>
+
+                <div class="ml-2 border-left border-danger" id="rejected-list" style="display:none">
+                    @foreach (var req in Model.RejectedRequests)
+                    {
+                        <a asp-action="EditColumnRequest" asp-route-id="@req.Id"
+                           class="list-group-item bg-light text-danger">
+                            @req.ColumnTitle
+                        </a>
+                    }
+                </div>
+
+                <!-- Approved -->
+
+                <button class="list-group-item d-flex justify-content-between align-items-center text-success bg-light"
+                        onclick="$('#approved-list').toggle('fast')">
+                    Odobreno
+                    <span class="badge badge-pill @(Model.ApprovedRequests.Count > 0 ? "badge-success" : "badge-secondary")">
+                        @Model.ApprovedRequests.Count
+                    </span>
+                </button>
+
+                <div class="ml-2 border-left border-success" id="approved-list" style="display:none">
+                    @foreach (var req in Model.ApprovedRequests)
+                    {
+                        <a asp-action="EditColumnRequest" asp-route-id="@req.Id"
+                           class="text-success list-group-item bg-light">
+                            @req.ColumnTitle
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>

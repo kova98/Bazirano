@@ -3,34 +3,44 @@
     ViewBag.Title = "Autorsko sučelje";
 }
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a asp-action="Index" asp-controller="Home" class="navbar-brand btn-link">
-        <span class="fa fa-home text-primary"></span>
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="fa fa-hamburger text-primary"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a id="index" class="nav-link text-primary" asp-action="Index" asp-controller="AuthorInterface">Početna</a>
-            </li>
-            <li class="nav-item">
-                <a id="overview" class="nav-link text-primary" asp-action="ColumnRequestsOverview" asp-controller="AuthorInterface">
-                    Zahtjevi
-                </a>
-            </li>
-        </ul>
-        <ul class="navbar-nav ml-auto float-right">
-            <li class="nav-item dropdown">
-                <a class="nav-link text-primary" asp-action="Logout" asp-controller="Account">
-                    <span class="fa fa-sign-out-alt"></span> Odjava
-                </a>
-            </li>
-        </ul>
+<div class="container-lg">
+    <nav class="navbar navbar-expand-md bg-transparent font-weight-bold border-bottom border-primary p-0">
+        <a class="bg-primary m-0 p-2 text-dark navbar-brand" asp-action="Index" asp-controller="AuthorInterface">
+            <h4 class="p-2 m-0 font-weight-bolder">BAZIRANO sučelje</h4>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon">
+                <span class="fa fa-bars text-primary h3" />
+            </span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav pl-1 pl-md-3">
+                <li class="nav-item">
+                    <a id="index" class="nav-link text-primary" asp-action="Index" asp-controller="AuthorInterface">
+                        <span class="fa fa-home text-primary"></span>
+                        Početna
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="overview" class="nav-link text-primary" asp-action="Settings" asp-controller="AuthorInterface">
+                        <span class="fa fa-wrench text-primary"></span>
+                        Postavke
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto float-right">
+                <li class="nav-item">
+                    <a asp-action="Index" asp-controller="Home" class="navbar-brand btn-link text-primary">
+                        <span class="fa fa-arrow-left text-primary"></span>
+                        Izlaz
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="p-2"></div>
+    <div class="row">
+        @RenderBody()
     </div>
-</nav>
-<div class="p-2"></div>
-<div class="row">
-    @RenderBody()
 </div>

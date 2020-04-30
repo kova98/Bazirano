@@ -1,0 +1,69 @@
+﻿@model ColumnRequest
+
+    <form asp-action="SaveColumnRequest" asp-controller="AuthorInterface">
+        <div class="form-group">
+            <label class="form-text text-muted">Naslov</label>
+            <input id="title-input" asp-for="ColumnTitle" class="form-control"
+                   placeholder="Naslov kolumne" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-text text-muted">Slika</label>
+            <input id="image-input" asp-for="ColumnImage" class="form-control"
+                   placeholder="Link na naslovnu sliku" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-text text-muted">Tekst</label>
+            <textarea rows="15" id="text-input" asp-for="ColumnText" class="form-control"
+                      placeholder="Sadržaj kolumne"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-text text-muted">Napomena</label>
+            <textarea id="text-input" asp-for="AuthorRemarks" class="form-control"
+                      placeholder="Ako imate bilo kakvu napomenu, upišite je ovdje"></textarea>
+        </div>
+
+        <div class="btn-group btn-block">
+            <button class="btn btn-primary" type="submit" name="command" value="save">
+                <span class="fa fa-save mr-1"></span>
+                Spremi kao skicu
+            </button>
+
+            @if (Model.Status == ColumnRequestStatus.Draft ||
+               Model.Status == ColumnRequestStatus.Revised)
+            {
+                <button class="btn btn-success" type="submit" name="command" value="saveAndSend">
+                    <span class="fa fa-paper-plane mr-1"></span>
+                    Spremi i pošalji
+                </button>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDelete">
+                    <span class="fa fa-trash mr-1"></span>
+                    Izbriši
+                </button>
+            }
+        </div>
+
+        <input id="title-input" asp-for="Id" class="form-control" hidden />
+        <input id="title-input" asp-for="Author.Id" class="form-control" hidden />
+    </form>
+
+
+<script type="text/javascript">
+    var converter = new showdown.Converter();
+
+    $(document).ready(function () {
+        refresh();
+
+        $('.form-control').on('input', function (e) {
+            refresh();
+        });
+    });
+
+    function refresh() {
+        $("#title").text($("#title-input").val());
+        $("#text").html(converter.makeHtml($("#text-input").val()));
+        $("#image").attr("src", $("#image-input").val());
+    }
+</script>

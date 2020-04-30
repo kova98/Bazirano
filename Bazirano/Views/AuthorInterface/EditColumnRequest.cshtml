@@ -1,5 +1,15 @@
 ﻿@{
     Layout = "_AuthorInterfaceLayout";
+
+
+    var columnPost = new ColumnPost
+    {
+        Author = Model.Author,
+        Image = Model.ColumnImage,
+        Text = Model.ColumnText,
+        Title = Model.ColumnTitle,
+        DatePosted = DateTime.Now
+    };
 }
 
 @model ColumnRequest
@@ -8,53 +18,32 @@
     <partial name="Alert" />
 </div>
 
-<div class="col-md-4 col-12">
-    <form asp-action="SaveColumnRequest" asp-controller="AuthorInterface">
-        <div class="form-group">
-            <label class="form-text text-muted">Naslov</label>
-            <input id="title-input" asp-for="ColumnTitle" class="form-control"
-                   placeholder="Naslov kolumne" />
+<div class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3">
+    <div class="card bg-dark">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#editor" role="tab" aria-controls="Editor" aria-selected="true">
+                    Uredi
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#preview" role="tab" aria-controls="Preview" aria-selected="false">
+                    Pregled
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="editor" role="tabpanel">
+                <partial name="Editor" model="Model" />
+            </div>
+            <div class="tab-pane fade" id="preview" role="tabpanel">
+                <partial name="ColumnPostBody" model="columnPost" />
+                @*<partial name="Preview" model="Model" />*@
+            </div>
+            <div class="tab-pane fade" id="contact" role="tabpanel">...</div>
         </div>
+    </div>
 
-        <div class="form-group">
-            <label class="form-text text-muted">Slika</label>
-            <input id="image-input" asp-for="ColumnImage" class="form-control"
-                   placeholder="Link na naslovnu sliku" />
-        </div>
-
-        <div class="form-group">
-            <label class="form-text text-muted">Tekst</label>
-            <textarea rows="15" id="text-input" asp-for="ColumnText" class="form-control"
-                      placeholder="Sadržaj kolumne"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label class="form-text text-muted">Napomena</label>
-            <textarea id="text-input" asp-for="AuthorRemarks" class="form-control"
-                      placeholder="Ako imate bilo kakvu napomenu, upišite je ovdje"></textarea>
-        </div>
-
-        <button class="btn btn-primary btn-block" type="submit" name="command" value="save">
-            <span class="fa fa-save mr-1"></span>
-            Spremi kao skicu
-        </button>
-
-        @if (Model.Status == ColumnRequestStatus.Draft ||
-            Model.Status == ColumnRequestStatus.Revised)
-        {
-            <button class="btn btn-success btn-block my-2" type="submit" name="command" value="saveAndSend">
-                <span class="fa fa-paper-plane mr-1"></span>
-                Spremi i pošalji
-            </button>
-            <button type="button" class="btn btn-danger btn-block my-2" data-toggle="modal" data-target="#confirmDelete">
-                <span class="fa fa-trash mr-1"></span>
-                Izbriši
-            </button>
-        }
-
-        <input id="title-input" asp-for="Id" class="form-control" hidden />
-        <input id="title-input" asp-for="Author.Id" class="form-control" hidden />
-    </form>
 </div>
 
 <!-- Confirm deletion modal -->
@@ -72,44 +61,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
-                <a class="btn btn-danger"asp-action="RemoveColumnRequest" asp-route-id="@Model.Id">Izbriši</a>
+                <a class="btn btn-danger" asp-action="RemoveColumnRequest" asp-route-id="@Model.Id">Izbriši</a>
             </div>
         </div>
     </div>
 </div>
-
-<div class="col-md-8 col-12" id="preview">
-    <div class="card">
-        <img id="image" class="card-img-top img-fluid" src="@Model.ColumnImage" />
-        <div class="card-body" id="preview">
-            <div class="card-title">
-                <h1 id="title">@Model.ColumnTitle</h1>
-            </div>
-            <span class="float-right text-muted">@Model.DateRequested.ToString("dd.MM.yyyy.")</span>
-            <div class="text-muted">
-                Piše: <span id="author">@Model.Author.Name</span>
-            </div>
-
-            <hr class="bg-secondary" />
-            <div class="text-body" id="text">@Model.ColumnText</div>
-        </div>
-    </div>
-</div>
-
-<script type="text/javascript">
-    var converter = new showdown.Converter();
-
-    $(document).ready(function () {
-        refresh();
-
-        $('.form-control').on('input', function (e) {
-            refresh();
-        });
-    });
-
-    function refresh() {
-        $("#title").text($("#title-input").val());
-        $("#text").html(converter.makeHtml($("#text-input").val()));
-        $("#image").attr("src", $("#image-input").val());
-    }
-</script>

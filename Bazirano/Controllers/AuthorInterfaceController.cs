@@ -34,7 +34,6 @@ namespace Bazirano.Controllers
         [Route("~/sucelje")]
         public IActionResult Index()
         {
-            var requests = GetAuthorRequests(User.Identity.Name);
             var author = columnRepository.Authors.FirstOrDefault(a => a.Name == User.Identity.Name);
 
             if (author == null)
@@ -42,24 +41,17 @@ namespace Bazirano.Controllers
                 return RedirectToAction("NotAuthor", "Error");
             }
 
-            var viewModel = new AuthorInterfaceIndexViewModel
-            {
-                Author = author,
-                DraftRequests = requests.DraftRequests,
-                PendingRequests = requests.PendingRequests,
-                ApprovedRequests = requests.ApprovedRequests,
-                RejectedRequests = requests.RejectedRequests,
-                RevisedRequests = requests.RevisedRequests
-            };
+            var viewModel = GetAuthorRequests(author);
 
             return View(nameof(Index), viewModel);
         }
 
-        [Route("~/sucelje/moje-kolumne")]
-        public ViewResult ColumnRequestsOverview()
+        [Route("~/postavke")]
+        public IActionResult Settings()
         {
-            var columnRequestsOverviewViewModel = GetAuthorRequests(User.Identity.Name);
-            return View(nameof(ColumnRequestsOverview), columnRequestsOverviewViewModel);
+            var author = columnRepository.Authors.FirstOrDefault(a => a.Name == User.Identity.Name);
+
+            return View("Settings", author);
         }
 
         public RedirectToActionResult SaveColumnRequest(ColumnRequest columnRequest, string command)
@@ -76,7 +68,7 @@ namespace Bazirano.Controllers
                 AddNewColumnRequest(columnRequest, command);
             }
 
-            return RedirectToAction(nameof(ColumnRequestsOverview), "AuthorInterface");
+            return RedirectToAction("Index" , "AuthorInterface");
         }
 
         private void AddNewColumnRequest(ColumnRequest columnRequest, string command)
@@ -192,7 +184,7 @@ namespace Bazirano.Controllers
                 Alert.Add(this, AlertType.Error, "Greška: Skica ne postoji!");
             }
 
-            return RedirectToAction(nameof(ColumnRequestsOverview), "AuthorInterface");
+            return RedirectToAction("Index", "AuthorInterface");
         }
 
         public IActionResult EditProfile(Author author)
@@ -234,6 +226,11 @@ namespace Bazirano.Controllers
             return RedirectToAction("Index", "AuthorInterface");
         }
 
+        public PartialViewResult GetColumnPostPreview(ColumnPost columnPost)
+        {
+            return PartialView("ColumnPostBody", columnPost);
+        }
+
         private ColumnRequest GetPlaceholderColumnRequest()
         {
             var author = columnRepository.Authors.FirstOrDefault(a => a.Name == User.Identity.Name);
@@ -250,12 +247,13 @@ namespace Bazirano.Controllers
             return columnRequest;
         }
 
-        private ColumnRequestsOverviewViewModel GetAuthorRequests(string authorName)
+        private AuthorInterfaceViewModel GetAuthorRequests(Author author)
         {
-            var requests = columnRequestsRepository.ColumnRequests.Where(c => c.Author.Name == authorName).ToList();
+            var requests = columnRequestsRepository.ColumnRequests.Where(c => c.Author.Name == author.Name).ToList();
 
-            var viewModel = new ColumnRequestsOverviewViewModel
+            var viewModel = new AuthorInterfaceViewModel
             {
+                Author = author,
                 DraftRequests = requests.Where(r => r.Status == ColumnRequestStatus.Draft).ToList(),
                 PendingRequests = requests.Where(r => r.Status == ColumnRequestStatus.Pending).ToList(),
                 ApprovedRequests = requests.Where(r => r.Status == ColumnRequestStatus.Approved).ToList(),

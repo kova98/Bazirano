@@ -49,7 +49,7 @@ namespace Bazirano.Tests.Controllers
             var controller = GetMockAuthorInterfaceController(columnRepo: mock.Object);
 
             var result = (ViewResult)controller.Index();
-            var model = (AuthorInterfaceIndexViewModel)result.Model;
+            var model = (AuthorInterfaceViewModel)result.Model;
 
             Assert.Equal("TestUser", model.Author.Name);
             Assert.NotNull(model.DraftRequests);
@@ -60,34 +60,14 @@ namespace Bazirano.Tests.Controllers
         }
 
         [Fact]
-        void ColumnRequestsOverview_ReturnsView()
-        {
-            var controller = GetMockAuthorInterfaceController();
-
-            var result = controller.ColumnRequestsOverview();
-
-            Assert.Equal("ColumnRequestsOverview", result.ViewName);
-        }
-
-        [Fact]
-        void ColumnRequestsOverview_ReturnsCorrectModel()
-        {
-            var controller = GetMockAuthorInterfaceController();
-
-            var result = controller.ColumnRequestsOverview();
-
-            Assert.IsType<ColumnRequestsOverviewViewModel>(result.Model);
-        }
-
-        [Fact]
-        void SaveColumnRequest_CallsColumnRequestsOverview()
+        void SaveColumnRequest_RedirectsToIndex()
         {
             var controller = GetMockAuthorInterfaceController();
 
             var result = controller.SaveColumnRequest(new ColumnRequest(), "");
 
             Assert.Equal("AuthorInterface", result.ControllerName);
-            Assert.Equal("ColumnRequestsOverview", result.ActionName);
+            Assert.Equal("Index", result.ActionName);
         }
 
         [Theory]
@@ -273,7 +253,7 @@ namespace Bazirano.Tests.Controllers
         }
 
         [Fact]
-        public void RemoveColumnRequest_AuthorId_RedirectsToColumnRequestsOverview()
+        public void RemoveColumnRequest_AuthorId_RedirectsToIndex()
         {
             var columnRequestsRepoMock = new Mock<IColumnRequestRepository>();
             columnRequestsRepoMock
@@ -284,7 +264,7 @@ namespace Bazirano.Tests.Controllers
             var result = controller.RemoveColumnRequest(1);
 
             Assert.Equal("AuthorInterface", result.ControllerName);
-            Assert.Equal("ColumnRequestsOverview", result.ActionName);
+            Assert.Equal("Index", result.ActionName);
         }
 
         [Fact]
@@ -329,7 +309,7 @@ namespace Bazirano.Tests.Controllers
             TestHelper.SimulateValidation(controller, author);
             var result = (ViewResult)controller.EditProfile(author);
 
-            Assert.IsType<AuthorInterfaceIndexViewModel>(result.Model);
+            Assert.IsType<AuthorInterfaceViewModel>(result.Model);
         }
 
         [Theory]
