@@ -30,12 +30,12 @@ namespace Bazirano.Infrastructure
         {
             switch (alertType)
             {
-                case AlertType.Info: return "alert-info";
-                case AlertType.Warning: return "alert-warning";
-                case AlertType.Error: return "alert-danger";
-                case AlertType.Success: return "alert-success";
+                case AlertType.Info: return "info";
+                case AlertType.Warning: return "warning";
+                case AlertType.Error: return "danger";
+                case AlertType.Success: return "success";
 
-                default: return "bg-primary";
+                default: return "primary";
             }
         }
 

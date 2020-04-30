@@ -1,6 +1,6 @@
 ﻿@if (TempData.ContainsKey("Alert.Message"))
 {
-    <div class="alert @TempData["Alert.Type"] alert-dismissible fade show" role="alert">
+    <div class="alert bg-@TempData["Alert.Type"] border-@TempData["Alert.Type"] text-dark alert-dismissible fade show" role="alert">
         @if (TempData.ContainsKey("Alert.Title"))
         {
             <h4 class="alert-heading">@TempData["Alert.Title"]</h4>
