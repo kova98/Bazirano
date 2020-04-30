@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Bazirano.Models.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -74,7 +71,7 @@ namespace Bazirano.Controllers
 
         public IActionResult AccessDenied()
         {
-            return View(nameof(AccessDenied));
+            return RedirectToAction("AccessDenied", "Error");
         }
     }
 }

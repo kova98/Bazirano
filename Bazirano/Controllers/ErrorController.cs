@@ -56,5 +56,14 @@ namespace Bazirano.Controllers
                 ButtonText = "Povratak na ploču"
             });
         }
+
+        [Route("~/greska-pristup-odbijen")]
+        public IActionResult AccessDenied()
+        {
+            return Index(new ErrorViewModel
+            {
+                Message = "Pristup odbijen!"
+            });
+        }
     }
 }
