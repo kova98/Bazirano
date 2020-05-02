@@ -26,7 +26,7 @@ namespace Bazirano.Library.Extensions
             {
                 NewsSource.Unknown => "Nepoznato",
                 NewsSource.IndexHr => "https://www.index.hr/",
-                NewsSource.KonzervaHr => "https://www.konzerva.hr/",
+                NewsSource.KonzervaHr => "http://www.konzerva.hr/",
                 NewsSource.PriznajemHr => "https://www.priznajem.hr/",
 
                 _ => throw new ArgumentException(message: "invalid enum value", paramName: "newsSource")
