@@ -80,5 +80,7 @@ namespace Bazirano.Models.News
         public ICollection<string> KeywordsList { get; set; }
 
         public NewsSource Source { get; set; }
+
+        public string SourceUrl { get; set; }
     }
 }

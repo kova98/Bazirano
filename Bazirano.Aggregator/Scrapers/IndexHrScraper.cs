@@ -62,6 +62,7 @@ namespace Bazirano.Aggregator.Scrapers
                         Text = await GetArticleText(schema.InternalID),
                         Summary = schema.Summary,
                         Keywords = keywordHelper.GetKeywordsFromTitle(schema.Title),
+                        SourceUrl = schema.InternalID
                     });
                 }
             }

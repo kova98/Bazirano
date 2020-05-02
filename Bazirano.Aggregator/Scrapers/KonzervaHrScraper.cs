@@ -67,6 +67,7 @@ namespace Bazirano.Aggregator.Scrapers
                     Text = articleText,
                     Summary = summary,
                     Keywords = keywords,
+                    SourceUrl = schema.InternalID
                 });
             }
 

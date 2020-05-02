@@ -15,7 +15,7 @@
                     @Model.Article.DatePosted.ToString("dd.MM.yyyy. HH:mm")
                     <span class="float-right">
                         Izvor: 
-                        <a href="@Model.Article.Source.Url()">
+                        <a href="@(Model.Article.SourceUrl ?? Model.Article.Source.Url())">
                             @Model.Article.Source.DisplayName()
                         </a>
                     </span>
