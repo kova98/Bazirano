@@ -3,7 +3,7 @@
     Layout = "_Layout";
 }
 
-@model BoardPost
+@model SubmitViewModel
 @inject Microsoft.Extensions.Configuration.IConfiguration config;
 
 <div class="col-lg-7 p-0 pt-5">
@@ -20,13 +20,19 @@
             <div class="form-group">
                 <div class="text-danger">@ViewBag.FileError</div>
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="file_input" asp-for="Image" name="file">
-                    <label class="custom-file-label bg-light text-primary border-light" for="file_input">Dodaj sliku</label>
+                    <input type="file" class="custom-file-input" id="file_input" name="file">
+                    <label class="custom-file-label bg-light text-primary border-light" for="file_input">Učitaj sliku</label>
                 </div>
             </div>
 
             <div class="form-group">
-                <div class="g-recaptcha" data-sitekey="@config["GoogleReCaptcha:key"]" data-theme="dark" ></div>
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                <input class="text-center form-control bg-light text-primary border-dark" asp-for="ImageUrl" 
+                          placeholder="ili zalijepi link na sliku..." />
+            </div>
+
+            <div class="form-group">
+                <div class="g-recaptcha" data-sitekey="@config["GoogleReCaptcha:key"]" data-theme="dark"></div>
             </div>
 
             <button class="btn btn-block btn-success" type="submit">Objavi</button>

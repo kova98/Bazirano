@@ -14,6 +14,7 @@ using Bazirano.Tests.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Logging;
 
 namespace Bazirano.Tests.Controllers
 {
@@ -28,8 +29,9 @@ namespace Bazirano.Tests.Controllers
             googleRecaptchaHelperMock.Setup(x => x.VerifyRecaptcha(It.IsAny<HttpRequest>(), It.IsAny<ModelStateDictionary>())).ReturnsAsync(true);
             
             var writerMock = new Mock<IWriter>();
+            var loggerMock = new Mock<ILogger<BoardController>>();
 
-            var boardController = new BoardController(mock.Object, googleRecaptchaHelperMock.Object, writerMock.Object)
+            var boardController = new BoardController(mock.Object, googleRecaptchaHelperMock.Object, writerMock.Object, loggerMock.Object)
             {
                 TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>())
             };
@@ -99,14 +101,17 @@ namespace Bazirano.Tests.Controllers
             Assert.Equal(1L, id);
         }
 
-        [Fact]
-        public async void CreateThread_InvalidModel_DisplaysSubmitView()
+        [Theory]
+        [InlineData("valid text", "invalid url")]
+        [InlineData("invalid", "http://valid.url")]
+        [InlineData("invalid", "invalid")]
+        public async void CreateThread_InvalidModel_DisplaysSubmitView(string text, string imageUrl)
         {
-            var boardController = new BoardController(Mock.Of<IBoardThreadRepository>(), new RecaptchaMock(), null);
-            var boardPost = new BoardPost();
+            var boardController = new BoardController(Mock.Of<IBoardThreadRepository>(), new RecaptchaMock(), null, null);
+            var viewModel = new SubmitViewModel { Text = text, ImageUrl = imageUrl };
 
-            TestHelper.SimulateValidation(boardController, boardPost);
-            var result = (ViewResult)await boardController.CreateThread(boardPost, null);
+            TestHelper.SimulateValidation(boardController, viewModel);
+            var result = (ViewResult)await boardController.CreateThread(viewModel, null);
 
             Assert.Equal(nameof(boardController.Submit), result.ViewName);
         }
@@ -120,18 +125,20 @@ namespace Bazirano.Tests.Controllers
             var boardThreads = GetBoardThreadsListContaining(threadCount, oldestThread );
             var boardThreadsRepoMock = new Mock<IBoardThreadRepository>();
             boardThreadsRepoMock.Setup(x => x.BoardThreads).Returns(boardThreads.AsQueryable());
-            var boardController = new BoardController(boardThreadsRepoMock.Object, new RecaptchaMock(), null);
+            var boardController = new BoardController(boardThreadsRepoMock.Object, new RecaptchaMock(), null, null);
 
-            await boardController.CreateThread(new BoardPost { Text = "test" }, null);
+            await boardController.CreateThread(new SubmitViewModel { Text = "test" }, null);
 
             boardThreadsRepoMock.Verify(x => x.RemoveThread(oldestThread.Id), Times.Exactly(timesRemoveThreadCalled));
         }
 
-        [Fact]
-        public async void CreateThread_ValidModel_RedirectsToThread()
+        [Theory]
+        [InlineData("valid text", null)]
+        [InlineData("valid text", "http://valid.png")]
+        public async void CreateThread_ValidModel_RedirectsToThread(string text, string imageUrl)
         {
-            var boardPost = new BoardPost { Id = 1, Text = "test test test" };
-            var boardController = new BoardController(Mock.Of<IBoardThreadRepository>(), new RecaptchaMock(), null);
+            var boardPost = new SubmitViewModel { Text = text, ImageUrl = imageUrl };
+            var boardController = new BoardController(Mock.Of<IBoardThreadRepository>(), new RecaptchaMock(), Mock.Of<IWriter>(), null);
 
             TestHelper.SimulateValidation(boardController, boardPost);
             var result = (RedirectToActionResult)await boardController.CreateThread(boardPost, null);
