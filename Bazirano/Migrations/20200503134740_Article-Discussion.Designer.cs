@@ -4,14 +4,16 @@ using Bazirano.Models.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bazirano.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200503134740_Article-Discussion")]
+    partial class ArticleDiscussion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,9 +111,6 @@ namespace Bazirano.Migrations
 
                     b.Property<bool>("SafeForWork")
                         .HasColumnType("bit");
-
-                    b.Property<string>("SourceUrl")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

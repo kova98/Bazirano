@@ -2,6 +2,8 @@
 using Bazirano.Infrastructure;
 using Bazirano.Models.Column;
 using Bazirano.Models.DataAccess;
+using Bazirano.Models.Shared;
+using Bazirano.Tests.Helpers;
 using Bazirano.Tests.TestData;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -90,6 +92,90 @@ namespace Bazirano.Tests.Controllers
             Assert.Equal(1, model.Columns[0].Id);
             Assert.Equal(2, model.Columns[1].Id);
             Assert.Equal(nameof(columnController.Author), result.ViewName);
+        }
+
+        [Theory]
+        [InlineData("txt < 10", "username < 20")]
+        [InlineData("text longer than 10", "username longer than 20")]
+        async void PostComment_InvalidModel_DisplaysColumnPost(string commentText, string commentUsername)
+        {
+            var articlesRepoMock = new Mock<IColumnRepository>();
+            articlesRepoMock.Setup(x => x.ColumnPosts).Returns(new ColumnPost[] { new ColumnPost { Id = 1 } }.AsQueryable);
+            var columnController = new ColumnController(articlesRepoMock.Object, new RecaptchaMock());
+            var viewModel = new ColumnRespondViewModel
+            {
+                ColumnId = 1,
+                Comment = new Comment
+                {
+                    Text = commentText,
+                    Username = commentUsername
+                }
+            };
+
+            TestHelper.SimulateValidation(columnController, viewModel);
+            TestHelper.SimulateValidation(columnController, viewModel.Comment);
+            var result = (ViewResult)await columnController.PostComment(viewModel);
+
+            Assert.Equal("ColumnPost", result.ViewName);
+            articlesRepoMock.Verify(x => x.AddCommentToColumn(viewModel.Comment, viewModel.ColumnId), Times.Never);
+        }
+
+        [Fact]
+        async void PostComment_ValidModel_RedirectsToColumnPost()
+        {
+            var articlesRepoMock = new Mock<IColumnRepository>();
+            articlesRepoMock.Setup(x => x.ColumnPosts).Returns(new ColumnPost[] { new ColumnPost { Id = 1 } }.AsQueryable);
+            var columnController = new ColumnController(articlesRepoMock.Object, new RecaptchaMock());
+            var viewModel = new ColumnRespondViewModel { ColumnId = 1, Comment = new Comment { Text = "" } };
+
+            TestHelper.SimulateValidation(columnController, viewModel);
+            var result = (RedirectToActionResult)await columnController.PostComment(viewModel);
+
+            Assert.Equal("ColumnPost", result.ActionName);
+            Assert.Equal("Column", result.ControllerName);
+        }
+
+        [Fact]
+        async void PostComment_ValidModel_CallsAddCommentToColumn()
+        {
+            var articlesRepoMock = new Mock<IColumnRepository>();
+            articlesRepoMock.Setup(x => x.ColumnPosts).Returns(new ColumnPost[] { new ColumnPost { Id = 1 } }.AsQueryable);
+            var columnController = new ColumnController(articlesRepoMock.Object, new RecaptchaMock());
+            var viewModel = new ColumnRespondViewModel { ColumnId = 1, Comment = new Comment { Text = "" } };
+
+            TestHelper.SimulateValidation(columnController, viewModel);
+            var result = (RedirectToActionResult)await columnController.PostComment(viewModel);
+
+            articlesRepoMock.Verify(x => x.AddCommentToColumn(viewModel.Comment, viewModel.ColumnId), Times.Once);
+        }
+
+        [Fact]
+        async void PostComment_InvalidColumnId_DisplaysErrorView()
+        {
+            var columnRepoMock = new Mock<IColumnRepository>();
+            columnRepoMock.Setup(x => x.ColumnPosts).Returns(new ColumnPost[] { new ColumnPost { Id = 1 } }.AsQueryable);
+            var columnController = new ColumnController(columnRepoMock.Object, Mock.Of<IGoogleRecaptchaHelper>());
+            var viewModel = new ColumnRespondViewModel { ColumnId = 2, Comment = new Comment { Text = "" } };
+
+            TestHelper.SimulateValidation(columnController, viewModel);
+            var result = (RedirectToActionResult)await columnController.PostComment(viewModel);
+
+            Assert.Equal("Error", result.ControllerName);
+            Assert.Equal("Column", result.ActionName);
+        }
+
+        [Fact]
+        async void PostComment_TrimsText()
+        {
+            var columnRepoMock = new Mock<IColumnRepository>();
+            columnRepoMock.Setup(x => x.ColumnPosts).Returns(new ColumnPost[] { new ColumnPost { Id = 1 } }.AsQueryable);
+            var columnController = new ColumnController(columnRepoMock.Object, new RecaptchaMock());
+            var viewModel = new ColumnRespondViewModel { ColumnId = 1, Comment = new Comment { Text = "   test    " } };
+
+            TestHelper.SimulateValidation(columnController, viewModel);
+            var result = (RedirectToActionResult)await columnController.PostComment(viewModel);
+
+            Assert.Equal("test", viewModel.Comment.Text);
         }
     }
 }

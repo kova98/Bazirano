@@ -1,4 +1,4 @@
-﻿@{ 
+﻿@{
     ViewBag.Title = Model.Article.Title;
     var newsHelper = new NewsHelper(null);
 }
@@ -7,48 +7,55 @@
 
 <nav class="nav navbar-nav p-3"></nav>
 <div class="row">
-    <div class="col-12 col-md-8">
+    <div class="col-12 col-md-8 mb-4">
         <div>
-            <div>
-                <h1 class="card-title">@Model.Article.Title</h1>
-                <p class="text-muted">
-                    @Model.Article.DatePosted.ToString("dd.MM.yyyy. HH:mm")
-                    <span class="float-right">
-                        Izvor: 
-                        <a href="@(Model.Article.SourceUrl ?? Model.Article.Source.Url())">
-                            @Model.Article.Source.DisplayName()
-                        </a>
-                    </span>
-                </p>
-            </div>
-            <img class="card-img-bottom" src="@Model.Article.Image" />
-            <div class="card-body text-body">
-                @foreach (var paragraph in Model.Paragraphs)
-                {
-                    <p>@paragraph</p>
-                }
-            </div>
+            <h1 class="card-title">@Model.Article.Title</h1>
+            <p class="text-muted">
+                @Model.Article.DatePosted.ToString("dd.MM.yyyy. HH:mm")
+                <span class="float-right">
+                    Izvor:
+                    <a href="@(Model.Article.SourceUrl ?? Model.Article.Source.Url())">
+                        @Model.Article.Source.DisplayName()
+                    </a>
+                </span>
+            </p>
+        </div>
+        <img class="card-img-bottom" src="@Model.Article.Image" />
+        <div class="card-body text-body">
+            @foreach (var paragraph in Model.Paragraphs)
+            {
+                <p>@paragraph</p>
+            }
         </div>
 
-
-        @if (Model.Article.Comments.Count > 0)
+        @if (Model.Article.Discussion == null)
         {
-            <h2 class="border-bottom border-secondary">Komentari</h2>
-        }
 
-        @foreach (var comment in Model.Article.Comments)
+            <div class="text-center">
+                <div class="display-4 text-secondary mb-4">
+                    Nema rasprave
+                </div>
+
+                <a asp-action="StartDiscussion" asp-controller="Board" asp-route-articleId="@Model.Article.Id"
+                   class="btn btn-primary">
+                    Pokreni raspravu
+                </a>
+            </div>
+        }
+        else
         {
-            <partial name="Comment" model="comment" />
-            <div class="p-1"></div>
+            <div class="container-fluid">
+                <div class="row">
+                    <partial name="DiscussionPreview" model="Model.Article.Discussion" />
+                </div>
+                <div class="text-center my-3">
+                    <a asp-action="Thread" asp-controller="Board" asp-route-id="@Model.Article.Discussion.Id"
+                       class="btn btn-lg btn-primary text-dark">
+                        Prikaži cijelu raspravu
+                    </a>
+                </div>
+            </div>
         }
-
-        <div id="comment">
-            <partial name="ArticleAddComment"
-                     model="@new ArticleRespondViewModel { ArticleId = Model.Article.Id, Comment = new Comment()}" />
-        </div>
-
-        <div class="p-2"></div>
-
     </div>
     <div class="col-4 d-none d-md-block">
         @foreach (var post in Model.LatestNews)

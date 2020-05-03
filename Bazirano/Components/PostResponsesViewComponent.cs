@@ -7,13 +7,6 @@ namespace Bazirano.Components
 {
     public class PostResponsesViewComponent : ViewComponent
     {
-        private IBoardThreadRepository repository;
-
-        public PostResponsesViewComponent(IBoardThreadRepository repo)
-        {
-            repository = repo;
-        }
-
         public IViewComponentResult Invoke(BoardPostViewModel viewModel)
         {
             var responses = viewModel.ParentThread.Posts

@@ -19,6 +19,17 @@
         <button class="btn btn-outline-secondary" onclick="jumpToAnchor('bot')">Na dno</button>
     </div>
 
+    @if (string.IsNullOrEmpty(Model.SourceUrl) == false)
+    {
+        <div class="col-12">
+            <div class="text-white ">
+                <p class="p-2 border border-primary rounded">
+                    Ovo je rasprava o članku čiji izvorni tekst možete pronaći
+                    <a href="@Model.SourceUrl">ovdje</a>.
+                </p>
+            </div>
+        </div>
+    }
 
     @foreach (var post in Model.Posts)
     {

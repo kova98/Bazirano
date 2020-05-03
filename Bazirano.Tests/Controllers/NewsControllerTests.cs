@@ -1,4 +1,5 @@
 ﻿using Bazirano.Controllers;
+using Bazirano.Infrastructure;
 using Bazirano.Models.Admin;
 using Bazirano.Models.Board;
 using Bazirano.Models.Column;
@@ -65,64 +66,6 @@ namespace Bazirano.Tests.Controllers
 
             Assert.Equal("Error", result.ControllerName);
             Assert.Equal("Article", result.ActionName);
-        }
-
-        [Theory]
-        [InlineData("text longer than 10", "username < 20", 1)]
-        [InlineData("txt < 10", "username < 20", 0)]
-        [InlineData("text longer than 10", "username longer than 20", 0)]
-        async void PostComment_ValidModel_DisplaysArticleViewAndAddsComment(string commentText, string commentUsername, int timesCalled)
-        {
-            var articlesRepoMock = new Mock<IArticleRepository>();
-            articlesRepoMock.Setup(x => x.Articles).Returns(new Article[] { new Article { Id = 1 } }.AsQueryable);
-            var newsController = new NewsController(articlesRepoMock.Object, new RecaptchaMock());
-            var viewModel = new ArticleRespondViewModel
-            {
-                ArticleId = 1,
-                Comment = new Comment
-                {
-                    Text = commentText,
-                    Username = commentUsername
-                }
-            };
-
-            TestHelper.SimulateValidation(newsController, viewModel);
-            TestHelper.SimulateValidation(newsController, viewModel.Comment);
-            var result = (ViewResult)await newsController.PostComment(viewModel);
-
-            Assert.Equal(nameof(newsController.Article), result.ViewName);
-            articlesRepoMock.Verify(x => x.AddCommentToArticle(viewModel.Comment, viewModel.ArticleId), Times.Exactly(timesCalled));
-        }
-
-        [Theory]
-        [InlineData(0)]
-        [InlineData(2)]
-        async void PostComment_InvalidArticleId_DisplaysErrorView(long articleId)
-        {
-            var articlesRepoMock = new Mock<IArticleRepository>();
-            articlesRepoMock.Setup(x => x.Articles).Returns(new Article[] { new Article { Id = 1 } }.AsQueryable);
-            var newsController = new NewsController(articlesRepoMock.Object, null);
-            var viewModel = new ArticleRespondViewModel { ArticleId = articleId };
-
-            TestHelper.SimulateValidation(newsController, viewModel);
-            var result = (RedirectToActionResult)await newsController.PostComment(viewModel);
-
-            Assert.Equal("Error", result.ControllerName);
-            Assert.Equal("Article", result.ActionName);
-        }
-
-        [Fact]
-        async void PostComment_TrimsText()
-        {
-            var articlesRepoMock = new Mock<IArticleRepository>();
-            articlesRepoMock.Setup(x => x.Articles).Returns(new Article[] { new Article { Id = 1 } }.AsQueryable);
-            var newsController = new NewsController(articlesRepoMock.Object, new RecaptchaMock());
-            var viewModel = new ArticleRespondViewModel { ArticleId = 1, Comment = new Comment { Text = "   test    " } };
-
-            TestHelper.SimulateValidation(newsController, viewModel);
-            var result = (ViewResult)await newsController.PostComment(viewModel);
-
-            Assert.Equal("test", viewModel.Comment.Text);
         }
 
         [Fact]

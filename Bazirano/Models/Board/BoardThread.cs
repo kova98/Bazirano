@@ -33,5 +33,10 @@ namespace Bazirano.Models.Board
         /// The collection of all the <see cref="BoardPost"/>s in the thread.
         /// </summary>
         public ICollection<BoardPost> Posts { get; set; }
+
+        /// <summary>
+        /// The url for the source of the article being discussed in the thread
+        /// </summary>
+        public string SourceUrl { get; set; }
     }
 }

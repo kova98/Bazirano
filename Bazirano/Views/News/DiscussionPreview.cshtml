@@ -1,0 +1,41 @@
+﻿@model BoardThread
+
+<div class="col-12 display-4 text-center text-secondary mb-4">
+    Rasprava
+</div>
+
+@{ 
+    var posts = Model.Posts.OrderBy(x => x.DatePosted).Take(5).ToList();
+}
+@for (int i = 0; i < posts.Count; i++)
+{
+    var post = posts[i];
+    var image = "" + post.Image;
+    var isUrl = image.StartsWith("http");
+    var imageSource = isUrl ? post.Image : $"~/images/{post.Image}";
+
+    // Calculates the opacity based on the order; The oldest posts are the least visible.
+    var opacity = Math.Abs(i / 5F - 1);
+
+    <div class="col-12 pb-2" style="opacity:@opacity">
+        <div class="card bg-light">
+            <div class="card-header p-2">
+                <span class="text-primary">#@post.Id</span>
+                <span class="float-right text-secondary">@post.DatePosted.ToEuTimeFormat()</span>
+            </div>
+        </div>
+        <div class="">
+            @if (!string.IsNullOrEmpty(post.Image))
+            {
+
+                <img src="@imageSource" class="img-fluid float-left mr-3"
+                     style="max-height:120px;border-bottom-left-radius:3px;" />
+            }
+            <div class="card-body ml-2">
+                <post-text text="@post.Text"></post-text>
+            </div>
+        </div>
+        @await Component.InvokeAsync("PostResponses", new BoardPostViewModel { ParentThread = Model, Post = post})
+    </div>
+}
+

@@ -3,6 +3,9 @@
 @{
     string time = Model.Post.DatePosted.ToString("dd.MM.yyyy. HH:mm");
     bool containsImage = !string.IsNullOrEmpty(Model.Post.Image);
+    var image = "" + Model.Post.Image;
+    var isUrl = image.StartsWith("http");
+    var imageSource = isUrl ? Model.Post.Image : $"~/images/{Model.Post.Image}";
 }
 
 
@@ -18,10 +21,10 @@
                 @if (containsImage)
                 {
                 <a onclick="toggleImage('@Model.Post.Id')" id="img-@Model.Post.Id" style="display:none">
-                    <img src="~/images/@Model.Post.Image" class="img-fluid" />
+                    <img src="@imageSource" class="img-fluid" />
                 </a>
                 <a onclick="toggleImage('@Model.Post.Id')" id="thumb-@Model.Post.Id">
-                    <img src="~/images/@Model.Post.Image" class="img-fluid float-left mr-3"
+                    <img src="@imageSource" class="img-fluid float-left mr-3"
                          style="max-height:120px;border-bottom-left-radius:3px;" />
                 </a>
                 }

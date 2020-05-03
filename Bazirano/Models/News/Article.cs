@@ -1,4 +1,5 @@
 ﻿using Bazirano.Library.Enums;
+using Bazirano.Models.Board;
 using Bazirano.Models.Shared;
 using System;
 using System.Collections.Generic;
@@ -58,10 +59,7 @@ namespace Bazirano.Models.News
         /// </summary>
         public DateTime DatePosted { get; set; }
 
-        /// <summary>
-        /// The collection of child comments of the article.
-        /// </summary>
-        public ICollection<Comment> Comments { get; set; }
+        public BoardThread Discussion { get; set; }
 
         /// <summary>
         /// The property used for converting the <see cref="KeywordsList"/> to a string, and vice versa.

@@ -15,15 +15,22 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
+using Bazirano.Models.News;
 
 namespace Bazirano.Tests.Controllers
 {
     public class BoardControllerTests
     {
-        BoardController GetMockBoardController(BoardThread[] boardThreads)
+        BoardController GetMockBoardController(BoardThread[] boardThreads = null, Article[] articles = null)
         {
-            var mock = new Mock<IBoardThreadRepository>();
-            mock.Setup(x => x.BoardThreads).Returns(boardThreads.AsQueryable);
+            boardThreads ??= new BoardThread[] { };
+            articles ??= new Article[] { };
+
+            var boardRepoMock = new Mock<IBoardThreadRepository>();
+            boardRepoMock.Setup(x => x.BoardThreads).Returns(boardThreads.AsQueryable);
+
+            var articleRepoMock = new Mock<IArticleRepository>();
+            articleRepoMock.Setup(x => x.Articles).Returns(articles.AsQueryable);
 
             var googleRecaptchaHelperMock = new Mock<IGoogleRecaptchaHelper>();
             googleRecaptchaHelperMock.Setup(x => x.VerifyRecaptcha(It.IsAny<HttpRequest>(), It.IsAny<ModelStateDictionary>())).ReturnsAsync(true);
@@ -31,7 +38,12 @@ namespace Bazirano.Tests.Controllers
             var writerMock = new Mock<IWriter>();
             var loggerMock = new Mock<ILogger<BoardController>>();
 
-            var boardController = new BoardController(mock.Object, googleRecaptchaHelperMock.Object, writerMock.Object, loggerMock.Object)
+            var boardController = new BoardController(
+                boardRepoMock.Object,
+                articleRepoMock.Object,
+                googleRecaptchaHelperMock.Object,
+                writerMock.Object,
+                loggerMock.Object)
             {
                 TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>())
             };
@@ -107,7 +119,7 @@ namespace Bazirano.Tests.Controllers
         [InlineData("invalid", "invalid")]
         public async void CreateThread_InvalidModel_DisplaysSubmitView(string text, string imageUrl)
         {
-            var boardController = new BoardController(Mock.Of<IBoardThreadRepository>(), new RecaptchaMock(), null, null);
+            var boardController = GetMockBoardController();
             var viewModel = new SubmitViewModel { Text = text, ImageUrl = imageUrl };
 
             TestHelper.SimulateValidation(boardController, viewModel);
@@ -125,7 +137,7 @@ namespace Bazirano.Tests.Controllers
             var boardThreads = GetBoardThreadsListContaining(threadCount, oldestThread );
             var boardThreadsRepoMock = new Mock<IBoardThreadRepository>();
             boardThreadsRepoMock.Setup(x => x.BoardThreads).Returns(boardThreads.AsQueryable());
-            var boardController = new BoardController(boardThreadsRepoMock.Object, new RecaptchaMock(), null, null);
+            var boardController = new BoardController(boardThreadsRepoMock.Object, null, new RecaptchaMock(), null, null);
 
             await boardController.CreateThread(new SubmitViewModel { Text = "test" }, null);
 
@@ -138,13 +150,78 @@ namespace Bazirano.Tests.Controllers
         public async void CreateThread_ValidModel_RedirectsToThread(string text, string imageUrl)
         {
             var boardPost = new SubmitViewModel { Text = text, ImageUrl = imageUrl };
-            var boardController = new BoardController(Mock.Of<IBoardThreadRepository>(), new RecaptchaMock(), Mock.Of<IWriter>(), null);
+            var boardController = GetMockBoardController();
 
             TestHelper.SimulateValidation(boardController, boardPost);
             var result = (RedirectToActionResult)await boardController.CreateThread(boardPost, null);
 
             Assert.Equal("Thread", result.ActionName);
             Assert.Equal("Board", result.ControllerName);
+        }
+
+        [Fact]
+        void StartDiscussion_ArticleDoesNotExist_RedirectsToError()
+        {
+            var articles = new Article[] { new Article { Id = 1 } };
+            var boardController = GetMockBoardController(articles: articles);
+
+            var result = (RedirectToActionResult)boardController.StartDiscussion(2);
+
+            Assert.Equal("Article", result.ActionName);
+            Assert.Equal("Error", result.ControllerName);
+        }
+
+        [Fact]
+        void StartDiscussion_DiscussionExists_RedirectsToThread()
+        {
+            var articles = new Article[] { new Article { Id = 1, Discussion = new BoardThread { Id = 2 } } };
+            var boardController = GetMockBoardController(articles: articles);
+
+            var result = (RedirectToActionResult)boardController.StartDiscussion(1);
+
+            Assert.Equal("Thread", result.ActionName);
+            Assert.Equal("Board", result.ControllerName);
+            Assert.Equal(2L, result.RouteValues["id"]);
+        }
+
+        [Fact]
+        void StartDiscussion_DiscussionDoesNotExist_CreatesThread()
+        {
+            var articleRepoMock = new Mock<IArticleRepository>();
+            var articles = new Article[]
+            {
+                new Article
+                {
+                    Id = 1,
+                    Image = "test1",
+                    Title = "test2",
+                    SourceUrl = "test3"
+                }
+            };
+            articleRepoMock.Setup(x => x.Articles).Returns(articles.AsQueryable);
+            var boardController = new BoardController(Mock.Of<IBoardThreadRepository>(), articleRepoMock.Object, null, null, null);
+
+            var result = (RedirectToActionResult)boardController.StartDiscussion(1);
+
+            articleRepoMock.Verify(x => x.EditArticle(
+                It.Is<Article>(t =>
+                    (t.Discussion.Posts.First().Image == "test1") &&
+                    (t.Discussion.Posts.First().Text == "test2") &&
+                    (t.Discussion.SourceUrl == "test3"))),
+                Times.Once);
+        }
+
+        [Fact]
+        void StartDiscussion_CreatesThread()
+        {
+            var articles = new Article[] { new Article { Id = 1, Discussion = new BoardThread { Id = 2 } } };
+            var boardController = GetMockBoardController(articles: articles);
+
+            var result = (RedirectToActionResult)boardController.StartDiscussion(1);
+
+            Assert.Equal("Thread", result.ActionName);
+            Assert.Equal("Board", result.ControllerName);
+            Assert.Equal(2L, result.RouteValues["id"]);
         }
 
         private List<BoardThread> GetBoardThreadsListContaining(int threadCount, params BoardThread[] threads)

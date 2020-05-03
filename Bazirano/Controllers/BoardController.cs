@@ -14,7 +14,8 @@ namespace Bazirano.Controllers
 {
     public class BoardController : Controller
     {
-        private readonly IBoardThreadRepository repository;
+        private readonly IBoardThreadRepository boardRepo;
+        private readonly IArticleRepository articleRepo;
         private readonly IGoogleRecaptchaHelper googleRecaptchaHelper;
         private readonly IWriter writer;
         private readonly ILogger<BoardController> logger;
@@ -24,13 +25,15 @@ namespace Bazirano.Controllers
         private readonly int maxImagesInThread = 50;
 
         public BoardController(
-            IBoardThreadRepository repo,
+            IBoardThreadRepository boardRepo,
+            IArticleRepository articleRepo,
             IGoogleRecaptchaHelper grHelper,
             IWriter writer,
             ILogger<BoardController> logger)
         {
-            repository = repo;
             googleRecaptchaHelper = grHelper;
+            this.boardRepo = boardRepo;
+            this.articleRepo = articleRepo;
             this.writer = writer;
             this.logger = logger;
         }
@@ -44,7 +47,7 @@ namespace Bazirano.Controllers
         [Route("~/ploca")]
         public IActionResult Catalog()
         {
-            var threads = repository.BoardThreads.ToList().SortByBumpOrder();
+            var threads = boardRepo.BoardThreads.ToList().SortByBumpOrder();
 
             return View(nameof(Catalog), threads);
         }
@@ -52,7 +55,7 @@ namespace Bazirano.Controllers
         [Route("~/ploca/dretva/{id}")]
         public IActionResult Thread(long id)
         {
-            var thread = repository.BoardThreads.FirstOrDefault(t => t.Id == id);
+            var thread = boardRepo.BoardThreads.FirstOrDefault(t => t.Id == id);
 
             if (thread == null)
             {
@@ -64,7 +67,7 @@ namespace Bazirano.Controllers
 
         public async Task<IActionResult> Respond(BoardRespondViewModel vm, IFormFile file)
         {
-            var thread = repository.BoardThreads.FirstOrDefault(t => t.Id == vm.ThreadId);
+            var thread = boardRepo.BoardThreads.FirstOrDefault(t => t.Id == vm.ThreadId);
 
             await googleRecaptchaHelper.VerifyRecaptcha(Request, ModelState);
 
@@ -81,7 +84,7 @@ namespace Bazirano.Controllers
                 }
 
                 vm.BoardPost.Text = vm.BoardPost.Text.Trim();
-                repository.AddPostToThread(vm.BoardPost, vm.ThreadId);
+                boardRepo.AddPostToThread(vm.BoardPost, vm.ThreadId);
                 ModelState.Clear();
                 TempData["ScrollToComment"] = true;
                 return RedirectToAction("Thread", "Board", new { thread.Id });
@@ -134,10 +137,45 @@ namespace Bazirano.Controllers
                 Posts = new List<BoardPost> { post }
             };
 
-            repository.AddThread(thread);
+            boardRepo.AddThread(thread);
             RemoveLastThread();
 
             return RedirectToAction("Thread", "Board", new { thread.Id });
+        }
+
+        public IActionResult StartDiscussion(long articleId)
+        {
+            var article = articleRepo.Articles.FirstOrDefault(a => a.Id == articleId);
+
+            if (article == null)
+            {
+                return RedirectToAction("Article", "Error");
+            }
+
+            if (article.Discussion != null)
+            {
+                return RedirectToAction("Thread", "Board", new { id = article.Discussion.Id });
+            }
+
+            var thread = new BoardThread
+            {
+                SourceUrl = article.SourceUrl,
+                Posts = new BoardPost[]
+                {
+                    new BoardPost
+                    {
+                        Text = article.Title,
+                        Image = article.Image,
+                        DatePosted = DateTime.Now
+                    }
+                }
+            };
+
+            article.Discussion = thread;
+
+            articleRepo.EditArticle(article);
+
+            return RedirectToAction("Thread", "Board", new { id = thread.Id });
         }
 
         private bool MaxImagesCountReached(BoardThread thread)
@@ -169,12 +207,12 @@ namespace Bazirano.Controllers
 
         private void RemoveLastThread()
         {
-            var threadCount = repository.BoardThreads.Count();
-            var lastThread = repository.BoardThreads.ToList().SortByBumpOrder().LastOrDefault();
+            var threadCount = boardRepo.BoardThreads.Count();
+            var lastThread = boardRepo.BoardThreads.ToList().SortByBumpOrder().LastOrDefault();
 
             if (threadCount > maxThreadCount)
             {
-                repository.RemoveThread(lastThread.Id);
+                boardRepo.RemoveThread(lastThread.Id);
             }
         }
     }

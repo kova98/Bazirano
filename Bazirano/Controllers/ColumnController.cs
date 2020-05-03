@@ -99,6 +99,13 @@ namespace Bazirano.Controllers
         {
             await googleRecaptchaHelper.VerifyRecaptcha(Request, ModelState);
 
+            var articleExists = columnRepo.ColumnPosts.Any(p => p.Id == viewModel.ColumnId);
+
+            if (articleExists == false)
+            {
+                return RedirectToAction("Column", "Error");
+            }
+
             if (ModelState.IsValid)
             {
                 viewModel.Comment.DatePosted = DateTime.Now;

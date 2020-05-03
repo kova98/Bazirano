@@ -2,8 +2,10 @@
 
 @{
     BoardPost post = Model.Posts.OrderBy(p => p.DatePosted).First();
-    string time = post.DatePosted.ToString("dd.MM.yyyy. HH:mm");
-    bool containsImage = !string.IsNullOrEmpty(post.Image);
+    var time = post.DatePosted.ToString("dd.MM.yyyy. HH:mm");
+    var containsImage = !string.IsNullOrEmpty(post.Image);
+    var image = "" + post.Image;
+    var isUrl = image.StartsWith("http");
 }
 
     <div class="card text-center mb-2 bg-light" style="min-width: 15rem;">
@@ -14,7 +16,7 @@
             @if (containsImage)
             {
                 <div class="card-img text-center">
-                    <img src="~/images/@post.Image" class="img-fluid" style="max-height:200px" />
+                    <img src="@(isUrl ? post.Image : $"~/images/{post.Image}")" class="img-fluid" style="max-height:200px" />
                 </div>
             }
         </a>

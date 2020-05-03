@@ -32,13 +32,6 @@ namespace Bazirano.Models.DataAccess
         void EditArticle(Article article);
 
         /// <summary>
-        /// Adds a new <see cref="Comment"/> to a <see cref="Article"/>.
-        /// </summary>
-        /// <param name="comment">The comment to add.</param>
-        /// <param name="postId">The id of the post which to add the comment to.</param>
-        void AddCommentToArticle(Comment comment, long postId);
-
-        /// <summary>
         /// Increases the <see cref="Article.ViewCount"/> by 1.
         /// </summary>
         /// <param name="post">The post which view count to increment.</param>

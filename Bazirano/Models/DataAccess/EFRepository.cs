@@ -30,7 +30,8 @@ namespace Bazirano.Models.DataAccess
         public IQueryable<BoardPost> BoardPosts => context.BoardPosts;
 
         public IQueryable<Article> Articles => context.Articles
-            .Include(x=>x.Comments);
+            .Include(a => a.Discussion)
+                .ThenInclude(d => d.Posts);
 
         public IQueryable<ColumnPost> ColumnPosts => context.ColumnPosts
             .Include(p => p.Author)
@@ -56,19 +57,6 @@ namespace Bazirano.Models.DataAccess
             context.SaveChanges();
         }
 
-        public void AddCommentToArticle(Comment comment, long postId)
-        {
-            Article post = context.Articles.FirstOrDefault(p => p.Id == postId);
-            if (post.Comments == null)
-            {
-                post.Comments = new List<Comment>();
-            }
-
-            post.Comments.Add(comment);
-
-            context.SaveChanges();
-        }
-
         public void AddArticle(Article post)
         {
             context.Articles.Add(post);
@@ -83,6 +71,7 @@ namespace Bazirano.Models.DataAccess
             postToEdit.Title = post.Title;
             postToEdit.Text = post.Text;
             postToEdit.Image = post.Image;
+            postToEdit.Discussion = post.Discussion;
 
             context.SaveChanges();
         }
@@ -124,13 +113,6 @@ namespace Bazirano.Models.DataAccess
         {
             var post = context.Articles.FirstOrDefault(p => p.Id == postId);
 
-            if (post.Comments != null && post.Comments.Count > 0)
-            {
-                var comments = context.Comments.Where(x => post.Comments.Contains(x));
-
-                context.Comments.RemoveRange(comments);
-            }
-            
             context.Articles.Remove(post);
 
             context.SaveChanges();
