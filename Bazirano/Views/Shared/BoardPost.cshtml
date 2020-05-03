@@ -5,7 +5,6 @@
     bool containsImage = !string.IsNullOrEmpty(Model.Post.Image);
     var image = "" + Model.Post.Image;
     var isUrl = image.StartsWith("http");
-    var imageSource = isUrl ? Model.Post.Image : $"~/images/{Model.Post.Image}";
 }
 
 
@@ -21,11 +20,26 @@
                 @if (containsImage)
                 {
                 <a onclick="toggleImage('@Model.Post.Id')" id="img-@Model.Post.Id" style="display:none">
-                    <img src="@imageSource" class="img-fluid" />
+                    @if (isUrl)
+                    {
+                        <img src="@Model.Post.Image" class="img-fluid" />
+                    }
+                    else
+                    {
+                        <img src="~/images/@Model.Post.Image" class="img-fluid" />
+                    }
                 </a>
                 <a onclick="toggleImage('@Model.Post.Id')" id="thumb-@Model.Post.Id">
-                    <img src="@imageSource" class="img-fluid float-left mr-3"
-                         style="max-height:120px;border-bottom-left-radius:3px;" />
+                    @if (isUrl)
+                    {
+                        <img src="@Model.Post.Image" class="img-fluid float-left mr-3"
+                             style="max-height:120px;border-bottom-left-radius:3px;" />
+                    }
+                    else
+                    {
+                        <img src="~/images/@Model.Post.Image" class="img-fluid float-left mr-3"
+                             style="max-height:120px;border-bottom-left-radius:3px;" />
+                    }
                 </a>
                 }
                 <div class="card-body ml-2">

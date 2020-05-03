@@ -8,32 +8,39 @@
     var isUrl = image.StartsWith("http");
 }
 
-    <div class="card text-center mb-2 bg-light" style="min-width: 15rem;">
-        <a asp-action="Thread" asp-route-id="@Model.Id" asp-controller="Board">
-            <div class="card-header">
-                #@post.Id | @time
+<div class="card text-center mb-2 bg-light" style="min-width: 15rem;">
+    <a asp-action="Thread" asp-route-id="@Model.Id" asp-controller="Board">
+        <div class="card-header">
+            #@post.Id | @time
+        </div>
+        @if (containsImage)
+        {
+            <div class="card-img text-center">
+                @if (isUrl)
+                {
+                    <img src="@post.Image" class="img-fluid" style="max-height:200px" />
+                }
+                else
+                {
+                    <img src="~/images/@post.Image" class="img-fluid" style="max-height:200px" />
+                }
             </div>
-            @if (containsImage)
-            {
-                <div class="card-img text-center">
-                    <img src="@(isUrl ? post.Image : $"~/images/{post.Image}")" class="img-fluid" style="max-height:200px" />
-                </div>
-            }
-        </a>
+        }
+    </a>
 
-        <div class="card-body text-sm-center m-0 p-0">
-            <div class="text-center text-secondary">
-                <br />
-                <span>Odg: @Model.PostCount | Sli: @Model.ImageCount</span>
-            </div>
-            <div class="text-center m-2 p-1">
-                <div>
-                    <thread-post-text text="@post.Text"></thread-post-text>
-                </div>
+    <div class="card-body text-sm-center m-0 p-0">
+        <div class="text-center text-secondary">
+            <br />
+            <span>Odg: @Model.PostCount | Sli: @Model.ImageCount</span>
+        </div>
+        <div class="text-center m-2 p-1">
+            <div>
+                <thread-post-text text="@post.Text"></thread-post-text>
             </div>
         </div>
-
     </div>
+
+</div>
 
 
 

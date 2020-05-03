@@ -12,7 +12,6 @@
     var post = posts[i];
     var image = "" + post.Image;
     var isUrl = image.StartsWith("http");
-    var imageSource = isUrl ? post.Image : $"~/images/{post.Image}";
 
     // Calculates the opacity based on the order; The oldest posts are the least visible.
     var opacity = Math.Abs(i / 5F - 1);
@@ -27,9 +26,16 @@
         <div class="">
             @if (!string.IsNullOrEmpty(post.Image))
             {
-
-                <img src="@imageSource" class="img-fluid float-left mr-3"
-                     style="max-height:120px;border-bottom-left-radius:3px;" />
+                @if (isUrl)
+                {
+                    <img src="@post.Image" class="img-fluid float-left mr-3"
+                         style="max-height:120px;border-bottom-left-radius:3px;" />
+                }
+                else
+                {
+                    <img src="~/images/@post.Image" class="img-fluid float-left mr-3"
+                         style="max-height:120px;border-bottom-left-radius:3px;" />
+                }
             }
             <div class="card-body ml-2">
                 <post-text text="@post.Text"></post-text>
