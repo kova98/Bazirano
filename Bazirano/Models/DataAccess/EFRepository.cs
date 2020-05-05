@@ -129,6 +129,13 @@ namespace Bazirano.Models.DataAccess
                 .Include(x=>x.Posts)
                 .FirstOrDefault(x => x.Id == id);
 
+            var articleDiscussedInThisThread = context.Articles.FirstOrDefault(x => x.Discussion.Id == thread.Id);
+
+            if (articleDiscussedInThisThread != null)
+            {
+                articleDiscussedInThisThread.Discussion = null;
+            }
+
             foreach (var post in thread.Posts)
             {
                 writer.DeleteImage(post.Image);
