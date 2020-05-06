@@ -3,6 +3,7 @@
     var newsHelper = new NewsHelper(null);
 }
 
+@inject Microsoft.Extensions.Configuration.IConfiguration config;
 @model ArticleViewModel
 
 <nav class="nav navbar-nav p-3"></nav>
@@ -31,16 +32,24 @@
         @if (Model.Article.Discussion == null)
         {
 
-            <div class="text-center">
+            <div class="text-center col-12">
                 <div class="display-4 text-secondary mb-4">
                     Nema rasprave
                 </div>
 
-                <a asp-action="StartDiscussion" asp-controller="Board" asp-route-articleId="@Model.Article.Id"
-                   class="btn btn-primary">
-                    Pokreni raspravu
-                </a>
+                <form method="post" enctype="multipart/form-data"
+                      asp-action="StartDiscussion" asp-controller="Board" asp-route-articleId="@Model.Article.Id">
+
+                    <div class="form-group">
+                        <button class="btn btn-primary text-dark" type="submit">
+                            Pokreni raspravu
+                        </button>
+                    </div>
+
+                    <div class="g-recaptcha" style="display:inline-block" data-sitekey="@config["GoogleReCaptcha:key"]" data-theme="dark"></div>
+                </form>
             </div>
+
         }
         else
         {
@@ -68,6 +77,6 @@
 
 @if (ViewBag.CommentPosted != null)
 {
-    <script>scrollToAnchor("comment");</script>
+<script>scrollToAnchor("comment");</script>
 }
 

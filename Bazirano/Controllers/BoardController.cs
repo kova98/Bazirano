@@ -143,8 +143,15 @@ namespace Bazirano.Controllers
             return RedirectToAction("Thread", "Board", new { thread.Id });
         }
 
-        public IActionResult StartDiscussion(long articleId)
+        public async Task<IActionResult> StartDiscussion(long articleId)
         {
+            await googleRecaptchaHelper.VerifyRecaptcha(Request, ModelState);
+
+            if (ModelState.IsValid == false)
+            {
+                return RedirectToAction("Index", "Error");
+            }
+
             var article = articleRepo.Articles.FirstOrDefault(a => a.Id == articleId);
 
             if (article == null)
