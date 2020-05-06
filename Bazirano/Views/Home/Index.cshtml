@@ -21,7 +21,7 @@
             <div class="row">
                 @foreach (var post in Model.PopularPosts)
                 {
-                    <a class="col-4"
+                    <a class="col-4 pb-4"
                        asp-action="Article" asp-route-id="@post.Id" asp-controller="News">
                         <img class="img-fluid" src="@post.Image" />
                     </a>
