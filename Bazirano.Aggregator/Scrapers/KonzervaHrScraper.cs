@@ -77,7 +77,7 @@ namespace Bazirano.Aggregator.Scrapers
         private string GetArticleImage(IDocument document)
         {
             var img = document.QuerySelector(".td-modal-image");
-            var imgUrl = img.GetAttribute("src");
+            var imgUrl = img?.GetAttribute("src");
 
             return imgUrl;
         }
