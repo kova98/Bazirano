@@ -25,17 +25,17 @@ namespace Bazirano.Aggregator
             var config = serviceProvider.GetService<IConfigurationRoot>();
             var logger = serviceProvider.GetService<ILogger<Program>>();
 
+            var succeeded = int.TryParse(config["WorkCycleDelayInSeconds"], out int delayInSeconds);
+            if (succeeded == false)
+            {
+                delayInSeconds = 60;
+                logger.LogWarning("WorkCycleDelayInSeconds parsing from config file failed. Using default value (60)");
+            }
+
+            var delayInMiliseconds = delayInSeconds * 1000;
+
             while (true)
             {
-                var succeeded = int.TryParse(config["WorkCycleDelayInSeconds"], out int delayInSeconds);
-                if (succeeded == false)
-                {
-                    delayInSeconds = 60;
-                    logger.LogWarning("WorkCycleDelayInSeconds parsing from config file failed. Using default value (60)");
-                }
-
-                var delayInMiliseconds = delayInSeconds * 1000;
-
                 try
                 {
                     await DoWork();
